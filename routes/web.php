@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\CampaignComponent;
 use App\Livewire\FolderComponent;
 use App\Livewire\FolderShowComponent;
 use Illuminate\Support\Facades\Route;
@@ -51,4 +52,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('folder', FolderComponent::class)->name('folder.index');
     Route::get('folder/{uuid}', FolderShowComponent::class)->name('folder.show');
+
+    Route::get('campaign/{uuid}', CampaignComponent::class)->name('campaign.show');
 });

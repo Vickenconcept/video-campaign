@@ -13,6 +13,6 @@ window.Toastify = Toastify;
 import Alpine from 'alpinejs';
 Alpine.data('notification', notification);
 
-window.Alpine = Alpine;
+// window.Alpine = Alpine;
 
-Alpine.start();
+// Alpine.start();

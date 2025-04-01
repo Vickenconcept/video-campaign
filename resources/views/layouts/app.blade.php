@@ -8,14 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @seo([
-        'title' => 'FluenceGrid',
+        'title' => 'Video',
         'description' => 'Influencers Management Hub',
         'image' => asset('images/login-image.png'),
         'site_name' => config('app.name'),
         'favicon' => asset('images/fav-image.png'),
     ])
 
-    <title>Influence</title>
+    <title>Video</title>
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -31,23 +31,11 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-    {{-- <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
-
+{{-- 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-
-
-
-    @yield('styles')
-
-
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -56,12 +44,9 @@
     <link rel="stylesheet" href="{{ asset('build/assets/app-CE5Kpj__.css') }}"> --}}
    
 
-    @livewireStyles
     @yield('styles')
-
-
-
-
+    
+    @livewireStyles
 </head>
 
 <body class="h-screen ">
@@ -73,7 +58,7 @@
         <x-navbar />
         <x-sidebar />
 
-        <div class="h-full sm:ml-64 bg-slate-200 pt-20 overflow-y-hidden">
+        <div class="h-full sm:ml-64 bg-slate-100 pt-20 overflow-y-hidden">
             {{-- <div class="h-full sm:ml-64 bg-[#F0F3F7] pt-20 overflow-y-hidden"> --}}
             {{ $slot }}
         </div>
@@ -95,7 +80,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         window.addEventListener('beforeunload', function(event) {
             var hiddenText = document.getElementById('hiddenText');
             hiddenText.classList.remove('hidden');
@@ -110,9 +95,8 @@
                 hiddenLinearPreloader.classList.add("hidden");
             }, 2000);
         });
-    </script>
+    </script> --}}
 
-{{-- <script src="{{ asset('build/assets/app-CB21gC7Z.js') }}"></script> --}}
 
 </body>
 

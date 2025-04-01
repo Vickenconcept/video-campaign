@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\DataAccessScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Folder extends Model
@@ -14,5 +15,14 @@ class Folder extends Model
 
     public function campaigns(){
         return $this->hasMany(Campaign::class);
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new DataAccessScope);
+
     }
 }

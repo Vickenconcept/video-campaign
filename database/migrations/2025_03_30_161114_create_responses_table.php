@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('step_id')->constrained('steps')->onDelete('cascade');
-            $table->string('name');
+            $table->text('video')->nullable();
+            $table->text('audio')->nullable();
+            $table->text('text')->nullable();
+            $table->string('name')->nullable();
+            $table->text('email')->nullable();
             $table->timestamps();
         });
     }
