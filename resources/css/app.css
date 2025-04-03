@@ -14,7 +14,7 @@
 
 
 .form-control {
-    @apply bg-gray-50 border border-gray-300   rounded-lg focus:ring-slate-900 focus:border-slate-900  block w-full p-2.5 placeholder-gray-500 placeholder:italic
+    @apply bg-gray-200 border text-gray-800 border-gray-300   rounded-lg focus:ring-slate-900 focus:border-slate-900  block w-full p-2.5 placeholder-gray-500 placeholder:italic
 }
 .btn {
     @apply block w-full rounded-lg bg-[#0F1523] px-6 py-3 text-xs font-medium capitalize leading-normal text-white shadow transition duration-150 ease-in-out

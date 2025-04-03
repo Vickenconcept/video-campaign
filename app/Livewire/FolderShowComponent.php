@@ -49,12 +49,16 @@ class FolderShowComponent extends Component
         ]);
 
         $multi_choice_setting = json_encode([
-            ['name' => 'multiple_select', 'label' => 'Enable multiple selection','status' => false, 'info' => 'Allow multiple selection of multiple choice items.'],
-            ['name' => 'randomize', 'label' => 'Randomize','status' => false, 'info' => 'Change the oder of your choices everytime your campaign is viewed'],
-            ['name' => 'skip_data_collection', 'label' => 'Skip data collection','status' => false, 'info' => 'use this setting if you are using multiple choice for navigation only as to skip collection of data'],
-            ['name' => 'option_count', 'label' => 'Show option count','status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
+            ['name' => 'multiple_select', 'label' => 'Enable multiple selection', 'status' => false, 'info' => 'Allow multiple selection of multiple choice items.'],
+            ['name' => 'randomize', 'label' => 'Randomize', 'status' => false, 'info' => 'Change the oder of your choices everytime your campaign is viewed'],
+            ['name' => 'skip_data_collection', 'label' => 'Skip data collection', 'status' => false, 'info' => 'use this setting if you are using multiple choice for navigation only as to skip collection of data'],
+            ['name' => 'option_count', 'label' => 'Show option count', 'status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
         ]);
-        
+
+        $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
+
+        $multi_choice_question = json_encode(['default' => 1]);
+
         $campaign->steps()->create([
             'uuid' => Str::uuid(),
             'name' => 'step 1',
@@ -62,13 +66,14 @@ class FolderShowComponent extends Component
             'contact_detail' => $this->contact_detail,
             'form' => $form,
             'multi_choice_setting' => $multi_choice_setting,
-            
+            'multi_choice_question' => $multi_choice_question,
+            'video_setting' => $video_setting,
+
         ]);
 
         session()->flash('success', 'Campaign successfully created.');
 
         return redirect()->route('campaign.show', ['uuid' => $campaign->uuid]);
-
     }
 
 

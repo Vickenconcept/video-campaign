@@ -11,7 +11,7 @@ use Livewire\Attributes\On;
 class CampaignComponent extends Component
 {
 
-    public $campaign, $steps, $activeStep, $user, $form, $multi_choice_setting;
+    public $campaign, $steps, $activeStep, $activeName, $user, $form, $multi_choice_setting;
     public $id, $postion, $contact_detail = false;
 
     public $activeTab = 'answer';
@@ -39,6 +39,8 @@ class CampaignComponent extends Component
             ['name' => 'skip_data_collection', 'label' => 'Skip data collection','status' => false, 'info' => 'use this setting if you are using multiple choice for navigation only as to skip collection of data'],
             ['name' => 'option_count', 'label' => 'Show option count','status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
         ]);
+
+        
     }
 
     public function goToTab($tab)
@@ -71,8 +73,12 @@ class CampaignComponent extends Component
     // }
 
     public function updateAnswerType() {
+
+        $multi_choice_question = $this->answer_type !== 'multi_choice' ? json_encode(['default' => 1]): null;
+
         $this->activeStep->update([
-            'answer_type' =>  $this->answer_type
+            'answer_type' =>  $this->answer_type,
+            'multi_choice_question' =>  $multi_choice_question
         ]);
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
     }
@@ -84,30 +90,31 @@ class CampaignComponent extends Component
     }
 
 
-    public function addStep($position, $nextStepMappings = [])
+    public function addStep($position)
     {
-
-
         $newPosition = $position + 1;
 
-        // Shift existing steps' positions
         $steps = $this->campaign->steps()->orderBy('position')->get();
         foreach ($steps as $step) {
             if ($step->position >= $newPosition) {
                 $step->update(['position' => $step->position + 1]);
             }
         }
+        $multi_choice_question = json_encode(['default' => 1]);
+        $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
 
         // Create the new step
         $newStep = $this->campaign->steps()->create([
             'uuid' => Str::uuid(),
-            'name' => "Defualt Step",
+            'name' => "default Step",
             'position' => $newPosition,
             'contact_detail' => $this->contact_detail,
-            'next_steps' => $nextStepMappings,
             'form' => $this->form,
             'multi_choice_setting' => $this->multi_choice_setting,
+            'multi_choice_question' => $multi_choice_question,
+            'video_setting' => $video_setting,
         ]);
+        
         $this->steps = $this->campaign->steps;
 
         session()->flash('success', 'Step added successfully.');
@@ -190,9 +197,6 @@ class CampaignComponent extends Component
     }
 
 
-
-
-
     public function deleteStep($id, $position)
     {
         $this->campaign->steps()->where('id', $id)->delete();
@@ -209,6 +213,18 @@ class CampaignComponent extends Component
         session()->flash('success', 'Step deleted and reordered successfully.');
     }
 
+    public function saveStepName(){
+
+        $this->activeStep->update([
+            'name' =>  $this->activeName,
+        ]);
+
+        $this->steps = $this->campaign->steps;
+
+        $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
+
+    }
+
 
     public function setStep($id, $postion)
     {
@@ -218,6 +234,8 @@ class CampaignComponent extends Component
         $this->activeStep = $this->campaign->steps()
             ->where('id', $this->id)
             ->first();
+
+            $this->activeName = $this->activeStep->name ?? '';
 
         $this->answer_type = $this->activeStep->answer_type;
         // dd($this->activeStep);

@@ -36,7 +36,7 @@
 
         @forelse ($steps->sortBy('position') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
-            <div class="w-52 h-48 flex ">
+            <div class="w-52 h-48 flex relative">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
                     class=" cursor-pointer rounded-l-lg border-2 border-slate-300 w-[75%]   bg-white hover:shadow-xl transition duration-500 ease-in-out overflow-hidden">
                     <div class="bg-slate-200 text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize ">
@@ -85,9 +85,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
-
                         </button>
-
                     </div>
                 </div>
                 {{-- @if ($index < $steps->count() - 1) --}}
@@ -99,6 +97,11 @@
                                     d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z" />
                             </svg>
                         </span>
+                    </div>
+                @endif
+                @if ($step->contact_detail)
+                    <div class="absolute bottom-0 right-0">
+                        <i class='bx bxs-contact text-gray-800 text-xl'></i>
                     </div>
                 @endif
             </div>
@@ -135,7 +138,10 @@
                                 <i class="bx bx-x text-3xl font-bold hover:text-gray-600"></i>
                             </button>
                         </div>
-
+                        <div class="mb-5">
+                            <input type="text" wire:keydown.debounce.5000ms="saveStepName" class="form-control"
+                                wire:model="activeName" placeholder="Enter step name (only visible to you)">
+                        </div>
 
                         <section>
                             <div class="grid grid-cols-3 gap-1 py-3">
@@ -152,8 +158,9 @@
 
                             <div class="space-y-5">
                                 @if ($activeTab === 'video')
-                                    <div class="bg-red-500 p-20">
-                                        video
+                                    <div class="">
+                                        <livewire:video-setup :activeStep="$activeStep"
+                                            wire:key="video-setup-{{ now() }}" />
                                     </div>
                                 @endif
                                 @if ($activeTab === 'answer')
@@ -161,8 +168,8 @@
                                         <div>
                                             <label for="answer_type" class="text-sm font-bold mb-1">Select answer
                                                 type:</label>
-                                            <select wire:model.live="answer_type" id="answer_type" wire:change="updateAnswerType()"
-                                                class="form-control">
+                                            <select wire:model.live="answer_type" id="answer_type"
+                                                wire:change="updateAnswerType()" class="form-control">
                                                 <option value="open_ended" selected>Open Ended</option>
                                                 <option value="ai_chat">AI Chat</option>
                                                 <option value="multi_choice">Multiple Choice</option>
@@ -194,7 +201,7 @@
                                 @if ($activeTab === 'logic')
                                     <div class="">
                                         <livewire:logic-component :activeStep="$activeStep"
-                                        wire:key="multi-choice-{{ now() }}" />
+                                            wire:key="multi-choice-{{ now() }}" />
                                     </div>
                                 @endif
 
@@ -248,10 +255,10 @@
         updateButtons();
 
 
-       
+
 
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             Livewire.on('notify', (data) => {
                 if (data.status == 'success') {
                     Toastify({
@@ -271,4 +278,94 @@
             });
         });
     </script>
+
+
+    @section('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var myWidget = cloudinary.createUploadWidget({
+                    cloudName: "dp0bpzh9b",
+                    uploadPreset: "video-campaign",
+                    resourceType: "video",
+                    clientAllowedFormats: ["mp4", "avi", "mov", "webm"],
+                    maxFileSize: 500000000
+                }, (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        console.log("Done! Here is the image info: ", result.info);
+                    }
+                });
+
+                function openWidget() {
+                    myWidget.open();
+                }
+
+                function attachUploadListener() {
+                    const uploadButton = document.getElementById("upload_widget");
+                    if (uploadButton) {
+                        // Remove any existing event listeners to prevent duplicates
+                        uploadButton.removeEventListener("click", openWidget);
+                        uploadButton.addEventListener("click", openWidget);
+                    }
+                }
+
+                // Initial check if button exists
+                attachUploadListener();
+
+                // Observe the DOM for button appearing dynamically
+                const observer = new MutationObserver(() => {
+                    attachUploadListener();
+                });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        </script>
+
+
+
+
+
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                window.addEventListener('play-audio', event => {
+                    console.log("Full event object:", event.detail);
+                    const audioData = Array.isArray(event.detail) ? event.detail[0] : event.detail;
+                    if (!audioData?.url) {
+                        console.error("Audio URL is missing!");
+                        return;
+                    }
+
+                    if (window.currentAudio) {
+                        window.currentAudio.pause();
+                        window.currentAudio.currentTime = 0;
+                    }
+                    const audio = new Audio(audioData.url);
+                    window.currentAudio = audio;
+                    audio.play().catch(error => console.error("Audio playback error:", error));
+                });
+
+            })
+
+            // window.addEventListener('play-audio', event => {
+            //     console.log(event.detail.url);
+
+            //     // Check if there's an existing audio instance before pausing
+            //     if (window.currentAudio) {
+            //         window.currentAudio.pause();
+            //         window.currentAudio.currentTime = 0;
+            //     }
+
+            //     // Create and play new audio
+            //     const audio = new Audio(event.detail.url);
+            //     window.currentAudio = audio;
+
+            //     audio.play().catch(error => console.error("Audio playback error:", error));
+            // });
+        </script>
+    @endsection
 </div>

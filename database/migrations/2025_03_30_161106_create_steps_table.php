@@ -16,10 +16,9 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('campaign_id')->constrained('campaigns')->onDelete('cascade');
             $table->string('name');
-            $table->text('video')->nullable();
+            $table->text('video_url')->nullable();
             $table->json('video_setting')->nullable();
             $table->integer('position');
-            $table->json('next_steps')->nullable();
             $table->json('form')->nullable();
             $table->json('multi_choice_question')->nullable();
             $table->json('multi_choice_setting')->nullable();
@@ -28,6 +27,12 @@ return new class extends Migration
             $table->boolean('allow_audio_response')->default(false);
             $table->boolean('allow_text_response')->default(false);
             $table->boolean('contact_detail')->default(false);
+
+            $table->text('pipio_project_id')->nullable();
+            $table->text('pipio_video_id')->nullable();
+            $table->text('pipio_status')->nullable();
+            $table->text('thumbnail_url')->nullable();
+            $table->boolean('is_pipio_processed')->default(false);
             $table->timestamps();
         });
     }

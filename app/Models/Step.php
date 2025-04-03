@@ -10,7 +10,6 @@ class Step extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'next_steps' => 'array',
         'video_setting' => 'array',
         'form' => 'array',
         'multi_choice_question' => 'array',
@@ -19,7 +18,7 @@ class Step extends Model
     
     public function getNextStep($action)
     {
-        return $this->next_steps[$action] ?? null; // Get step ID based on action
+        return $this->multi_choice_question[$action] ?? null; // Get step ID based on action
     }
     
     public function campaign(){

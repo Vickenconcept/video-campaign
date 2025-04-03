@@ -33,7 +33,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- 
+    {{-- 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
 
@@ -42,10 +42,10 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-Dbbx3F5k.css') }}">
     <link rel="stylesheet" href="{{ asset('build/assets/app-CE5Kpj__.css') }}"> --}}
-   
+
 
     @yield('styles')
-    
+
     @livewireStyles
 </head>
 
@@ -58,17 +58,69 @@
         <x-navbar />
         <x-sidebar />
 
-        <div class="h-full sm:ml-64 bg-slate-100 pt-20 overflow-y-hidden">
-            {{-- <div class="h-full sm:ml-64 bg-[#F0F3F7] pt-20 overflow-y-hidden"> --}}
+        <div class="h-full sm:ml-64 bg-white pt-20 overflow-y-hidden">
+            {{-- <button id="upload_widget" class="cloudinary-button">Upload files</button> --}}
+
+            <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+
+            {{-- <script type="text/javascript">
+                var myWidget = cloudinary.createUploadWidget({
+                    cloudName: 'dp0bpzh9b',
+                    uploadPreset: 'video-campaign'
+                }, (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        console.log('Done! Here is the image info: ', result.info);
+                    }
+                })
+        
+                document.getElementById("upload_widget").addEventListener("click", function() {
+                    myWidget.open();
+                }, false);
+            </script> --}}
+
+            {{-- <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var myWidget = cloudinary.createUploadWidget({
+                        cloudName: "dp0bpzh9b",
+                        uploadPreset: "video-campaign"
+                    }, (error, result) => {
+                        if (!error && result && result.event === "success") {
+                            console.log("Done! Here is the image info: ", result.info);
+                        }
+                    });
+
+                    function openWidget() {
+                        myWidget.open();
+                    }
+
+                    function attachUploadListener() {
+                        const uploadButton = document.getElementById("upload_widget");
+                        if (uploadButton) {
+                            // Remove any existing event listeners to prevent duplicates
+                            uploadButton.removeEventListener("click", openWidget);
+                            uploadButton.addEventListener("click", openWidget);
+                        }
+                    }
+
+                    // Initial check if button exists
+                    attachUploadListener();
+
+                    // Observe the DOM for button appearing dynamically
+                    const observer = new MutationObserver(() => {
+                        attachUploadListener();
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                });
+            </script> --}}
             {{ $slot }}
         </div>
     </div>
 
-
-
     @yield('scripts')
-
-
 
     @livewireScripts
 
