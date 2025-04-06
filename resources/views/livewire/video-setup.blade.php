@@ -1,6 +1,6 @@
-<div class="space-y-8 pt-10" x-data="{ upload_type: 'avatar_video' }">
+<div class="space-y-8 pt-5" x-data="{ upload_type: 'upload' }">
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
-   
+
 
     <div class="flex justify-center mb-5" wire:transition>
         <button type="button" class="whitespace-nowrap flex flex-wrap" x-show="upload_type == 'upload'"
@@ -42,7 +42,8 @@
     </div>
 
 
-    <div class="bg-slate-100 flex justify-center py-10 rounded-md border-2 border-gray-300" x-show="upload_type == 'upload'" wire:transition>
+    <div class="bg-slate-100 flex justify-center py-10 rounded-md border-2 border-gray-300"
+        x-show="upload_type == 'upload'" wire:transition>
         {{-- <x-cloudinary::widget>Upload Files</x-cloudinary::widget> --}}
         <div class="text-center">
             <button id="upload_widget" class="cloudinary-button">Upload files</button>
@@ -80,7 +81,7 @@
         }
     }" class="">
 
-        <div class="relative" x-show="upload_type == 'avatar_video'">
+        <div class="relative bg-gray-100 rounded-md" x-show="upload_type == 'avatar_video'">
             <div x-show="isGenerating" style="display: none"
                 class="absolute z-20 left-0 top-0 h-full w-full bg-white bg-opacity-90 flex items-center justify-center">
 
@@ -251,6 +252,132 @@
 
             </div>
         </div>
+
+
+        <section class="py-6 space-y-5">
+            <div
+                class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5  items-center flex justify-between">
+                <h5 class="font-semibold text-gray-900">Fit video</h5>
+                <label class="relative inline-flex items-center  cursor-pointer" wire:click="update_fit_video('fit')">
+                    <input type="checkbox" value="1" class="sr-only peer" wire:model="fit_video">
+                    <div
+                        class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                    </div>
+                </label>
+            </div>
+
+            <div class=" h-28 @if ($fit_video) cursor-not-allowed opacity-50 @endif">
+                <div
+                    class="mx-auto w-[50%] flex flex-col justify-between rounded-md border-2 border-gray-300 bg-slate-100 h-full overflow-hidden p-1">
+                    <div class="grid grid-cols-3 ">
+                        <div class="flex justify-start items-center">
+                            <label wire:click="update_position_video('position')" for="top-left"
+                                class=" @if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="top-left" id="top-left">
+                            </label>
+                        </div>
+                        <div class="flex justify-center items-center">
+                            <label wire:click="update_position_video('position')" for="top-center"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="top-center"
+                                    id="top-center">
+                            </label>
+                        </div>
+                        <div class="flex justify-end items-center">
+                            <label wire:click="update_position_video('position')" for="top-right"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="top-right" id="top-right">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 ">
+                        <div class="flex justify-start items-center">
+                            <label wire:click="update_position_video('position')" for="center-left"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="center-left"
+                                    id="center-left">
+                            </label>
+                        </div>
+                        <div class="flex justify-center items-center">
+                            <label wire:click="update_position_video('position')" for="center"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="center" id="center">
+                            </label>
+                        </div>
+                        <div class="flex justify-end items-center">
+                            <label wire:click="update_position_video('position')" for="center-right"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="center-right"
+                                    id="center-right">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 ">
+                        <div class="flex justify-start items-center">
+                            <label wire:click="update_position_video('position')" for="bottom-left"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="bottom-left"
+                                    id="bottom-left">
+                            </label>
+                        </div>
+                        <div class="flex justify-center items-center">
+                            <label wire:click="update_position_video('position')" for="bottom-center"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="bottom-center"
+                                    id="bottom-center">
+                            </label>
+                        </div>
+                        <div class="flex justify-end items-center">
+                            <label wire:click="update_position_video('position')" for="bottom-right"
+                                class="@if ($fit_video) cursor-not-allowed @else cursor-pointer @endif bg-gray-600 size-5 rounded-sm hover:shadow flex justify-center">
+                                <input type="radio" wire:model="position_video" value="bottom-right"
+                                    id="bottom-right">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="" class="text-sm font-semibold">Overlay text:</label>
+                <textarea rows="3" wire:model.live="overlay_text" wire:keydown.debounce.3000ms="update_overlay_text('overlay_text')" class="form-control" placeholder="Enter overlay text"></textarea>
+            </div>
+            @if ($overlay_text != '')
+                <div
+                    class="w-full py-1  items-center flex justify-between">
+                    <h5 class="font-semibold">Language</h5>
+                    @php
+                        $texts = [
+                            'text-xs' => 'Extra Small',
+                            'text-sm' => 'Small',
+                            'text-md' => 'Medium',
+                            'text-xl' => 'Large',
+                            'text-2xl' => 'Extra Large',
+                        ];
+                    @endphp
+
+                    <select wire:model.change="text_size" wire:change="update_text_size('text_size')" 
+                        class="bg-gray-300 text-gray-800 rounded-md p-2 font-medium">
+                        <option value="">Text size</option>
+                        @foreach ($texts as $code => $name)
+                            <option class="bg-white text-gray-700  font-medium" value="{{ $code }}">
+                                {{ $name }}</option>
+                        @endforeach
+                    </select>
+
+                </div>
+                <div
+                    class="bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5  items-center flex justify-between">
+                    <h5 class="font-semibold text-gray-900">Darken video for text readability</h5>
+                    <label class="relative inline-flex items-center  cursor-pointer"
+                        wire:click="update_overlay_bg('overlay_bg')">
+                        <input type="checkbox" value="1" class="sr-only peer" wire:model="overlay_bg">
+                        <div
+                            class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                        </div>
+                    </label>
+                </div>
+            @endif
+        </section>
 
         {{-- <script>
             document.addEventListener('DOMContentLoaded', () => {

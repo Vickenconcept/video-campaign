@@ -18,7 +18,9 @@ class Step extends Model
     
     public function getNextStep($action)
     {
-        return $this->multi_choice_question[$action] ?? null; // Get step ID based on action
+        $multi_choice_question = json_decode($this->multi_choice_question, true);
+        return $multi_choice_question[$action]; 
+        // return $this->multi_choice_question[$action] ?? null; // Get step ID based on action
     }
     
     public function campaign(){

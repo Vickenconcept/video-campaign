@@ -20,20 +20,17 @@ class OpenEnded extends Component
     public function update_video_response()
     {
         !$this->allow_video_response ? $this->activeStep->update(['allow_video_response' => false]) : $this->activeStep->update(['allow_video_response' => true]);
-        // $this->activeStep = $this->activeStep ;
     }
 
     public function update_text_response()
     {
         !$this->allow_text_response ? $this->activeStep->update(['allow_text_response' => false]) : $this->activeStep->update(['allow_text_response' => true]);
-        // $this->activeStep = $this->activeStep ;
     }
 
 
     public function update_audio_response()
     {
         !$this->allow_audio_response ? $this->activeStep->update(['allow_audio_response' => false]) : $this->activeStep->update(['allow_audio_response' => true]);
-        // $this->activeStep = $this->activeStep ;
     }
 
     public function render()

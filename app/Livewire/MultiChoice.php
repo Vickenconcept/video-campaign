@@ -50,7 +50,6 @@ class MultiChoice extends Component
 
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
 
-        // session()->flash('message', 'Options saved successfully!');
     }
 
     public function toggleSettingStatus($index)
@@ -68,8 +67,6 @@ class MultiChoice extends Component
             $this->activeStep->update([
                 'multi_choice_setting' => json_encode($settings)
             ]);
-            
-            // $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
 
         }
     }

@@ -3,6 +3,10 @@
     {{-- {{ $campaign }} --}}
     <div>
         hello
+        <div>
+            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}">share</a>
+            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}?preview">preview</a>
+        </div>
         <div class="controls">
             <button class="cursor-pointer" onclick="zoomIn()">
                 <span>
@@ -123,10 +127,15 @@
 
                 <div class="grid grid-cols-3 h-full">
                     <div class="h-full lg:col-span-2 flex justify-center items-center">
-                        <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2">
-                            <div class="h-full bg-red-500">
-                                <img src="https://placehold.co/600x400" alt=""
-                                    class="w-full h-full object-center">
+                        <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2" wire:key="display-{{ now() }}">
+                            <div class="h-full bg-slate-600">
+                                @if ($activeStep)
+                                    <video width="100%" controls
+                                        class="mx-auto bg-slate-50 ">
+                                        <source src="{{ $activeStep->video_url }}" type="video/webm">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @endif
                             </div>
                             <div class="h-full bg-white"></div>
                         </div>
@@ -143,18 +152,18 @@
                                 wire:model="activeName" placeholder="Enter step name (only visible to you)">
                         </div>
 
-                        <section>
-                            <div class="grid grid-cols-3 gap-1 py-3">
-                                <div>
-                                    <button class="btn cursor-pointer" wire:click="goToTab('video')">video</button>
-                                </div>
-                                <div>
-                                    <button class="btn cursor-pointer" wire:click="goToTab('answer')">answer</button>
-                                </div>
-                                <div>
-                                    <button class="btn cursor-pointer" wire:click="goToTab('logic')">logic</button>
-                                </div>
+                        <div class="grid grid-cols-3 gap-1 py-3">
+                            <div>
+                                <button class="btn cursor-pointer" wire:click="goToTab('video')">video</button>
                             </div>
+                            <div>
+                                <button class="btn cursor-pointer" wire:click="goToTab('answer')">answer</button>
+                            </div>
+                            <div>
+                                <button class="btn cursor-pointer" wire:click="goToTab('logic')">logic</button>
+                            </div>
+                        </div>
+                        <section class=" h-[72%] overflow-y-auto">
 
                             <div class="space-y-5">
                                 @if ($activeTab === 'video')

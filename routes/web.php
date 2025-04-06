@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\CampaignComponent;
 use App\Livewire\FolderComponent;
 use App\Livewire\FolderShowComponent;
+use App\Livewire\ShowCampaign;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,7 @@ Route::middleware('guest')->group(function () {
     });
 });
 
+Route::get('c/{uuid}/', ShowCampaign::class)->name('campaign.view');
 
 
 Route::middleware(['auth'])->group(function () {
