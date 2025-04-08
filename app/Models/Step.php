@@ -14,13 +14,18 @@ class Step extends Model
         'form' => 'array',
         'multi_choice_question' => 'array',
         'multi_choice_setting' => 'array',
+        'previous' => 'array',
     ];
     
     public function getNextStep($action)
     {
         $multi_choice_question = json_decode($this->multi_choice_question, true);
         return $multi_choice_question[$action]; 
-        // return $this->multi_choice_question[$action] ?? null; // Get step ID based on action
+    }
+    public function getPreviousStep($action)
+    {
+        $previous = json_decode($this->previous, true);
+        return $previous[$action]; 
     }
     
     public function campaign(){

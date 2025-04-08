@@ -10,9 +10,7 @@ use App\Livewire\FolderShowComponent;
 use App\Livewire\ShowCampaign;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 
 

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('form')->nullable();
             $table->json('multi_choice_question')->nullable();
             $table->json('multi_choice_setting')->nullable();
+            $table->json('previous')->nullable();
             $table->enum('answer_type', ['open_ended', 'ai_chat', 'multi_choice', 'button', 'calender', 'live_call', 'NPS' , 'file_upload', 'payment'])->default('open_ended');
             $table->boolean('allow_video_response')->default(false);
             $table->boolean('allow_audio_response')->default(false);
