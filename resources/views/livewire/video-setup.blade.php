@@ -2,7 +2,7 @@
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
 
 
-    <div class="flex justify-center mb-5" wire:transition>
+    <div class="flex justify-center mb-5" >
         <button type="button" class="whitespace-nowrap flex flex-wrap" x-show="upload_type == 'upload'"
             style="display: none">
             <span
@@ -43,14 +43,11 @@
 
 
     <div class="bg-slate-100 flex justify-center py-10 rounded-md border-2 border-gray-300"
-        x-show="upload_type == 'upload'" wire:transition>
-        {{-- <x-cloudinary::widget>Upload Files</x-cloudinary::widget> --}}
+        x-show="upload_type == 'upload'" >
         <div class="text-center">
             <button id="upload_widget" class="cloudinary-button">Upload files</button>
             <p class="text-sm font-semibold mt-2 text-slate-700">Click button to upload video , max of 100mb</p>
         </div>
-
-
     </div>
 
     <div x-data="{
@@ -339,7 +336,7 @@
             </div>
             <div>
                 <label for="" class="text-sm font-semibold">Overlay text:</label>
-                <textarea rows="3" wire:model.live="overlay_text" wire:keydown.debounce.3000ms="update_overlay_text('overlay_text')" class="form-control" placeholder="Enter overlay text"></textarea>
+                <textarea rows="3" wire:model.live="overlay_text" wire:keydown.debounce.2000ms="update_overlay_text('overlay_text')" class="form-control" placeholder="Enter overlay text"></textarea>
             </div>
             @if ($overlay_text != '')
                 <div

@@ -38,7 +38,7 @@
     @foreach ($steps as $step)
         @php
             $nexts = json_decode($step->multi_choice_question, true);
-            $previous = json_decode($step->previous, true);
+            $previous = json_decode($step->previous, true) ?? [];
             $video_setting = json_decode($step->video_setting, true);
         @endphp
 
@@ -101,9 +101,11 @@
                                 @if ($step->contact_detail && $step->id === $contactDetailShownStepId)
                                     @php
                                         $form = json_decode($step->form, true);
+
                                     @endphp
                                     <div class="space-y-4">
-                                        @foreach ($form as $field)
+                                        @foreach ($activeForm as $field)
+                                            {{-- @foreach ($form as $field) --}}
                                             @if ($field['active'])
                                                 <div class="space-y-2">
                                                     <label for="{{ $field['name'] }}"
@@ -122,6 +124,7 @@
                                                             <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
                                                                 id="{{ $field['name'] }}" class="form-control"
                                                                 placeholder="{{ $field['label'] }}"
+                                                                wire:model.live="{{ $field['name'] }}"
                                                                 @if ($field['required']) required @endif>
                                                         @break
 
@@ -129,6 +132,7 @@
                                                             <div class="flex items-center">
                                                                 <input type="checkbox" name="{{ $field['name'] }}"
                                                                     id="{{ $field['name'] }}"
+                                                                    wire:model.live="{{ $field['name'] }}"
                                                                     class="h-4 w-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
                                                                 <label for="{{ $field['name'] }}" class="ml-2 text-gray-700">
                                                                     {{ $field['label'] }}
@@ -139,28 +143,42 @@
                                                         @default
                                                             <input type="text" name="{{ $field['name'] }}"
                                                                 id="{{ $field['name'] }}" class="form-control"
-                                                                placeholder="{{ $field['label'] }}">
+                                                                placeholder="{{ $field['label'] }}"
+                                                                wire:model.live="{{ $field['name'] }}">
                                                     @endswitch
                                                 </div>
                                             @endif
                                         @endforeach
 
                                         <div class="flex space-x-3">
-                                            @foreach ($previous as $index => $prev)
-                                                <button class="btn cursor-pointer"
-                                                    wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
-                                                    Back
-                                                </button>
-                                            @endforeach
-                                            @foreach ($nexts as $index => $next)
+                                            @if ($nextStep !== $firstPosition)
+                                                @foreach ($previous as $index => $prev)
+                                                    <button class="btn cursor-pointer"
+                                                        wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
+                                                        Back
+                                                    </button>
+                                                @endforeach
+                                            @endif
+                                            {{-- @foreach ($nexts as $index => $next)
                                                 @if ($loop->first)
                                                     <button class="btn cursor-pointer"
                                                         wire:click="goToNext({{ $step->id }},'{{ $index }}')">
-                                                        {{-- {{ $index }} --}}
+                                                        Continue {{ $email }} {{ $name }}
+                                                    </button>
+                                                @endif
+                                            @endforeach --}}
+
+                                            @foreach ($nexts as $index => $next)
+                                                @if ($loop->first)
+                                                    <button
+                                                        class="btn  {{ !$this->canContinue ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
+                                                        @if (!$this->canContinue) disabled @endif
+                                                        wire:click="goToNext({{ $step->id }},'{{ $index }}')">
                                                         Continue
                                                     </button>
                                                 @endif
                                             @endforeach
+
                                         </div>
                                     </div>
                                 @else
@@ -174,6 +192,15 @@
 
                                     @if ($step->answer_type == 'multi_choice')
                                         @include('components.response.multi-choice')
+                                    @endif
+                                    @if ($step->answer_type == 'button')
+                                        @include('components.response.button')
+                                    @endif
+                                    @if ($step->answer_type == 'calender')
+                                        @include('components.response.calender')
+                                    @endif
+                                    @if ($step->answer_type == 'file_upload')
+                                        @include('components.response.file_upload')
                                     @endif
                                 @endif
                             </div>
@@ -206,7 +233,6 @@
         @endif
     @endforeach
 
-    <p>{{ $nextStep }}</p>
 
 
 
@@ -255,7 +281,7 @@
                             const dataTransfer = new DataTransfer();
                             dataTransfer.items.add(file);
                             this.$refs.audioUpload = dataTransfer
-                                .files; 
+                                .files;
 
                             const audioFile = dataTransfer.files[0];
                             console.log(audioFile);
@@ -272,71 +298,9 @@
 
                         this.mediaRecorder.start();
                         setTimeout(() => this.stopAudioRecording(),
-                            60000);
+                            30000);
                     });
                 },
-
-
-                // startAudioRecording() {
-                //     navigator.mediaDevices.getUserMedia({
-                //         audio: true, // Only request audio
-                //         video: false // Don't request video
-                //     }).then(stream => {
-                //         // Set up the audio stream
-                //         this.audioStream = stream;
-
-                //         // Create the MediaRecorder for audio
-                //         this.mediaRecorder = new MediaRecorder(stream);
-                //         const chunks = [];
-
-                //         // Collect data as it's available
-                //         this.mediaRecorder.ondataavailable = e => chunks.push(e.data);
-
-                //         // When recording stops, handle the resulting audio data
-                //         this.mediaRecorder.onstop = () => {
-                //             console.log('Audio recording stopped');
-
-                //             const audioBlob = new Blob(chunks, {
-                //                 type: 'audio/webm'
-                //             });
-                //             const audioUrl = URL.createObjectURL(audioBlob);
-
-                //             // Reset the video player source
-                //             this.$refs.videoPlayer.srcObject = null;
-                //             this.$refs.videoPlayer.src = audioUrl; // You can use this URL to preview audio
-
-                //             // Convert the audio Blob to a File
-                //             const file = new File([audioBlob], `audio_${Date.now()}.webm`, {
-                //                 type: 'audio/webm'
-                //             });
-
-                //             // Put it in the hidden file input
-                //             const dataTransfer = new DataTransfer();
-                //             dataTransfer.items.add(file);
-                //             this.$refs.audioUpload.files = dataTransfer
-                //             .files; // Assuming you have a file input for audio
-
-                //             // Now we can upload the audio file using Livewire
-                //             const audioFile = dataTransfer.files[0];
-
-                //             // Upload to the backend using Livewire
-                //             @this.upload('audioResponse', audioFile, () => {
-                //                 @this.call('saveAudio');
-                //             }, () => {
-                //                 alert('Something went wrong while uploading your audio');
-                //             });
-                //         };
-
-                //         // Start recording audio
-                //         this.mediaRecorder.start();
-
-                //         // Optionally, stop the recording after a certain amount of time
-                //         setTimeout(() => this.stopAudioRecording(), 60000); // 1 minute for example
-                //     }).catch(error => {
-                //         console.error('Error accessing audio device:', error);
-                //     });
-                // },
-
 
 
 
@@ -391,7 +355,7 @@
                         };
 
                         this.mediaRecorder.start();
-                        setTimeout(() => this.stopVideoRecording(), 60000);
+                        setTimeout(() => this.stopVideoRecording(), 30000);
                     });
                 },
 
@@ -421,5 +385,61 @@
             }
         }
     </script>
+
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+
+
+    <div wire:key="text-{{ now() }}">
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Livewire.on('setFileType', (file_type) => {
+                    let formatAllowed = file_type.flat();
+
+                    var myWidget = cloudinary.createUploadWidget({
+                        cloudName: "dp0bpzh9b",
+                        uploadPreset: "video-campaign",
+                        resourceType: "raw",
+                        clientAllowedFormats: formatAllowed ?? ["mp4", "avi", "mov", "webm"],
+                        maxFileSize: 500000000
+                    }, (error, result) => {
+                        if (!error && result && result.event === "success") {
+                            // console.log("Done! Here is the image info: ", result.info);
+                            let response = result.info;
+
+                            Livewire.dispatch('update-file', {
+                                url: response.secure_url
+                            })
+                        }
+                    });
+
+                    function openWidget() {
+                        myWidget.open();
+                    }
+
+                    function attachUploadListener() {
+                        const uploadButton = document.getElementById("upload_widget");
+                        if (uploadButton) {
+                            // Remove any existing event listeners to prevent duplicates
+                            uploadButton.removeEventListener("click", openWidget);
+                            uploadButton.addEventListener("click", openWidget);
+                        }
+                    }
+
+                    // Initial check if button exists
+                    attachUploadListener();
+
+                    // Observe the DOM for button appearing dynamically
+                    const observer = new MutationObserver(() => {
+                        attachUploadListener();
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                });
+            });
+        </script>
+    </div>
 
 </div>

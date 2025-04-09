@@ -15,6 +15,7 @@ class Step extends Model
         'multi_choice_question' => 'array',
         'multi_choice_setting' => 'array',
         'previous' => 'array',
+        'file_type' => 'array',
     ];
     
     public function getNextStep($action)

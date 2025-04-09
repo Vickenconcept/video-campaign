@@ -23,11 +23,14 @@ return new class extends Migration
             $table->json('multi_choice_question')->nullable();
             $table->json('multi_choice_setting')->nullable();
             $table->json('previous')->nullable();
+            $table->json('file_type')->nullable();
             $table->enum('answer_type', ['open_ended', 'ai_chat', 'multi_choice', 'button', 'calender', 'live_call', 'NPS' , 'file_upload', 'payment'])->default('open_ended');
             $table->boolean('allow_video_response')->default(false);
             $table->boolean('allow_audio_response')->default(false);
             $table->boolean('allow_text_response')->default(false);
             $table->boolean('contact_detail')->default(false);
+            $table->string('button_component')->nullable();
+            $table->text('calender_link')->nullable();
 
             $table->text('pipio_project_id')->nullable();
             $table->text('pipio_video_id')->nullable();

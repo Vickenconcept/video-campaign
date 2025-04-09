@@ -9,7 +9,7 @@ class LogicComponent extends Component
 
 
     public $activeStep;
-    public $multi_choice_question;
+    public $multi_choice_question,$multi_choice_setting;
     // public $contact_detail, $formFields;
 
     public function mount($activeStep)
@@ -18,6 +18,10 @@ class LogicComponent extends Component
 
         if ($this->activeStep !== null) {
             $this->multi_choice_question = json_decode($activeStep->multi_choice_question, true) ?? [];
+        }
+
+        if ($this->activeStep !== null) {
+            $this->multi_choice_setting = json_decode($activeStep->multi_choice_setting, true) ?? [];
         }
        
     }

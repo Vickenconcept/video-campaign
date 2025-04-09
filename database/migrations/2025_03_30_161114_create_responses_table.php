@@ -20,6 +20,12 @@ return new class extends Migration
             $table->text('text')->nullable();
             $table->string('name')->nullable();
             $table->text('email')->nullable();
+            $table->integer('phonenumber')->nullable();
+            $table->text('productname')->nullable();
+            $table->text('additionaltext')->nullable();
+            $table->boolean('consent')->default(false);
+            $table->text('multi_option_response')->nullable();
+            $table->text('file_upload')->nullable();
             $table->timestamps();
         });
     }

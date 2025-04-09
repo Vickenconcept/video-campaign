@@ -45,7 +45,6 @@ class CampaignComponent extends Component
 
     public function goToTab($tab)
     {
-        // dd($tab);
         $this->activeTab = $tab;
     }
 
@@ -87,6 +86,15 @@ class CampaignComponent extends Component
     public function update_contact_detail($tab)
     {
         $this->activeTab = $tab;
+    }
+    #[On('update-video')]
+    public function update_video($url)
+    {
+        $this->activeStep->update([
+            'video_url' =>  $url,
+        ]);
+        $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
+        // $this->activeTab = $tab;
     }
 
 

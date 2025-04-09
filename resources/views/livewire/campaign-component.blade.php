@@ -127,7 +127,8 @@
 
                 <div class="grid grid-cols-3 h-full">
                     <div class="h-full lg:col-span-2 flex justify-center items-center">
-                        <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2" wire:key="display-{{ now() }}">
+                        <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2"
+                            wire:key="display-{{ now() }}">
                             <div class="h-full bg-slate-600">
                                 @if ($activeStep)
                                     <video width="100%" controls
@@ -137,6 +138,18 @@
                                     </video>
                                 @endif
                             </div>
+                            {{-- <div class="h-full bg-slate-600" x-data="{ videoLoaded: false }" x-init="setTimeout(() => videoLoaded = true, 100)">
+                                @if ($activeStep)
+                                    <div x-show="!videoLoaded" class="text-white text-center p-4">Loading video...</div>
+
+                                    <video x-show="videoLoaded" width="100%" controls class="mx-auto bg-slate-50">
+                                        <source src="{{ $activeStep->video_url }}" type="video/webm">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @endif
+                            </div> --}}
+
+                            
                             <div class="h-full bg-white"></div>
                         </div>
 
@@ -148,7 +161,7 @@
                             </button>
                         </div>
                         <div class="mb-5">
-                            <input type="text" wire:keydown.debounce.5000ms="saveStepName" class="form-control"
+                            <input type="text" wire:keydown.debounce.2000ms="saveStepName" class="form-control"
                                 wire:model="activeName" placeholder="Enter step name (only visible to you)">
                         </div>
 
@@ -202,6 +215,24 @@
                                                 <div>
                                                     <livewire:multi-choice :activeStep="$activeStep"
                                                         wire:key="multi-choice-{{ now() }}" />
+                                                </div>
+                                            @endif
+                                            @if ($answer_type == 'button')
+                                                <div>
+                                                    <livewire:button-component :activeStep="$activeStep"
+                                                        wire:key="button-{{ now() }}" />
+                                                </div>
+                                            @endif
+                                            @if ($answer_type == 'calender')
+                                                <div>
+                                                    <livewire:calender-component :activeStep="$activeStep"
+                                                        wire:key="calender-{{ now() }}" />
+                                                </div>
+                                            @endif
+                                            @if ($answer_type == 'file_upload')
+                                                <div>
+                                                    <livewire:file-upload :activeStep="$activeStep"
+                                                        wire:key="file-{{ now() }}" />
                                                 </div>
                                             @endif
                                         </div>
@@ -300,7 +331,10 @@
                     maxFileSize: 500000000
                 }, (error, result) => {
                     if (!error && result && result.event === "success") {
-                        console.log("Done! Here is the image info: ", result.info);
+                        // console.log("Done! Here is the image info: ", result.info);
+                        let response = result.info;
+
+                        Livewire.dispatch('update-video', {url: response.secure_url })
                     }
                 });
 
