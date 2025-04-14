@@ -45,11 +45,18 @@
                                 <p class="text-gray-500 text-xs font-semibold mb-2">Choose a destination</p>
                                 @foreach ($otherSteps as $step)
                                     <div class="py-2 cursor-pointer rounded-md bg-slate-100 p-2 mb-2 border border-slate-100 hover:border-black transition duration-500 ease-in-out"
-                                        wire:click="setNextStep('{{ $index }}', {{ $step->position }})">
+                                        wire:click="setNextStep('{{ $index }}', {{ $step->id }})">
                                         <p class="text-gray-800 flex justify-between items-center  font-semibold">
-                                            <span>{{ $step->name }}</span>
+                                            <span>
+                                                {{ $step->name }}
+                                                <span
+                                                    class="rounded-full bg-gray-800 text-white px-2.5 py-1 text-center text-xs">
+                                                    {{ $step->position }}
+                                                </span>
+                                            </span>
 
-                                            @if ($option == $step->position)
+
+                                            @if ($option == $step->id)
                                                 <span>
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

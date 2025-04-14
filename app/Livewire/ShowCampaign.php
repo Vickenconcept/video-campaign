@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\Attributes\On;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class ShowCampaign extends Component
@@ -18,6 +19,7 @@ class ShowCampaign extends Component
     public $preview;
     public $contactDetailShownStepId;
     public $userToken;
+    public $paypal_keys;
 
 
     public $videoResponse, $textResponse, $audioResponse;
@@ -30,12 +32,29 @@ class ShowCampaign extends Component
 
     public function mount($uuid)
     {
-        if (!session()->has('user_token')) {
-            $userToken = Str::uuid()->toString();
-            session(['user_token' => $userToken]);
+        // if (!session()->has('user_token')) {
+        //     $userToken = Str::uuid()->toString();
+        //     session(['user_token' => $userToken]);
+        // } else {
+        //     $this->userToken = session('user_token');
+        // }
+
+        $currentUuid = session('user_uuid');
+        $currentToken = session('user_token');
+    
+        if (!$currentUuid || $currentUuid !== $uuid) {
+            $newToken = Str::uuid()->toString();
+            session([
+                'user_uuid' => $uuid,
+                'user_token' => $newToken,
+            ]);
+    
+            $this->userToken = $newToken;
         } else {
-            $this->userToken = session('user_token');
+            $this->userToken = $currentToken;
         }
+    
+
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
 
         $this->steps = $this->campaign->steps;
@@ -49,9 +68,9 @@ class ShowCampaign extends Component
             }
         }
 
-        $this->nextStep = $this->steps->min('position');
+        $this->nextStep = $this->steps->min('id');
 
-        $this->activeForm = json_decode($this->steps->findOrFail($this->nextStep)->form, true);
+        $this->activeForm = json_decode($this->steps->findOrFail($this->nextStep)->form, true) ?? [];
     }
 
 
@@ -129,11 +148,22 @@ class ShowCampaign extends Component
 
 
         $this->nextStep = $nextStepId;
-        $this->activeForm = json_decode($this->steps->findOrFail($nextStepId)->form, true);
+        $this->activeForm = json_decode($nextStep->form, true);
 
-        if (!empty($nextStep->file_type)) {
-            $this->dispatch('setFileType', json_decode($nextStep->file_type, true));
+        $this->paypal_keys = json_decode($this->campaign->paypal_keys, true);
+
+        // dd($this->paypal_keys);
+        if (is_array($this->paypal_keys) && isset($this->paypal_keys['client_id'], $this->paypal_keys['currency'])) {
+            $this->dispatch('paypalKeysUpdated', [
+                'client_id' => Crypt::decryptString($this->paypal_keys['client_id']),
+                'currency' => $this->paypal_keys['currency'],
+                'amount' => $nextStep->amount
+            ]);
         }
+
+        // if (!empty($nextStep->file_type)) {
+        $this->dispatch('setFileType', json_decode($nextStep->file_type, true) ?? ['']);
+        // }
     }
 
     public function goToPrevious($id, $action)
@@ -336,6 +366,8 @@ class ShowCampaign extends Component
             ]);
         }
     }
+
+
 
     public function render()
     {

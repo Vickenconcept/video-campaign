@@ -341,7 +341,7 @@
             @if ($overlay_text != '')
                 <div
                     class="w-full py-1  items-center flex justify-between">
-                    <h5 class="font-semibold">Language</h5>
+                    <h5 class="font-semibold">Text Size</h5>
                     @php
                         $texts = [
                             'text-xs' => 'Extra Small',

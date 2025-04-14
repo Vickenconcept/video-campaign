@@ -11,7 +11,7 @@ use Livewire\Attributes\On;
 class CampaignComponent extends Component
 {
 
-    public $campaign, $steps, $activeStep, $activeName, $user, $form, $multi_choice_setting;
+    public $campaign, $title, $steps, $activeStep, $activeName, $user, $form, $multi_choice_setting;
     public $id, $postion, $contact_detail = false;
 
     public $activeTab = 'answer';
@@ -20,6 +20,7 @@ class CampaignComponent extends Component
     public function mount($uuid)
     {
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
+        $this->title = $this->campaign->title;
         $this->steps = $this->campaign->steps;
 
         $this->user = auth()->user();
@@ -43,6 +44,14 @@ class CampaignComponent extends Component
         
     }
 
+    public function saveTitle()
+    {
+        $this->campaign->update([
+            'title' =>  $this->title,
+        ]);
+
+        $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
+    }
     public function goToTab($tab)
     {
         $this->activeTab = $tab;

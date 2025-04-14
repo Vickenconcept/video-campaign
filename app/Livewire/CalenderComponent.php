@@ -12,6 +12,9 @@ class CalenderComponent extends Component
     public function mount($activeStep)
     {
         $this->activeStep = $activeStep;
+        if ($this->activeStep->calender_link == null) {
+            $this->activeStep->update(['calender_link' => 'https://calendly.com/videoaskteam/30min']);
+        }
         $this->calender_link = optional($this->activeStep)->calender_link ?? 'https://calendly.com/videoaskteam/30min';
     }
 

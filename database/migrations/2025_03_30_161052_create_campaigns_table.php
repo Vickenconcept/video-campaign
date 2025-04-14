@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('language');
             $table->text('description')->nullable();
+            $table->json('paypal_keys')->nullable();
             $table->timestamps();
         });
     }

@@ -136,18 +136,18 @@
 
                 <div class="my-10 space-y-3">
 
-                    <h5 class="text-center text-2xl font-semibold pb-1">Contract with influencer will be cancled!
+                    <h5 class="text-center text-2xl font-semibold pb-1">All campaign and response will be deleted!
                     </h5>
                     <p class="text-center text-md font-medium pb-3">Are you Sure?</p>
 
                     <div class="flex justify-center space-x-2">
                         <div>
-                            <button type="button" @click="openDelete = false" wire:click="deleteForm()" class="btn-danger">
+                            <button type="button" @click="openDelete = false" wire:click="deleteForm()" class="btn-danger cursor-pointer">
                                 Yes, Delete
                             </button>
                         </div>
                         <div>
-                            <button type="button" @click="openDelete = false" class="btn2">
+                            <button type="button" @click="openDelete = false" class="btn2 cursor-pointer">
                                 No, Cancle
                             </button>
                         </div>

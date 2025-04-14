@@ -2,35 +2,120 @@
     {{-- Because she competes with no one, no one can compete with her. --}}
     {{-- {{ $campaign }} --}}
     <div>
-        hello
-        <div>
-            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}">share</a>
-            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}?preview">preview</a>
+        <div class="flex justify-between items-center space-x-5">
+            <div class="flex-grow">
+                <input type="text" wire:model="title" wire:keydown.debounce.2000ms="saveTitle()" class="form-control">
+            </div>
+
+            <div class="controls">
+                <button class="cursor-pointer" onclick="zoomIn()">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
+                        </svg>
+
+                    </span>
+                </button>
+                <button class="cursor-pointer" onclick="zoomOut()">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+                        </svg>
+
+                    </span>
+                </button>
+            </div>
+            <div class="flex items-center space-x-3">
+
+                <button id="previewButton" data-dropdown-toggle="previewDropdown" data-dropdown-delay="500"
+                    data-dropdown-trigger="hover"
+                    class="text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border "
+                    type="button">
+                    <i class='bx bx-play text-xl'></i>
+                    <span>Preview</span>
+                </button>
+
+                <!-- Dropdown menu -->
+                <div id="previewDropdown"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 overflow-hidden ">
+                    <ul class=" text-sm text-gray-700 " aria-labelledby="previewButton">
+                        <li>
+                            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}?preview" target="_blank"
+                                class="block px-4 py-2 hover:bg-gray-100 ">
+                                <p class="font-semibold text-sm">Preview mode</p>
+                                <p class="text-xs text-gray-500">No data gets collected</p>
+                            </a>
+                            <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}" target="_blank"
+                                class="block px-4 py-2 hover:bg-gray-100 ">
+                                <p class="font-semibold text-sm">Live mode</p>
+                                <p class="text-xs text-gray-500">Data does get collected</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+               
+
+
+
+                <!-- Modal toggle -->
+                <button data-modal-target="default-modal" data-modal-toggle="default-modal"
+                    class="text-gray-800 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border border-slate-300"
+                    type="button">
+                    <i class='bx bx-paper-plane text-xl'></i>
+                    <span>Share</span>
+                </button>
+
+                <!-- Main modal -->
+                <div id="default-modal" tabindex="-1" aria-hidden="true"
+                    class="hidden overflow-y-auto overflow-x-hidden bg-slate-500/40 fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative p-4 w-full max-w-2xl max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow-sm ">
+                            <!-- Modal header -->
+                            <div
+                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                                <h3 class="text-xl font-semibold text-gray-900">
+                                    How would you like to share your Campaign?
+                                </h3>
+                                <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                    data-modal-hide="default-modal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="p-4 md:p-5 space-y-4">
+                                <p class="text-base leading-relaxed text-gray-500 ">
+                                    With less than a month to go before the European Union enacts new consumer privacy
+                                    laws for its citizens, companies around the world are updating their terms of
+                                    service agreements to comply.
+                                </p>
+
+                            </div>
+                            <!-- Modal footer -->
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
-        <div class="controls">
-            <button class="cursor-pointer" onclick="zoomIn()">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
-                    </svg>
-
-                </span>
-            </button>
-            <button class="cursor-pointer" onclick="zoomOut()">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
-                    </svg>
-
-                </span>
-            </button>
-        </div>
-
     </div>
+
+
+
 
     <div class="flex gap-3 flex-wrap" id="zoomContainer" style="zoom: 0.9;">
         @php
@@ -43,8 +128,11 @@
             <div class="w-52 h-48 flex relative">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
                     class=" cursor-pointer rounded-l-lg border-2 border-slate-300 w-[75%]   bg-white hover:shadow-xl transition duration-500 ease-in-out overflow-hidden">
-                    <div class="bg-slate-200 text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize ">
-                        {{ $step->name }}
+                    <div class="bg-slate-200 text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize flex justify-between ">
+                        <span>{{ $step->name }}  </span>
+                        <span class="rounded-full bg-gray-800 text-white px-2.5 py-1 text-center text-xs">
+                           {{ $step->position }} 
+                        </span>
                     </div>
                     <div class="h-full  grid grid-cols-2">
                         <div class="bg-slate-300 h-full"></div>
@@ -131,8 +219,7 @@
                             wire:key="display-{{ now() }}">
                             <div class="h-full bg-slate-600">
                                 @if ($activeStep)
-                                    <video width="100%" controls
-                                        class="mx-auto bg-slate-50 ">
+                                    <video width="100%" controls class="mx-auto bg-slate-50 ">
                                         <source src="{{ $activeStep->video_url }}" type="video/webm">
                                         Your browser does not support the video tag.
                                     </video>
@@ -149,7 +236,7 @@
                                 @endif
                             </div> --}}
 
-                            
+
                             <div class="h-full bg-white"></div>
                         </div>
 
@@ -229,6 +316,12 @@
                                                         wire:key="calender-{{ now() }}" />
                                                 </div>
                                             @endif
+                                            @if ($answer_type == 'payment')
+                                                <div>
+                                                    <livewire:payment-component :activeStep="$activeStep" :campaign="$campaign"
+                                                        wire:key="payment-{{ now() }}" />
+                                                </div>
+                                            @endif
                                             @if ($answer_type == 'file_upload')
                                                 <div>
                                                     <livewire:file-upload :activeStep="$activeStep"
@@ -303,6 +396,8 @@
                 if (data.status == 'success') {
                     Toastify({
                         text: `${data.msg}`,
+                        // gravity: "bottom",
+                        position: "center",
                         duration: 3000,
                         backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
                     }).showToast();
@@ -311,6 +406,8 @@
                 if (data.status == 'error') {
                     Toastify({
                         text: `${data.msg}`,
+                        // gravity: "bottom",
+                        position: "center",
                         duration: 3000,
                         backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)"
                     }).showToast();
@@ -334,7 +431,9 @@
                         // console.log("Done! Here is the image info: ", result.info);
                         let response = result.info;
 
-                        Livewire.dispatch('update-video', {url: response.secure_url })
+                        Livewire.dispatch('update-video', {
+                            url: response.secure_url
+                        })
                     }
                 });
 

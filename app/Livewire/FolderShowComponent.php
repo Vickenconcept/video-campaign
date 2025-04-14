@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 
 class FolderShowComponent extends Component
 {
-    public $folder, $campaigns;
-    public $user;
+    public $folder, $all_folder, $campaigns, $campaignID;
+    public $user, $selectedFolder;
 
     #[Validate('required', message: 'Please provide a campaign title')]
     public $title;
@@ -20,15 +20,32 @@ class FolderShowComponent extends Component
     public function mount($uuid)
     {
         $this->folder = Folder::where('uuid', $uuid)->firstOrFail();
+        $this->all_folder = Folder::latest()->get();
         $this->campaigns = $this->folder->campaigns;
 
         $this->user = auth()->user();
     }
 
-    public function createCampaign()
+
+    public function setCampaign($id)
     {
 
+        $this->campaignID = $id;
+    }
+    public function deleteForm()
+    {
+        if ($this->campaignID) {
+            $this->campaigns->find($this->campaignID)->delete();
+        }
+        $this->campaigns = $this->folder->campaigns;
 
+        $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
+    }
+
+
+
+    public function createCampaign()
+    {
         $this->validate([
             'title' => 'required',
         ]);
@@ -55,7 +72,7 @@ class FolderShowComponent extends Component
             ['name' => 'option_count', 'label' => 'Show option count', 'status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
         ]);
 
-        $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
+        $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm', 'overlay_bg' => true]);
 
         $multi_choice_question = json_encode(['default' => 1]);
 
@@ -77,6 +94,44 @@ class FolderShowComponent extends Component
     }
 
 
+    public function duplicateCampaign($id)
+    {
+        $originalCampaign = $this->campaigns->find($id);
+
+        if (!$originalCampaign) {
+            return;
+        }
+
+        $newCampaign = $originalCampaign->replicate();
+        $newCampaign->title = $originalCampaign->title . ' (Copy)';
+        $newCampaign->uuid = Str::uuid();
+        $newCampaign->push();
+
+        foreach ($originalCampaign->steps as $step) {
+            $newStep = $step->replicate();
+            $newStep->campaign_id = $newCampaign->id;
+            $newStep->save();
+        }
+
+        $this->campaigns = $this->folder->campaigns;
+        $this->dispatch('notify', status: 'success', msg: 'Duplicated successfully!');
+    }
+
+    public function moveToFolder()
+    {
+        if ($this->campaignID) {
+            $campaign = $this->campaigns->find($this->campaignID);
+
+            if ($campaign) {
+                $campaign->update([
+                    'folder_id' => $this->selectedFolder
+                ]);
+            }
+
+            $this->campaigns = $this->folder->campaigns;
+            $this->dispatch('notify', status: 'success', msg: 'Moved successfully!');
+        }
+    }
 
 
     public function render()

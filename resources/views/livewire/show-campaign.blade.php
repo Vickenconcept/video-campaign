@@ -6,13 +6,6 @@
 
     {{-- 
     
-    @if ($step->answer_type == 'button')
-        <p>button</p>
-    @endif
-    @if ($step->answer_type == 'calender')
-        <p>calender</p>
-    @endif
-
     @if ($step->answer_type == 'live_call')
         <p>live_call</p>
     @endif
@@ -21,13 +14,8 @@
         <p>NPS</p>
     @endif
 
-    @if ($step->answer_type == 'file_upload')
-        <p>file_upload</p>
-    @endif
-
-    @if ($step->answer_type == 'payment')
-        <p>payment</p>
-    @endif --}}
+  --}}
+ 
 
 
     @php
@@ -36,6 +24,7 @@
 
     @endphp
     @foreach ($steps as $step)
+
         @php
             $nexts = json_decode($step->multi_choice_question, true);
             $previous = json_decode($step->previous, true) ?? [];
@@ -44,6 +33,7 @@
 
 
         @if ($step->id == $nextStep)
+        {{-- <p>hello</p> --}}
             <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition>
                 @php
                     $fit = $video_setting['fit'] ?? false;
@@ -84,7 +74,7 @@
                     </div>
                 </div>
 
-                <div class="relative h-full bg-white flex justify-center items-center">
+                <div class="relative h-full bg-white flex justify-center items-center overflow-y-auto pb-10">
                     @if ($preview)
                         <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
                             <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
@@ -92,20 +82,17 @@
                             </p>
                         </div>
                     @endif
-                    <div class="h-[80%] w-[80%] border rounded-md flex justify-center items-center">
-                        {{-- {{ $step->name }} --}}
+                    <div class="h-[80%] w-[80%] border rounded-md flex justify-center items-center overflow-y-auto ">
                         <div class="w-[80%] ">
-                            {{ $step->name }}
+                            {{-- {{ $step->name }} --}}
 
                             <div class="w-full">
                                 @if ($step->contact_detail && $step->id === $contactDetailShownStepId)
                                     @php
                                         $form = json_decode($step->form, true);
-
                                     @endphp
                                     <div class="space-y-4">
                                         @foreach ($activeForm as $field)
-                                            {{-- @foreach ($form as $field) --}}
                                             @if ($field['active'])
                                                 <div class="space-y-2">
                                                     <label for="{{ $field['name'] }}"
@@ -159,14 +146,7 @@
                                                     </button>
                                                 @endforeach
                                             @endif
-                                            {{-- @foreach ($nexts as $index => $next)
-                                                @if ($loop->first)
-                                                    <button class="btn cursor-pointer"
-                                                        wire:click="goToNext({{ $step->id }},'{{ $index }}')">
-                                                        Continue {{ $email }} {{ $name }}
-                                                    </button>
-                                                @endif
-                                            @endforeach --}}
+                                           
 
                                             @foreach ($nexts as $index => $next)
                                                 @if ($loop->first)
@@ -174,7 +154,7 @@
                                                         class="btn  {{ !$this->canContinue ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
                                                         @if (!$this->canContinue) disabled @endif
                                                         wire:click="goToNext({{ $step->id }},'{{ $index }}')">
-                                                        Continue
+                                                        Next
                                                     </button>
                                                 @endif
                                             @endforeach
@@ -198,6 +178,9 @@
                                     @endif
                                     @if ($step->answer_type == 'calender')
                                         @include('components.response.calender')
+                                    @endif
+                                    @if ($step->answer_type == 'payment')
+                                        @include('components.response.payment')
                                     @endif
                                     @if ($step->answer_type == 'file_upload')
                                         @include('components.response.file_upload')
@@ -234,7 +217,127 @@
     @endforeach
 
 
+    <!-- Paypal -->
 
+
+    <script>
+        let clientID = '';
+        let currency = '';
+        let amount = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            Livewire.on('paypalKeysUpdated', (data) => {
+                clientID = data[0].client_id;
+                currency = data[0].currency;
+                amount = data[0].amount;
+                const script = document.createElement('script');
+                script.src = `https://www.paypal.com/sdk/js?client-id=${clientID}&currency=${currency}`;
+                script.onload = () => {
+                    console.log('PayPal SDK loaded');
+
+                    paypal.Buttons({
+
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: amount,
+                                        // currency_code: currency
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                                // Handle successful payment
+                                console.log('Payment successful:', details);
+                            });
+                        }
+                        // ...
+                    }).render('#paypal-button-container');
+                };
+                document.head.appendChild(script);
+
+            });
+        });
+    </script>
+
+
+
+
+    {{-- <script>
+        function initializePayPalButtons() {
+            if (typeof paypal === "undefined") {
+                console.error("PayPal SDK not loaded.");
+                return;
+            }
+
+            if (!document.querySelector('#paypal-button-container') || document.querySelector('#paypal-button-container')
+                .hasChildNodes()) {
+                return; // Avoid re-rendering or if container doesn't exist yet
+            }
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: "10.00" // You can make this dynamic
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        fetch("/paypal-payment-success", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": document.querySelector(
+                                        'meta[name="csrf-token"]').content
+                                },
+                                body: JSON.stringify({
+                                    order_id: data.orderID,
+                                    payer_id: data.payerID,
+                                    details: details
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Payment successful! Your account has been updated.");
+                                    window.location.href = '/user/db-access/detail';
+                                } else {
+                                    alert("Payment verification failed.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    });
+                }
+            }).render("#paypal-button-container");
+        }
+
+        Wait for DOM to load
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof paypal === "undefined") {
+                console.error("PayPal SDK failed to load.");
+                return;
+            }
+
+            const observer = new MutationObserver((mutationsList, observer) => {
+                const container = document.querySelector("#paypal-button-container");
+                if (container && !container.hasChildNodes()) {
+                    initializePayPalButtons();
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script> --}}
+    <!-- Paypal -->
 
 
     <script>
@@ -386,60 +489,57 @@
         }
     </script>
 
+
     <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Livewire.on('setFileType', (file_type) => {
+                let formatAllowed = file_type.flat();
 
+                var myWidget = cloudinary.createUploadWidget({
+                    cloudName: "dp0bpzh9b",
+                    uploadPreset: "video-campaign",
+                    resourceType: "raw",
+                    clientAllowedFormats: formatAllowed,
+                    maxFileSize: 500000000
+                }, (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        // console.log("Done! Here is the image info: ", result.info);
+                        let response = result.info;
 
-    <div wire:key="text-{{ now() }}">
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Livewire.on('setFileType', (file_type) => {
-                    let formatAllowed = file_type.flat();
-
-                    var myWidget = cloudinary.createUploadWidget({
-                        cloudName: "dp0bpzh9b",
-                        uploadPreset: "video-campaign",
-                        resourceType: "raw",
-                        clientAllowedFormats: formatAllowed ?? ["mp4", "avi", "mov", "webm"],
-                        maxFileSize: 500000000
-                    }, (error, result) => {
-                        if (!error && result && result.event === "success") {
-                            // console.log("Done! Here is the image info: ", result.info);
-                            let response = result.info;
-
-                            Livewire.dispatch('update-file', {
-                                url: response.secure_url
-                            })
-                        }
-                    });
-
-                    function openWidget() {
-                        myWidget.open();
+                        Livewire.dispatch('update-file', {
+                            url: response.secure_url
+                        })
                     }
+                });
 
-                    function attachUploadListener() {
-                        const uploadButton = document.getElementById("upload_widget");
-                        if (uploadButton) {
-                            // Remove any existing event listeners to prevent duplicates
-                            uploadButton.removeEventListener("click", openWidget);
-                            uploadButton.addEventListener("click", openWidget);
-                        }
+                function openWidget() {
+                    myWidget.open();
+                }
+
+                function attachUploadListener() {
+                    const uploadButton = document.getElementById("upload_widget");
+                    if (uploadButton) {
+                        // Remove any existing event listeners to prevent duplicates
+                        uploadButton.removeEventListener("click", openWidget);
+                        uploadButton.addEventListener("click", openWidget);
                     }
+                }
 
-                    // Initial check if button exists
+                // Initial check if button exists
+                attachUploadListener();
+
+                // Observe the DOM for button appearing dynamically
+                const observer = new MutationObserver(() => {
                     attachUploadListener();
+                });
 
-                    // Observe the DOM for button appearing dynamically
-                    const observer = new MutationObserver(() => {
-                        attachUploadListener();
-                    });
-
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
                 });
             });
-        </script>
-    </div>
+        });
+    </script>
 
 </div>

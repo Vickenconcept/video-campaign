@@ -121,6 +121,7 @@
     </div>
 
     @yield('scripts')
+    @stack('scripts')
 
     @livewireScripts
 
