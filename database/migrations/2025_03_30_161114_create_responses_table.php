@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->foreignId('step_id')->constrained('steps')->onDelete('cascade');
             $table->string('user_token')->nullable();
             $table->text('video')->nullable();
@@ -20,12 +21,14 @@ return new class extends Migration
             $table->text('text')->nullable();
             $table->string('name')->nullable();
             $table->text('email')->nullable();
-            $table->integer('phonenumber')->nullable();
+            $table->string('phonenumber', 20)->nullable();
             $table->text('productname')->nullable();
             $table->text('additionaltext')->nullable();
             $table->boolean('consent')->default(false);
             $table->text('multi_option_response')->nullable();
             $table->text('file_upload')->nullable();
+            $table->string('nps_score')->nullable();
+            $table->string('type')->default('user');
             $table->timestamps();
         });
     }

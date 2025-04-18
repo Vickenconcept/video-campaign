@@ -15,7 +15,7 @@
     @endif
 
   --}}
- 
+
 
 
     @php
@@ -33,7 +33,7 @@
 
 
         @if ($step->id == $nextStep)
-        {{-- <p>hello</p> --}}
+            {{-- <p>hello</p> --}}
             <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition>
                 @php
                     $fit = $video_setting['fit'] ?? false;
@@ -85,7 +85,6 @@
                     <div class="h-[80%] w-[80%] border rounded-md flex justify-center items-center overflow-y-auto ">
                         <div class="w-[80%] ">
                             {{-- {{ $step->name }} --}}
-
                             <div class="w-full">
                                 @if ($step->contact_detail && $step->id === $contactDetailShownStepId)
                                     @php
@@ -146,7 +145,7 @@
                                                     </button>
                                                 @endforeach
                                             @endif
-                                           
+
 
                                             @foreach ($nexts as $index => $next)
                                                 @if ($loop->first)
@@ -184,6 +183,10 @@
                                     @endif
                                     @if ($step->answer_type == 'file_upload')
                                         @include('components.response.file_upload')
+                                    @endif
+                                    @if ($step->answer_type == 'NPS')
+                                    @include('components.response.NPS')
+                                       
                                     @endif
                                 @endif
                             </div>
@@ -389,6 +392,13 @@
                             const audioFile = dataTransfer.files[0];
                             console.log(audioFile);
 
+                            // let id = @json($nextStep);
+
+                            // @this.upload('audioResponse', audioFile, () => {
+                            //     @this.call('saveAudio', id);
+                            // }, () => {
+                            //     alert('Something went wrong while uploading your audio');
+                            // });
                             @this.upload('audioResponse', audioFile, () => {
                                 @this.call('saveAudio');
                             }, () => {
@@ -409,7 +419,9 @@
 
                 stopAudioRecording() {
                     this.mediaRecorder.stop();
-                    this.shouldContinue = true;
+                    setTimeout(() => {
+                        this.shouldContinue = true;
+                    }, 2000);
                 },
 
                 startVideoRecording() {
@@ -467,7 +479,10 @@
 
                 stopVideoRecording() {
                     this.mediaRecorder.stop();
-                    this.shouldContinue = true;
+                    // this.shouldContinue = true;
+                    setTimeout(() => {
+                        this.shouldContinue = true;
+                    }, 2000);
                     // Stop all tracks in the stream (this will turn off the camera)
 
                     // if (this.mediaStream) {

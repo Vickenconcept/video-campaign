@@ -41,10 +41,7 @@
 
 
     <section>
-        <ul class="w-full  divide-gray-200  grid sm:grid-cols-3 gap-5"
-         x-data="{ folder: null, editFolder: false, openDelete: false }"
-
-        >
+        <ul class="w-full  divide-gray-200  grid sm:grid-cols-3 gap-5" x-data="{ folder: null, editFolder: false, openDelete: false }">
             @forelse ($folders as $folder)
                 <div class="p-4 bg-gray-50  rounded-2xl shadow-sm space-y-14 border-2 hover:!border-[#0F1523] ">
                     <div class="flex justify-between">
@@ -53,14 +50,16 @@
                         </span>
 
                         <div class=" space-x-4 items-center flex ">
-                            <button type="button" @click="editFolder = true " wire:click="setFolder({{ $folder->id }}, '{{ addslashes($folder->name) }}')"
+                            <button type="button" @click="editFolder = true "
+                                wire:click="setFolder({{ $folder->id }}, '{{ addslashes($folder->name) }}')"
                                 class=" bg-gray-200 hover:bg-green-500 group cursor-pointer  px-3 py-2 rounded-md text-sm flex items-center delay-100 transition-all duration-500 ease-in-out">
                                 <i
                                     class="bx bx-edit font-medium group-hover:text-white mr-1 text-lg delay-100 transition-all duration-500 ease-in-out"></i>
 
                             </button>
                             @if ($folder->status != 1)
-                                <button type="button"  @click="openDelete =true" wire:click="setFolder({{ $folder->id }}, '{{ addslashes($folder->name) }}')"
+                                <button type="button" @click="openDelete =true"
+                                    wire:click="setFolder({{ $folder->id }}, '{{ addslashes($folder->name) }}')"
                                     class="delete-btn bg-gray-200 hover:bg-red-500 group cursor-pointer  px-3 py-2 rounded-md text-sm flex items-center delay-100 transition-all duration-500 ease-in-out">
                                     <i
                                         class="bx bx-trash font-medium group-hover:text-white mr-1 text-lg delay-100 transition-all duration-500 ease-in-out"></i>
@@ -127,36 +126,38 @@
 
 
             {{-- openDelete --}}
-        <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
-        x-show="openDelete" style="display: none;">
-        <div @click.away="openDelete = false"
-            class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
-            <div class=" h-full ">
+            <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
+                x-show="openDelete" style="display: none;">
+                <div @click.away="openDelete = false"
+                    class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
+                    <div class=" h-full ">
 
 
-                <div class="my-10 space-y-3">
+                        <div class="my-10 space-y-3">
 
-                    <h5 class="text-center text-2xl font-semibold pb-1">All campaign and response will be deleted!
-                    </h5>
-                    <p class="text-center text-md font-medium pb-3">Are you Sure?</p>
+                            <h5 class="text-center text-2xl font-semibold pb-1">All campaign and response will be
+                                deleted!
+                            </h5>
+                            <p class="text-center text-md font-medium pb-3">Are you Sure?</p>
 
-                    <div class="flex justify-center space-x-2">
-                        <div>
-                            <button type="button" @click="openDelete = false" wire:click="deleteForm()" class="btn-danger cursor-pointer">
-                                Yes, Delete
-                            </button>
-                        </div>
-                        <div>
-                            <button type="button" @click="openDelete = false" class="btn2 cursor-pointer">
-                                No, Cancle
-                            </button>
+                            <div class="flex justify-center space-x-2">
+                                <div>
+                                    <button type="button" @click="openDelete = false" wire:click="deleteForm()"
+                                        class="btn-danger cursor-pointer">
+                                        Yes, Delete
+                                    </button>
+                                </div>
+                                <div>
+                                    <button type="button" @click="openDelete = false" class="btn2 cursor-pointer">
+                                        No, Cancle
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
             </div>
-        </div>
-    </div>
         </ul>
 
 
@@ -175,8 +176,8 @@
                         <button type="button"
                             class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
                             data-modal-hide="create-modal">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 14 14">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                             </svg>
@@ -200,8 +201,8 @@
                                 <textarea wire:model="description" id="description" class="form-control"></textarea>
                             </div>
 
-                            <button data-modal-hide="create-modal" wire:key="create" wire:click="createFolder()" type="button"
-                                class="btn cursor-pointer">Create
+                            <button data-modal-hide="create-modal" wire:key="create" wire:click="createFolder()"
+                                type="button" class="btn cursor-pointer">Create
                                 Folder</button>
 
                         </div>

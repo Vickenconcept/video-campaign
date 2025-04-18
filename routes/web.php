@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ESPController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\AllResponse;
 use App\Livewire\CampaignComponent;
+use App\Livewire\EspConnector;
 use App\Livewire\FolderComponent;
 use App\Livewire\FolderShowComponent;
 use App\Livewire\ShowCampaign;
@@ -56,4 +58,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('campaign/{uuid}', CampaignComponent::class)->name('campaign.show');
     Route::get('response', AllResponse::class)->name('response.index');
+
+
+    Route::get('connect/esp', EspConnector::class)->name('esp.connect');
+    Route::post('mail-chip/connect', [ESPController::class, 'connectMailchimp'])->name('mail-chip.connect');
+    Route::post('get-response/connect', [ESPController::class, 'connectGetRespones'])->name('get-response.connect');
+    Route::post('convert-kit/connect', [ESPController::class, 'connectCOnvertKit'])->name('convert-kit.connect');
 });

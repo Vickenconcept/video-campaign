@@ -15,6 +15,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
+        "mailchimp/marketing": "^3.0",
         "spatie/laravel-permission": "^6.16",
         "spatie/laravel-sluggable": "^3.7"
     },

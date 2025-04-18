@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\Attributes\On;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
@@ -20,9 +21,10 @@ class ShowCampaign extends Component
     public $contactDetailShownStepId;
     public $userToken;
     public $paypal_keys;
+    public $mediaID;
 
 
-    public $videoResponse, $textResponse, $audioResponse;
+    public $videoResponse, $textResponse, $audioResponse, $NPSScore;
     public $activeForm;
 
     public $name, $email, $phonenumber, $productname, $consent, $additionaltext;
@@ -32,28 +34,36 @@ class ShowCampaign extends Component
 
     public function mount($uuid)
     {
-        // if (!session()->has('user_token')) {
-        //     $userToken = Str::uuid()->toString();
-        //     session(['user_token' => $userToken]);
+
+
+        // $currentUuid = session('user_uuid');
+        // $currentToken = session('user_token');
+
+        // if (!$currentUuid || $currentUuid !== $uuid) {
+        //     $newToken = Str::uuid()->toString();
+        //     session([
+        //         'user_uuid' => $uuid,
+        //         'user_token' => $newToken,
+        //     ]);
+
+        //     $this->userToken = $newToken;
         // } else {
-        //     $this->userToken = session('user_token');
+        //     $this->userToken = $currentToken;
         // }
 
-        $currentUuid = session('user_uuid');
-        $currentToken = session('user_token');
-    
+        $currentUuid = Cache::get('user_uuid');
+        $currentToken = Cache::get('user_token');
+
         if (!$currentUuid || $currentUuid !== $uuid) {
             $newToken = Str::uuid()->toString();
-            session([
-                'user_uuid' => $uuid,
-                'user_token' => $newToken,
-            ]);
-    
+            Cache::put('user_uuid', $uuid, 180); // 3600 seconds
+            Cache::put('user_token', $newToken, 180); // 3600 seconds
+
             $this->userToken = $newToken;
         } else {
             $this->userToken = $currentToken;
         }
-    
+
 
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
 
@@ -93,7 +103,7 @@ class ShowCampaign extends Component
     }
 
 
-    public function goToNext($id, $action)
+    public function goToNext($id = 0, $action = 'defualt')
     {
         if (!$this->preview) {
             if (trim($this->textResponse) !== '') {
@@ -117,11 +127,16 @@ class ShowCampaign extends Component
                 $this->saveContact();
             }
 
-
             if (!empty($this->selectedOptions)) {
                 $this->saveSelectedOptions();
             }
+            
+            if (!empty($this->NPSScore)) {
+                $this->saveNPSScore();
+            }
         }
+
+
 
 
 
@@ -145,6 +160,7 @@ class ShowCampaign extends Component
         $nextStep->update([
             'previous' => json_encode($previous),
         ]);
+
 
 
         $this->nextStep = $nextStepId;
@@ -202,6 +218,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'name' => $this->name,
                 'email' => $this->email,
@@ -272,6 +289,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'video' => $cloudinaryUrl,
             ]);
@@ -312,6 +330,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'audio' => $cloudinaryUrl,
             ]);
@@ -336,6 +355,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'multi_option_response' => json_encode($this->selectedOptions),
             ]);
@@ -361,8 +381,32 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'file_upload' => $url,
+            ]);
+        }
+    }
+
+    public function saveNPSScore() {
+
+
+        if (!$this->userToken) {
+            return response()->json(['error' => 'User token not found'], 400);
+        }
+
+        $step = $this->steps->findorFail($this->nextStep);
+
+        $existingResponse = $step->responses()->where('user_token', $this->userToken)->first();
+
+        if ($existingResponse) {
+            $existingResponse->update([
+                'nps_score' => $this->NPSScore,
+            ]);
+        } else {
+            $step->responses()->create([
+                'user_token' => $this->userToken,
+                'nps_score' => $this->NPSScore,
             ]);
         }
     }

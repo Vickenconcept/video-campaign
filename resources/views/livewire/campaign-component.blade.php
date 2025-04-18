@@ -328,6 +328,12 @@
                                                         wire:key="file-{{ now() }}" />
                                                 </div>
                                             @endif
+                                            @if ($answer_type == 'NPS')
+                                                <div>
+                                                    <livewire:n-p-s-component :activeStep="$activeStep"
+                                                        wire:key="file-{{ now() }}" />
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 @endif
