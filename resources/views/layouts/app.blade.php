@@ -20,7 +20,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -49,7 +49,7 @@
     @livewireStyles
 </head>
 
-<body class="h-screen ">
+<body class="h-screen font-['Poppins'] ">
     <marquee direction="right" scrollamount="120" class="z-50 fixed w-full hidden" id="hiddenLinearPreloader">
         <div class="bg-gradient-to-r from-[#0F1523] from-70%  to-[#B5FFAB] w-[1500px] p-1 rounded-full"></div>
     </marquee>

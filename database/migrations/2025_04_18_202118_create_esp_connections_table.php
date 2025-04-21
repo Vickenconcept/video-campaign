@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('service'); // mailchimp, getresponse, convertkit
             $table->text('api_key');
             $table->string('server_prefix')->nullable(); // For Mailchimp
+            $table->text('account_name')->nullable(); 
             $table->timestamps();
         });
     }

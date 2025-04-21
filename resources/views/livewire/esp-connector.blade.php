@@ -7,8 +7,8 @@
             <!-- Tabs Navigation -->
             <div class="flex border-b mb-6">
                 <button @click="activeTab = 'mailchimp'"
-                    :class="{ 'border-blue-500 text-blue-600': activeTab === 'mailchimp', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'mailchimp' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'mailchimp', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'mailchimp' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
                     Mailchimp
                     @if ($connectionStatus['mailchimp'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -20,8 +20,8 @@
                 </button>
 
                 <button @click="activeTab = 'getresponse'"
-                    :class="{ 'border-blue-500 text-blue-600': activeTab === 'getresponse', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'getresponse' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'getresponse', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'getresponse' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
                     GetResponse
                     @if ($connectionStatus['getresponse'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -33,10 +33,34 @@
                 </button>
 
                 <button @click="activeTab = 'convertkit'"
-                    :class="{ 'border-blue-500 text-blue-600': activeTab === 'convertkit', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'convertkit' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'convertkit', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'convertkit' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
                     ConvertKit
                     @if ($connectionStatus['convertkit'])
+                        <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    @endif
+                </button>
+                <button @click="activeTab = 'activecampaign'"
+                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'activecampaign', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'activecampaign' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    Activecampaign
+                    @if ($connectionStatus['activecampaign'])
+                        <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    @endif
+                </button>
+                <button @click="activeTab = 'hubspot'"
+                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'hubspot', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'hubspot' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    Hubspot
+                    @if ($connectionStatus['hubspot'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
@@ -55,17 +79,15 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="mailchimpApiKey">
                                 Mailchimp API Key
                             </label>
-                            <input wire:model="mailchimpApiKey"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="mailchimpApiKey" type="text" placeholder="Enter your Mailchimp API key">
+                            <input wire:model="mailchimpApiKey" class="form-control" id="mailchimpApiKey" type="text"
+                                placeholder="Enter your Mailchimp API key">
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="mailchimpServerPrefix">
                                 Server Prefix
                             </label>
-                            <input wire:model="mailchimpServerPrefix"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="mailchimpServerPrefix" type="text" placeholder="e.g. us21">
+                            <input wire:model="mailchimpServerPrefix" class="form-control" id="mailchimpServerPrefix"
+                                type="text" placeholder="e.g. us21">
                         </div>
                         @if (empty($mailchimpLists))
                             <button type="submit" wire:loading.attr="disabled" wire:target="connectMailchimp"
@@ -102,9 +124,8 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="getResponseApiKey">
                                 GetResponse API Key
                             </label>
-                            <input wire:model="getResponseApiKey"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="getResponseApiKey" type="text" placeholder="Enter your GetResponse API key">
+                            <input wire:model="getResponseApiKey" class="form-control" id="getResponseApiKey"
+                                type="text" placeholder="Enter your GetResponse API key">
                         </div>
 
 
@@ -143,11 +164,10 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="convertKitApiKey">
                                 ConvertKit API Key
                             </label>
-                            <input wire:model="convertKitApiKey"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="convertKitApiKey" type="text" placeholder="Enter your ConvertKit API key">
+                            <input wire:model="convertKitApiKey" class="form-control" id="convertKitApiKey"
+                                type="text" placeholder="Enter your ConvertKit API key">
                         </div>
-                        
+
                         @if (empty($convertKitLists))
                             <button type="submit" wire:loading.attr="disabled" wire:target="connectConvertKit"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
@@ -175,6 +195,101 @@
                         </div>
                     @endif
                 </div>
+
+                <!-- ActiveCampaign Connection -->
+                <div x-show="activeTab === 'activecampaign'" style="display: none;">
+                    <form wire:submit.prevent="connectActiveCampaign">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="activeCampaignApiKey">
+                                ActiveCampaign API Key
+                            </label>
+                            <input wire:model="activeCampaignApiKey" class="form-control" id="activeCampaignApiKey"
+                                type="text" placeholder="Enter your ActiveCampaign API key">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="activeCampaignAccount">
+                                Account Name
+                            </label>
+                            <div class="flex items-center">
+                                <input wire:model="activeCampaignAccount"
+                                    class="bg-gray-200 border text-gray-800 border-gray-300   rounded-l-lg focus:ring-slate-900 focus:border-slate-900  block w-full p-2.5 placeholder-gray-500 placeholder:italic"
+                                    id="activeCampaignAccount" type="text" placeholder="your-account">
+                                <span
+                                    class="bg-gray-300 text-gray-900 font-semibold border-gray-300 p-2.5 border-t border-b border-r rounded-r text-gray-700 whitespace-nowrap">.api-us1.com</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Found in your API URL (e.g., "your-account" in
+                                https://your-account.api-us1.com)</p>
+                        </div>
+
+                        @if ($activecampaignAuth)
+                            <button type="submit" wire:loading.attr="disabled" wire:target="connectActiveCampaign"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                                <span wire:loading.remove wire:target="connectActiveCampaign">Connected!
+                                </span>
+                                <span wire:loading wire:target="connectActiveCampaign">Connecting...</span>
+                            </button>
+                        @endif
+                        @if (!$activecampaignAuth)
+                            <button type="submit" wire:loading.attr="disabled" wire:target="connectActiveCampaign"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                                <span wire:loading.remove wire:target="connectActiveCampaign">Connect
+                                    ActiveCampaign</span>
+                                <span wire:loading wire:target="connectActiveCampaign">Connecting...</span>
+                            </button>
+                        @endif
+
+                    </form>
+
+
+                </div>
+
+                <!-- HubSpot Connection -->
+                <div x-show="activeTab === 'hubspot'" style="display: none;">
+                    <form wire:submit.prevent="connectHubSpot">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="hubspotApiKey">
+                                HubSpot API Key
+                            </label>
+                            <input wire:model="hubspotApiKey"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="hubspotApiKey" type="text" placeholder="Enter your HubSpot API key">
+                            <p class="text-xs text-gray-500 mt-1">Find this in HubSpot Settings > Integrations > API
+                                Key</p>
+                        </div>
+
+                        {{-- <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                            <span wire:loading.remove wire:target="connectHubSpot">
+                                @if ($hubspotAuth)
+                                    Reconnect
+                                @else
+                                    Connect
+                                @endif HubSpot
+                            </span>
+                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
+                        </button> --}}
+
+
+                        @if ($hubspotAuth)
+                        <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                            <span wire:loading.remove wire:target="connectHubSpot">Connected!
+                            </span>
+                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
+                        </button>
+                    @endif
+                    @if (!$hubspotAuth)
+                        <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                            <span wire:loading.remove wire:target="connectHubSpot">Connect
+                                Hubspot</span>
+                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
+                        </button>
+                    @endif
+                    </form>
+
+                </div>
             </div>
 
             <!-- Migration Section -->
@@ -189,7 +304,7 @@
                                 Target ESP
                             </label>
                             <select wire:model.live="targetEsp"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 id="targetEsp">
                                 <option value="">Select target</option>
                                 @if ($connectionStatus['mailchimp'])
@@ -201,14 +316,20 @@
                                 @if ($connectionStatus['convertkit'])
                                     <option value="convertkit">ConvertKit</option>
                                 @endif
+                                @if ($connectionStatus['activecampaign'])
+                                    <option value="activecampaign">ActiveCampaign</option>
+                                @endif
+                                @if ($connectionStatus['hubspot'])
+                                    <option value="hubspot">Hubspot</option>
+                                @endif
                             </select>
                         </div>
-                        <div>
+                        <div x-show="activeTab != 'activecampaign' && activeTab != 'hubspot'">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="targetList">
                                 Target List
                             </label>
                             <select wire:model="targetList"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 id="targetList">
                                 <option value="">Select list</option>
                                 @if ($targetEsp === 'mailchimp')
@@ -226,55 +347,61 @@
                                 @endif
                             </select>
                         </div>
-                    </div>
-                    <div class="max-w-2xl  mb-5" x-data="multiSelect()">
-                        <div class="relative">
-                            <label for="multi-select" class="block text-sm font-medium text-gray-700 mb-1">Select
-                                options:</label>
-                            <div class="mt-1 relative">
-                                <button type="button" @click="open = !open"
-                                    class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <span class="block truncate"
-                                        x-text="selectedEmails.length ? selectedEmails.join(', ') : 'Select options'"></span>
-                                    <span
-                                        class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                </button>
 
-                                <div x-show="open" @click.away="open = false"
-                                    class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
-                                    style="display: none;">
-                                    <template x-for="option in options" :key="option">
-                                        <div @click="toggleOption(option)"
-                                            class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white">
-                                            <span x-text="option"
-                                                :class="{ 'font-semibold': selectedEmails.includes(option) }"
-                                                class="block truncate"></span>
-                                            <span x-show="selectedEmails.includes(option)"
-                                                class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 hover:text-white">
-                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </span>
+                        <div class="max-w-2xl  mb-5" x-data="multiSelect()">
+                            <div class="relative">
+                                <label for="multi-select" class="block text-gray-700 text-sm font-bold mb-2">Select
+                                    Emails:</label>
+                                <div class="mt-1 relative">
+                                    <button type="button" @click="open = !open"
+                                        class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <span class="block truncate"
+                                            x-text="selectedEmails.length ? selectedEmails.join(', ') : 'Select options'"></span>
+                                        <span
+                                            class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </span>
+                                    </button>
+
+                                    <div x-show="open" @click.away="open = false"
+                                        class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                                        style="display: none;">
+                                        <div @click="toggleSelectAll"
+                                            class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white font-semibold">
+                                            <span class="block truncate">Select All Emails</span>
                                         </div>
-                                    </template>
+                                        <template x-for="option in options" :key="option">
+                                            <div @click="toggleOption(option)"
+                                                class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white">
+                                                <span x-text="option"
+                                                    :class="{ 'font-semibold': selectedEmails.includes(option) }"
+                                                    class="block truncate"></span>
+                                                <span x-show="selectedEmails.includes(option)"
+                                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 hover:text-white">
+                                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit"
+                    <button type="submit" wire:loading.attr="disabled" wire:target="migrateSubscriber"
                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
-                        Migrate Subscriber
+                        <span wire:loading.remove wire:target="migrateSubscriber"> Migrate Subscriber </span>
+                        <span wire:loading wire:target="migrateSubscriber">Loading...</span>
                     </button>
                 </form>
             </div>
@@ -298,6 +425,13 @@
                         this.selectedEmails = this.selectedEmails.filter(item => item !== option);
                     } else {
                         this.selectedEmails.push(option);
+                    }
+                },
+                toggleSelectAll() {
+                    if (this.selectedEmails.length === this.options.length) {
+                        this.selectedEmails = [];
+                    } else {
+                        this.selectedEmails = [...this.options];
                     }
                 }
             }
