@@ -125,15 +125,6 @@ class EspConnector extends Component
             $this->getResponseLists = $getResponse->getAudience($this->getResponseApiKey);
         }
 
-        // $convertKit = new ConvertKitService();
-        // $this->convertKitLists = $convertKit->getList($this->convertKitApiKey);
-
-        // $mailChimpService = new MailChimpService();
-        // $lists = $mailChimpService->getAllLists($this->mailchimpApiKey, $this->mailchimpServerPrefix);
-        // $this->mailchimpLists =  $lists = json_decode(json_encode($lists->lists), true);
-
-        // $getResponse = new GetResponseService();
-        // $this->getResponseLists = $getResponse->getAudience($this->getResponseApiKey);
     }
 
     public function connectMailchimp(MailChimpService $mailChimpService)

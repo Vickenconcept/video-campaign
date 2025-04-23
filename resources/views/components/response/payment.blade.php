@@ -1,8 +1,14 @@
 <div>
 
     @php
-        $currency = json_decode($campaign->paypal_keys, true);
-        $currency = $currency['currency'];
+
+        $currency = 'USD'; 
+        if (!empty($campaign->paypal_keys)) {
+            $paypalKeys = json_decode($campaign->paypal_keys, true);
+            if (is_array($paypalKeys) && isset($paypalKeys['currency'])) {
+                $currency = $paypalKeys['currency'];
+            }
+        }
     @endphp
     <div class="">
         <div class="flex justify-between text-gray-700">

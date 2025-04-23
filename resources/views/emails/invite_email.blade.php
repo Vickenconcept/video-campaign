@@ -54,41 +54,36 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Dear {{ $name ?: auth()->user()->name}}</h1>
-        <p>Your feedback fuels our passion for excellence!</p>
 
-        <a href="{{ $link }}" style="text-decoration: none">
-            <div class="rating">⭐⭐⭐⭐⭐</div>
-            <div class="rating">⭐⭐⭐⭐ </div>
-            <div class="rating">⭐⭐⭐  </div>
-            <div class="rating">⭐⭐   </div>
-            <div class="rating">⭐   </div>
+    <div class="container" style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2>Hello {{ $name ?: '' }},</h2>
+
+        <p>We appreciate you connecting with us!</p>
+
+        <p>To move forward, we need a quick response from you. It only takes a minute — just click the link or image
+            below to continue:</p>
+
+        <a href="{{ $link }}">
+            <img height="270" style="border-radius: 16px; max-width: 460px; width: 100%;"
+                src="https://res.cloudinary.com/videoask/image/fetch/t_social-image/https://images.pexels.com/videos/3002769/free-video-3002769.jpg?fit=crop&amp;w=1200&amp;h=630&amp;auto=compress&amp;cs=tinysrgb"
+                alt="Continue Here" />
         </a>
 
-        <p class="review-content">
-            Your review lights up our day! Thank you for sharing your thoughts and experiences with us. Your five-star rating reflects the dedication and commitment we pour into our service.
-        </p>
-        <p class="review-content">
-            But wait, we're not stopping there! We're constantly striving to elevate your experience even further. Your feedback is like a guiding star, illuminating our path towards perfection.
-        </p>
-        <p class="review-content">
-            Got more to say? We're all ears! Whether it's a suggestion, a question, or just a friendly chat, don't hesitate to reach out to us. Your voice matters, and we're here to listen.
-        </p>
-        <p class="review-content">
-            Looking forward to hearing from you soon!
-        </p>
-        <p class="review-content">
-            Warm regards,
-        </p>
+        <p><strong>Required Action:</strong> Please <a href="{{ $link }}">click here</a> to take the next step.
+            This is important to keep things moving forward.</p>
 
-        <p>If you have any further feedback or questions, feel free to reach out to us.</p>
-        <p>from: <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a></p>
-        
-        <p>P.S. Ready to embark on another journey of sharing your experiences?  <a href="{{ $link }}" class="">Click here</a> to write another review!</p>
+        <p>If you have any questions or need help, just reply to this email — we're here for you!</p>
 
-        {{-- <a href="{{ $link }}" class="cta-button">Write Another Review</a> --}}
+        <p>Warm regards,</p>
+        <p>The Team</p>
+
+        <hr style="margin: 24px 0;" />
+
+        <p style="font-size: 0.9em;">From: <a
+                href="mailto:{{ auth()->user()->email }}">{{ auth()->user()->email }}</a></p>
     </div>
+
+
 </body>
 
 </html>

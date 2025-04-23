@@ -5,6 +5,7 @@ use App\Http\Controllers\ESPController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResellerController;
 use App\Livewire\AllResponse;
 use App\Livewire\CampaignComponent;
 use App\Livewire\EspConnector;
@@ -51,6 +52,8 @@ Route::middleware(['auth'])->group(function () {
     Route::view('profile', 'profile')->name('profile');
     Route::post('profile/name', [ProfileController::class, 'changeName'])->name('changeName');
     Route::post('profile/password', [ProfileController::class, 'changePassword'])->name('changePassword');
+    Route::resource('reseller', ResellerController::class);
+    Route::view('tutorial', 'tutorial')->name('tutorial');
 
 
     Route::get('folder', FolderComponent::class)->name('folder.index');

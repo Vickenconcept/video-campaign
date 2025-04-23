@@ -44,7 +44,7 @@
 
                 <!-- Dropdown menu -->
                 <div id="dropdownNotification"
-                    class="z-20 hidden w-full max-w-sm  bg-white divide-y divide-gray-100 rounded-lg shadow-sm  overflow-hidden "
+                    class="z-20 hidden w-full max-w-sm  bg-white divide-y divide-gray-100 rounded-lg shadow-xl  overflow-hidden "
                     aria-labelledby="notification_bell">
                     <div class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50 ">
                         Notifications
@@ -119,7 +119,7 @@
                             <p class="text-xs">{{ auth()->user()->email }}</p>
                         </div>
                     </div>
-                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow "
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-xl "
                         id="dropdown-user">
                         <div class="px-4 py-3" role="none">
                             <p class="text-sm text-gray-900 " role="none">

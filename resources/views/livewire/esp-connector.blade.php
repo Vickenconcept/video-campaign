@@ -73,7 +73,7 @@
             <!-- Tab Panes -->
             <div>
                 <!-- Mailchimp Connection -->
-                <div x-show="activeTab === 'mailchimp'" style="display: none;">
+                <div x-show="activeTab === 'mailchimp'" style="display: none;" class="max-w-xl">
                     <form wire:submit.prevent="connectMailchimp">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="mailchimpApiKey">
@@ -118,7 +118,7 @@
                 </div>
 
                 <!-- GetResponse Connection -->
-                <div x-show="activeTab === 'getresponse'" style="display: none;">
+                <div x-show="activeTab === 'getresponse'" style="display: none;" class="max-w-xl">
                     <form wire:submit.prevent="connectGetResponse">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="getResponseApiKey">
@@ -126,6 +126,10 @@
                             </label>
                             <input wire:model="getResponseApiKey" class="form-control" id="getResponseApiKey"
                                 type="text" placeholder="Enter your GetResponse API key">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Find this in Getresponse tools >Integrations and API > API  or
+                                    <a href="https://app.getresponse.com/api" class="hover:underline text-blue-500" target="_blank">Get here</a>
+                                </p>
                         </div>
 
 
@@ -158,7 +162,7 @@
                 </div>
 
                 <!-- ConvertKit Connection -->
-                <div x-show="activeTab === 'convertkit'" style="display: none;">
+                <div x-show="activeTab === 'convertkit'" style="display: none;" class="max-w-xl">
                     <form wire:submit.prevent="connectConvertKit">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="convertKitApiKey">
@@ -197,7 +201,7 @@
                 </div>
 
                 <!-- ActiveCampaign Connection -->
-                <div x-show="activeTab === 'activecampaign'" style="display: none;">
+                <div x-show="activeTab === 'activecampaign'" style="display: none;" class="max-w-xl">
                     <form wire:submit.prevent="connectActiveCampaign">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="activeCampaignApiKey">
@@ -245,14 +249,14 @@
                 </div>
 
                 <!-- HubSpot Connection -->
-                <div x-show="activeTab === 'hubspot'" style="display: none;">
+                <div x-show="activeTab === 'hubspot'" style="display: none;" class="max-w-xl">
                     <form wire:submit.prevent="connectHubSpot">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="hubspotApiKey">
                                 HubSpot API Key
                             </label>
                             <input wire:model="hubspotApiKey"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                class="form-control"
                                 id="hubspotApiKey" type="text" placeholder="Enter your HubSpot API key">
                             <p class="text-xs text-gray-500 mt-1">Find this in HubSpot Settings > Integrations > API
                                 Key</p>

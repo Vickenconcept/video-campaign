@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Mail\InviteMail;
 use App\Models\Campaign;
 use App\Models\Step;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
@@ -13,6 +15,8 @@ class CampaignComponent extends Component
 
     public $campaign, $title, $steps, $activeStep, $activeName, $user, $form, $multi_choice_setting;
     public $id, $postion, $contact_detail = false;
+
+    public $email , $name ;
 
     public $activeTab = 'answer';
     public $answer_type = 'open_ended';
@@ -256,6 +260,27 @@ class CampaignComponent extends Component
 
         $this->answer_type = $this->activeStep->answer_type;
         // dd($this->activeStep);
+    }
+
+
+    public function inviteUser()
+    {
+        $this->validate([
+            'email' => 'required|email',
+            'name' => 'nullable|string|max:255', // optional: if you want to validate name too
+        ]);
+    
+        $url = route('campaign.view', ['uuid' => $this->campaign->uuid]);
+    
+        // dd($url);
+        Mail::to($this->email)->send(new InviteMail($url, $this->name));
+    
+        $this->name = '';
+        $this->email = '';
+    
+        session()->flash('success', 'Invitation email sent successfully!');
+    
+        $this->dispatch('email-sent');
     }
 
     public function render()

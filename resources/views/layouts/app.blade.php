@@ -32,6 +32,14 @@
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/share.js') }}"></script>
+
 
     {{-- 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
@@ -61,61 +69,8 @@
         <div class="h-full sm:ml-64 bg-white pt-20 overflow-y-hidden">
             {{-- <button id="upload_widget" class="cloudinary-button">Upload files</button> --}}
 
-            <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
 
-            {{-- <script type="text/javascript">
-                var myWidget = cloudinary.createUploadWidget({
-                    cloudName: 'dp0bpzh9b',
-                    uploadPreset: 'video-campaign'
-                }, (error, result) => {
-                    if (!error && result && result.event === "success") {
-                        console.log('Done! Here is the image info: ', result.info);
-                    }
-                })
-        
-                document.getElementById("upload_widget").addEventListener("click", function() {
-                    myWidget.open();
-                }, false);
-            </script> --}}
 
-            {{-- <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    var myWidget = cloudinary.createUploadWidget({
-                        cloudName: "dp0bpzh9b",
-                        uploadPreset: "video-campaign"
-                    }, (error, result) => {
-                        if (!error && result && result.event === "success") {
-                            console.log("Done! Here is the image info: ", result.info);
-                        }
-                    });
-
-                    function openWidget() {
-                        myWidget.open();
-                    }
-
-                    function attachUploadListener() {
-                        const uploadButton = document.getElementById("upload_widget");
-                        if (uploadButton) {
-                            // Remove any existing event listeners to prevent duplicates
-                            uploadButton.removeEventListener("click", openWidget);
-                            uploadButton.addEventListener("click", openWidget);
-                        }
-                    }
-
-                    // Initial check if button exists
-                    attachUploadListener();
-
-                    // Observe the DOM for button appearing dynamically
-                    const observer = new MutationObserver(() => {
-                        attachUploadListener();
-                    });
-
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                });
-            </script> --}}
             {{ $slot }}
         </div>
     </div>

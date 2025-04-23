@@ -1,6 +1,16 @@
 <div class="h-screen overflow-y-auto px-5 space-y-10" x-data="{ editStep: false }">
     {{-- Because she competes with no one, no one can compete with her. --}}
     {{-- {{ $campaign }} --}}
+
+    <x-seo::meta />
+    @seo([
+        'title' => 'Campain Video ask',
+        'description' => 'Campain',
+        'image' => asset('images/video-thumbnail.jpg'),
+        'site_name' => config('app.name'),
+        'favicon' => asset('images/fav-image.png'),
+    ])
+    <x-session-msg />
     <div>
         <div class="flex justify-between items-center space-x-5">
             <div class="flex-grow">
@@ -33,7 +43,7 @@
 
                 <button id="previewButton" data-dropdown-toggle="previewDropdown" data-dropdown-delay="500"
                     data-dropdown-trigger="hover"
-                    class="text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border "
+                    class="text-white bg-gray-800 cursor-pointer hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border "
                     type="button">
                     <i class='bx bx-play text-xl'></i>
                     <span>Preview</span>
@@ -41,7 +51,7 @@
 
                 <!-- Dropdown menu -->
                 <div id="previewDropdown"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 overflow-hidden ">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-44 overflow-hidden ">
                     <ul class=" text-sm text-gray-700 " aria-labelledby="previewButton">
                         <li>
                             <a href="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}?preview" target="_blank"
@@ -59,13 +69,13 @@
                     </ul>
                 </div>
 
-               
+
 
 
 
                 <!-- Modal toggle -->
                 <button data-modal-target="default-modal" data-modal-toggle="default-modal"
-                    class="text-gray-800 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border border-slate-300"
+                    class="text-gray-800 bg-white cursor-pointer hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border border-slate-300"
                     type="button">
                     <i class='bx bx-paper-plane text-xl'></i>
                     <span>Share</span>
@@ -73,18 +83,18 @@
 
                 <!-- Main modal -->
                 <div id="default-modal" tabindex="-1" aria-hidden="true"
-                    class="hidden overflow-y-auto overflow-x-hidden bg-slate-500/40 fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    class="hidden overflow-y-auto overflow-x-hidden bg-slate-500/40 fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full">
                     <div class="relative p-4 w-full max-w-2xl max-h-full">
                         <!-- Modal content -->
                         <div class="relative bg-white rounded-lg shadow-sm ">
                             <!-- Modal header -->
                             <div
-                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t  border-gray-200">
                                 <h3 class="text-xl font-semibold text-gray-900">
                                     How would you like to share your Campaign?
                                 </h3>
                                 <button type="button"
-                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                    class="text-gray-400 cursor-pointer bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
                                     data-modal-hide="default-modal">
                                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 14 14">
@@ -96,11 +106,271 @@
                             </div>
                             <!-- Modal body -->
                             <div class="p-4 md:p-5 space-y-4">
-                                <p class="text-base leading-relaxed text-gray-500 ">
-                                    With less than a month to go before the European Union enacts new consumer privacy
-                                    laws for its citizens, companies around the world are updating their terms of
-                                    service agreements to comply.
-                                </p>
+                                <div class="mx-auto max-w-xl" x-data="{ showTab: null }">
+                                    <section x-show="showTab == null" style="display: none;">
+                                        <div class="grid md:grid-cols-3 gap-5 mb-5">
+                                            <div @click="showTab = 'email'"
+                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+
+                                                <div class="bg-slate-900 w-full mb-5">
+                                                    <img src="{{ asset('images/video-thumbnail.jpg') }}" alt=""
+                                                        class="w-full object-center object-cover">
+                                                </div>
+                                                <p class="text-center text-sm font-semibold">
+                                                    Send via email
+                                                </p>
+                                            </div>
+                                            <div @click="showTab = 'embed'"
+                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+
+                                                <div class="bg-slate-900 w-full mb-5">
+                                                    <img src="{{ asset('images/video-thumbnail.jpg') }}" alt=""
+                                                        class="w-full object-center object-cover">
+                                                </div>
+                                                <p class="text-center text-sm font-semibold">
+                                                    Copy embed code
+                                                </p>
+                                            </div>
+                                            <div @click="showTab = 'social_share'"
+                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+
+                                                <div class="bg-slate-900 w-full mb-5">
+                                                    <img src="{{ asset('images/video-thumbnail.jpg') }}"
+                                                        alt="" class="w-full object-center object-cover">
+                                                </div>
+                                                <p class="text-center text-sm font-semibold">
+                                                    Social Share
+                                                </p>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="w-full max-w-md">
+                                            <div class="mb-2 flex justify-between items-center">
+                                                <label for="campaign-url"
+                                                    class="text-sm font-medium text-gray-900">Campaign link:</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg ">URL</span>
+                                                <div class="relative w-full">
+                                                    <input id="campaign-url" type="text"
+                                                        aria-describedby="helper-text-explanation"
+                                                        class="bg-gray-50 border border-e-0 border-gray-300 text-gray-500  text-sm border-s-0 focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 "
+                                                        value="{{ route('campaign.view', ['uuid' => $campaign->uuid]) }}"
+                                                        readonly disabled />
+                                                </div>
+                                                <button data-tooltip-target="tooltip-campaign-url"
+                                                    data-copy-to-clipboard-target="campaign-url"
+                                                    class="shrink-0 z-10 cursor-pointer inline-flex items-center py-3 px-4 text-sm font-medium text-center text-white bg-slate-700 rounded-e-lg hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300 border border-slate-700  hover:border-slate-800 "
+                                                    type="button">
+                                                    <span id="default-icon">
+                                                        <svg class="w-4 h-4" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                            viewBox="0 0 18 20">
+                                                            <path
+                                                                d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                                        </svg>
+                                                    </span>
+                                                    <span id="success-icon" class="hidden">
+                                                        <svg class="w-4 h-4" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 16 12">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="M1 5.917 5.724 10.5 15 1.5" />
+                                                        </svg>
+                                                    </span>
+                                                </button>
+                                                <div id="tooltip-campaign-url" role="tooltip"
+                                                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
+                                                    <span id="default-tooltip-message">Copy link</span>
+                                                    <span id="success-tooltip-message" class="hidden">Copied!</span>
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
+                                            </div>
+                                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 ">
+                                                Copy link</p>
+                                        </div>
+                                    </section>
+
+                                    <section x-show="showTab != null" style="display: none;" class="">
+                                        <div class="mb-5">
+                                            <button @click="showTab = null "
+                                                class="cursor-pointer text-md font-semibold">
+                                                < Back</button>
+                                        </div>
+                                        <div x-show="showTab == 'email'" style="display: none;">
+                                            <form action="" class="space-y-3">
+                                                <div>
+                                                    <label for="">Name</label>
+                                                    <input type="text" name="name" placeholder="Name"
+                                                        wire:model="name"
+                                                        class="text-gray-400 form-control text-md w-full">
+                                                </div>
+                                                <div>
+                                                    <label for="">Email <span
+                                                            class="text-red-500">*</span></label>
+                                                    <input type="email" name="email" placeholder="Email*"
+                                                        wire:model="email"
+                                                        class="text-gray-400 form-control text-md w-full">
+                                                </div>
+                                                <button type="button" wire:loading.attr="disabled"
+                                                    wire:target="inviteUser" class="btn cursor-pointer"
+                                                    wire:click="inviteUser">
+                                                    <span wire:loading.remove wire:target="inviteUser">send</span>
+
+                                                    <span wire:loading wire:target="inviteUser">Loading ...</span>
+                                                </button>
+
+                                            </form>
+                                        </div>
+                                        <div x-show="showTab == 'embed'" style="display: none;">
+                                            <div class="w-full max-w-lg mx-auto">
+                                                <div class="mb-2 flex justify-between items-center">
+                                                    <p class="text-sm font-medium text-gray-900 ">Embed your
+                                                        Campaign anywhere in your website:</p>
+                                                </div>
+                                                <div class="relative bg-gray-100 rounded-lg  p-4 h-28 shadow-lg">
+                                                    <div class="overflow-auto max-h-full">
+                                                        <pre><code id="code-block" class="text-sm text-gray-700  whitespace-pre">&#x3C;iframe src="{{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}" allow="camera *; microphone *; autoplay *; encrypted-media *; fullscreen *; display-capture *;" width="100%" height="600px" style="border: none; border-radius: 24px"&#x3E;&#x3C;/iframe&#x3E;
+                                                            </code>
+                                                        </pre>
+                                                    </div>
+                                                    <div class="absolute top-2 end-2 bg-gray-100 ">
+                                                        <button data-copy-to-clipboard-target="code-block"
+                                                            data-copy-to-clipboard-content-type="innerHTML"
+                                                            data-copy-to-clipboard-html-entities="true"
+                                                            class="text-gray-900 cursor-pointer m-0.5 hover:bg-gray-100  rounded-lg py-2 px-2.5 inline-flex items-center justify-center bg-white border-gray-200 border h-8">
+                                                            <span id="default-message">
+                                                                <span class="inline-flex items-center">
+                                                                    <svg class="w-3 h-3 me-1.5" aria-hidden="true"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="currentColor" viewBox="0 0 18 20">
+                                                                        <path
+                                                                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                                                    </svg>
+                                                                    <span class="text-xs font-semibold">Copy
+                                                                        code</span>
+                                                                </span>
+                                                            </span>
+                                                            <span id="success-message" class="hidden">
+                                                                <span class="inline-flex items-center">
+                                                                    <svg class="w-3 h-3 text-blue-700  me-1.5"
+                                                                        aria-hidden="true"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="none" viewBox="0 0 16 12">
+                                                                        <path stroke="currentColor"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M1 5.917 5.724 10.5 15 1.5" />
+                                                                    </svg>
+                                                                    <span
+                                                                        class="text-xs font-semibold text-blue-700 ">Copied</span>
+                                                                </span>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-2 text-sm text-gray-500">Copy Code</p>
+                                            </div>
+                                        </div>
+                                        <div x-show="showTab == 'social_share'" style="display: none;">
+                                            <p class="text-xl font-semibold">Social share</p>
+                                            {{-- <div id="social-links" class="mt-4 mx-auto max-w-lg ">
+                                                <ul class="flex gap-4 items-center bg-red-500">
+                                                    <li>
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="text-blue-600 hover:text-blue-800 text-2xl"
+                                                            target="_blank" title="Share on Facebook">
+                                                            <span class="fab fa-facebook-square"></span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://twitter.com/intent/tweet?text=Share+title&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="text-blue-400 hover:text-blue-600 text-2xl"
+                                                            target="_blank" title="Share on Twitter">
+                                                            <span class="fab fa-twitter"></span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite?mini=true&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}&title=Share+title&summary=Extra+linkedin+summary+can+be+passed+here"
+                                                            class="text-blue-700 hover:text-blue-900 text-2xl"
+                                                            target="_blank" title="Share on LinkedIn">
+                                                            <span class="fab fa-linkedin"></span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://wa.me/?text={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="text-green-500 hover:text-green-700 text-2xl"
+                                                            target="_blank" title="Share on WhatsApp">
+                                                            <span class="fab fa-whatsapp"></span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div> --}}
+
+                                            <div id="social-links" class="mt-4">
+                                                <ul class="grid grid-cols-2  gap-2 items-start sm:items-center">
+                                                    <li
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-lg w-full py-2 px-4"
+                                                            target="_blank" title="Share on Facebook">
+                                                            <span class="fab fa-facebook-square text-2xl"></span>
+                                                            <div>
+                                                                <p class="font-semibold">Facebook</p>
+                                                                <p class="text-sm text-gray-500">Share on Facebook</p>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+
+                                                    <li
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        <a href="https://twitter.com/intent/tweet?text=Share+title&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="flex items-center gap-2 text-slate-800 hover:text-slate-900 text-lg w-full py-2 px-4"
+                                                            target="_blank" title="Share on Twitter">
+                                                            <span class="fab fa-x-twitter text-2xl"></span>
+                                                            <!-- Font Awesome uses fa-x-twitter -->
+                                                            <div>
+                                                                <p class="font-semibold">X</p>
+                                                                <p class="text-sm text-gray-500">Share on Twitter</p>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+
+                                                    <li
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite?mini=true&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}&title=Share+title&summary=Extra+linkedin+summary+can+be+passed+here"
+                                                            class="flex items-center gap-2 text-blue-700 hover:text-blue-900 text-lg w-full py-2 px-4"
+                                                            target="_blank" title="Share on LinkedIn">
+                                                            <span class="fab fa-linkedin text-2xl"></span>
+                                                            <div>
+                                                                <p class="font-semibold">LinkedIn</p>
+                                                                <p class="text-sm text-gray-500">Share on LinkedIn</p>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+
+                                                    <li
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        <a href="https://wa.me/?text={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
+                                                            class="flex items-center gap-2 text-green-500 hover:text-green-700 text-lg w-full py-2 px-4"
+                                                            target="_blank" title="Share on WhatsApp">
+                                                            <span class="fab fa-whatsapp text-2xl"></span>
+                                                            <div>
+                                                                <p class="font-semibold">WhatsApp</p>
+                                                                <p class="text-sm text-gray-500">Share on Whatsapp</p>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                    </section>
+                                </div>
 
                             </div>
                             <!-- Modal footer -->
@@ -125,25 +395,22 @@
 
         @forelse ($steps->sortBy('position') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
-            <div class="w-52 h-48 flex relative">
+            <div class="w-52 h-48 flex relative ">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
-                    class=" cursor-pointer rounded-l-lg border-2 border-slate-300 w-[75%]   bg-white hover:shadow-xl transition duration-500 ease-in-out overflow-hidden">
-                    <div class="bg-slate-200 text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize flex justify-between ">
-                        <span>{{ $step->name }}  </span>
+                    class=" cursor-pointer shadow-xl rounded-l-lg border-3 border-gray-300 w-[75%]   bg-white hover:shadow-sm transition duration-500 ease-in-out overflow-hidden">
+                    <div
+                        class="bg-white text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize flex justify-between ">
+                        <span>{{ $step->name }} </span>
                         <span class="rounded-full bg-gray-800 text-white px-2.5 py-1 text-center text-xs">
-                           {{ $step->position }} 
+                            {{ $step->position }}
                         </span>
                     </div>
                     <div class="h-full  grid grid-cols-2">
-                        <div class="bg-slate-300 h-full"></div>
-                        <div class="bg-white h-full py-4 px-2 space-y-3">
-                            <div class=" bg-gray-800 p-3">
-                            </div>
-                            <div class=" bg-gray-500 p-3">
-                            </div>
-                            <div class=" bg-gray-300 p-3">
-                            </div>
+                        <div class="bg-slate-200 h-full flex justify-center items-center">
+                            <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
+                            class="w-full h-full object-center object-cover">
                         </div>
+                        <div class="bg-slate-100 h-full"></div>
 
                     </div>
                 </div>
@@ -184,10 +451,23 @@
                 @if ($step->position < $lastPosition)
                     <div class="w-[10%] flex items-center pl-2">
                         <span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22.703" height="21.928">
+                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="22.703" height="21.928">
                                 <path
                                     d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z" />
+                            </svg> --}}
+
+                            {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg> --}}
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                             </svg>
+
+
+
                         </span>
                     </div>
                 @endif
@@ -499,6 +779,20 @@
 
             })
 
+
+            // function toCopy(copyDiv) {
+            //     var range = document.createRange();
+            //     range.selectNode(copyDiv);
+            //     window.getSelection().removeAllRanges();
+            //     window.getSelection().addRange(range);
+            //     document.execCommand("copy");
+            // }
+
+            function toCopy(inputElement) {
+                inputElement.select();
+                inputElement.setSelectionRange(0, 99999); // For mobile devices
+                document.execCommand("copy");
+            }
             // window.addEventListener('play-audio', event => {
             //     console.log(event.detail.url);
 

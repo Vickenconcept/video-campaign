@@ -22,6 +22,7 @@ class ShowCampaign extends Component
     public $userToken;
     public $paypal_keys;
     public $mediaID;
+    public $selectedLang;
 
 
     public $videoResponse, $textResponse, $audioResponse, $NPSScore;
@@ -66,6 +67,7 @@ class ShowCampaign extends Component
 
 
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
+        $this->selectedLang =  $this->campaign->language;
 
         $this->steps = $this->campaign->steps;
 
@@ -130,7 +132,7 @@ class ShowCampaign extends Component
             if (!empty($this->selectedOptions)) {
                 $this->saveSelectedOptions();
             }
-            
+
             if (!empty($this->NPSScore)) {
                 $this->saveNPSScore();
             }
@@ -345,7 +347,25 @@ class ShowCampaign extends Component
             return response()->json(['error' => 'User token not found'], 400);
         }
 
+
         $step = $this->steps->findorFail($this->nextStep);
+
+        $multi_choice_setting = json_decode($step->multi_choice_setting, true);
+
+        // dd($multi_choice_setting);
+
+        $skipDataStatus = false;
+
+        foreach ($multi_choice_setting as $setting) {
+            if ($setting['name'] === 'skip_data_collection') {
+                $skipDataStatus = $setting['status'];
+                break;
+            }
+        }
+
+        if ($skipDataStatus) {
+            return;
+        }
 
         $existingResponse = $step->responses()->where('user_token', $this->userToken)->first();
 
@@ -388,7 +408,8 @@ class ShowCampaign extends Component
         }
     }
 
-    public function saveNPSScore() {
+    public function saveNPSScore()
+    {
 
 
         if (!$this->userToken) {
@@ -415,6 +436,6 @@ class ShowCampaign extends Component
 
     public function render()
     {
-        return view('livewire.show-campaign')->layout('layouts.guest');
+        return view('livewire.show-campaign')->layout('layouts.custom');
     }
 }

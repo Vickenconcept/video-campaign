@@ -78,9 +78,10 @@
                                 <div class="flex items-center w-[100%] cursor-pointer"
                                     @click="activeResponse = @js($response)"
                                     wire:click="setResponse('{{ $response->user_token }}')">
-                                    <img class="w-10 h-10 rounded-full"
-                                        src="https://unsplash.com/photos/oh0DITWoHi4/download?force=true&w=640"
-                                        alt="Christy">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden">
+                                            <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
+                                            class="w-full h-full object-center object-cover">
+                                        </div>
                                     <div>
                                         <p class="ml-3 font-medium  capitalize truncate">
                                             {{-- {{ $response->name }} --}}

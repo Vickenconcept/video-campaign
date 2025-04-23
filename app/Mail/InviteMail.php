@@ -31,7 +31,7 @@ class InviteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invite Mail',
+            subject: 'Action Required: Please Complete the Next Step',
         );
     }
 

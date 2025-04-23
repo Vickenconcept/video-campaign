@@ -16,6 +16,16 @@
 
   --}}
 
+  <x-seo::meta />
+    @seo([
+        'title' => 'Campain Video ask',
+        'description' => 'Campain',
+        'image' => asset('images/video-thumbnail.jpg'),
+        'site_name' => config('app.name'),
+        'favicon' => asset('images/fav-image.png'),
+    ])
+
+
 
 
     @php
@@ -34,7 +44,8 @@
 
         @if ($step->id == $nextStep)
             {{-- <p>hello</p> --}}
-            <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition>
+            <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
+                {{-- <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition> --}}
                 @php
                     $fit = $video_setting['fit'] ?? false;
 
@@ -55,7 +66,7 @@
                         : '';
                 @endphp
 
-                <div class="h-full w-full bg-slate-300 flex {{ $alignment }}">
+                <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
                     <div class="relative max-w-full max-h-full">
                         @if ($step->video_url)
                             <video controls class="mx-auto bg-slate-50/10 max-w-full max-h-full object-contain">
@@ -74,7 +85,7 @@
                     </div>
                 </div>
 
-                <div class="relative h-full bg-white flex justify-center items-center overflow-y-auto pb-10">
+                <div class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-black/30 md:bg-white flex justify-center items-center overflow-y-auto pb-10">
                     @if ($preview)
                         <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
                             <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
@@ -82,7 +93,7 @@
                             </p>
                         </div>
                     @endif
-                    <div class="h-[80%] w-[80%] border rounded-md flex justify-center items-center overflow-y-auto ">
+                    <div class="h-[80%] w-[80%] md:border rounded-md flex justify-center items-center overflow-y-auto ">
                         <div class="w-[80%] ">
                             {{-- {{ $step->name }} --}}
                             <div class="w-full">
@@ -185,8 +196,7 @@
                                         @include('components.response.file_upload')
                                     @endif
                                     @if ($step->answer_type == 'NPS')
-                                    @include('components.response.NPS')
-                                       
+                                        @include('components.response.NPS')
                                     @endif
                                 @endif
                             </div>
@@ -555,6 +565,10 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        const userLang = @json($selectedLang);
     </script>
 
 </div>

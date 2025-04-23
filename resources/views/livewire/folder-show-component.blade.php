@@ -7,7 +7,7 @@
         <div class="  space-y-10 " x-data="{ openDelete: false, openFolder: false }">
             <div class="flex justify-between">
                 <div>
-                    <h3 class="font-semibold text-2xl">{{$folder->name }}</h3>
+                    <h3 class="font-semibold text-2xl">{{ $folder->name }}</h3>
                 </div>
                 <div class="max-w-xs w-full">
                     <button class="btn cursor-pointer" data-modal-target="create-modal"
@@ -19,26 +19,16 @@
             <section class="" wire:key="section-{{ now() }}">
                 <ul class=" grid lg:grid-cols-4 gap-5 ">
                     @forelse ($campaigns as $campaign)
-                        @php
-                            $firstStep = $campaign->steps->first();
-                            $videoSrc = $firstStep && isset($firstStep->video_url) ? $firstStep->video_url : null;
-                        @endphp
                         <div class="relative" x-data="{ isOpen: false }" wire:key="campaign-{{ $campaign->id }}">
                             <div
-                                class="hover:shadow-2xl transition duration-500 ease-in-out rounded-xl border border-gray-300 overflow-hidden">
+                                class="hover:shadow-2xl shadow-md transition duration-500 ease-in-out rounded-xl border border-gray-300 overflow-hidden">
                                 <div class="bg-gray-500 h-40 overflow-hidden">
-                                    @if ($videoSrc)
-                                        <video class="mx-auto bg-slate-50/10 w-full  object-contain cursor-not-allowed">
-                                            <source src="{{ $videoSrc }}" type="video/webm">
-                                        </video>
-                                    @endif
+                                    <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
+                                        class="w-full h-full object-center object-cover">
                                 </div>
                                 <div class="p-3 flex justify-between items-center user-card ">
                                     <div class="flex items-center w-[60%] cursor-pointer"
                                         @click="activeCampaign = @js($campaign)">
-                                        <img class="w-10 h-10 rounded-full"
-                                            src="https://unsplash.com/photos/oh0DITWoHi4/download?force=true&w=640"
-                                            alt="Christy">
                                         <span class="ml-3 font-medium  capitalize truncate "
                                             title="{{ $campaign->title }}">{{ $campaign->title }} </span>
                                     </div>

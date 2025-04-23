@@ -61,4 +61,9 @@ class User extends Authenticatable
     public function folders(){
         return $this->hasMany(Folder::class);
     }
+
+    public function resellers()
+    {
+        return $this->hasMany(Reseller::class);
+    }
 }
