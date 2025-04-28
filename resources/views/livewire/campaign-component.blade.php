@@ -201,7 +201,7 @@
                                                 < Back</button>
                                         </div>
                                         <div x-show="showTab == 'email'" style="display: none;">
-                                            <form action="" class="space-y-3">
+                                            <form action="" class="space-y-3 mx-auto max-w-md mb-8">
                                                 <div>
                                                     <label for="">Name</label>
                                                     <input type="text" name="name" placeholder="Name"

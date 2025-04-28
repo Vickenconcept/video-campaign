@@ -107,81 +107,99 @@ class ShowCampaign extends Component
 
     public function goToNext($id = 0, $action = 'defualt')
     {
-        if (!$this->preview) {
-            if (trim($this->textResponse) !== '') {
-                $this->saveText();
-            } else {
-                session()->flash('error', 'Text response cannot be empty.');
+        try {
+            // [ everything inside goToNext as is... ]
+
+            if (!$this->preview) {
+                if (trim($this->textResponse) !== '') {
+                    $this->saveText();
+                } else {
+                    session()->flash('error', 'Text response cannot be empty.');
+                }
+
+
+                # code...
+                if (
+                    (
+                        !empty(trim($this->name)) ||
+                        !empty(trim($this->email)) ||
+                        !empty(trim($this->phonenumber)) ||
+                        !empty(trim($this->productname)) ||
+                        !empty(trim($this->consent)) ||
+                        !empty(trim($this->additionaltext))
+                    )
+                ) {
+                    $this->saveContact();
+                }
+
+                if (!empty($this->selectedOptions)) {
+                    $this->saveSelectedOptions();
+                }
+
+                if (!empty($this->NPSScore)) {
+                    $this->saveNPSScore();
+                }
             }
 
 
-            # code...
-            if (
-                (
-                    !empty(trim($this->name)) ||
-                    !empty(trim($this->email)) ||
-                    !empty(trim($this->phonenumber)) ||
-                    !empty(trim($this->productname)) ||
-                    !empty(trim($this->consent)) ||
-                    !empty(trim($this->additionaltext))
-                )
-            ) {
-                $this->saveContact();
-            }
-
-            if (!empty($this->selectedOptions)) {
-                $this->saveSelectedOptions();
-            }
-
-            if (!empty($this->NPSScore)) {
-                $this->saveNPSScore();
-            }
-        }
 
 
 
 
+            // =====================================
+            // =====================================
+            // =====================================
 
+            $this->textResponse = '';
 
-        // =====================================
-        // =====================================
-        // =====================================
+            $currentStep = $this->steps->findOrFail($id);
 
-        $this->textResponse = '';
+            $nextStepId = $currentStep->getNextStep($action);
 
-        $currentStep = $this->steps->findOrFail($id);
+            $nextStep = $this->steps->findOrFail($nextStepId);
 
-        $nextStepId = $currentStep->getNextStep($action);
+            $previous = json_decode($nextStep->previous, true) ?? [];
 
-        $nextStep = $this->steps->findOrFail($nextStepId);
+            $previous = [$action => $id];
 
-        $previous = json_decode($nextStep->previous, true) ?? [];
-
-        $previous = [$action => $id];
-
-        $nextStep->update([
-            'previous' => json_encode($previous),
-        ]);
-
-
-
-        $this->nextStep = $nextStepId;
-        $this->activeForm = json_decode($nextStep->form, true);
-
-        $this->paypal_keys = json_decode($this->campaign->paypal_keys, true);
-
-        // dd($this->paypal_keys);
-        if (is_array($this->paypal_keys) && isset($this->paypal_keys['client_id'], $this->paypal_keys['currency'])) {
-            $this->dispatch('paypalKeysUpdated', [
-                'client_id' => Crypt::decryptString($this->paypal_keys['client_id']),
-                'currency' => $this->paypal_keys['currency'],
-                'amount' => $nextStep->amount
+            $nextStep->update([
+                'previous' => json_encode($previous),
             ]);
-        }
 
-        // if (!empty($nextStep->file_type)) {
-        $this->dispatch('setFileType', json_decode($nextStep->file_type, true) ?? ['']);
-        // }
+
+
+            $this->nextStep = $nextStepId;
+            $this->activeForm = json_decode($nextStep->form, true);
+
+            $this->paypal_keys = json_decode($this->campaign->paypal_keys, true);
+
+            // dd($this->paypal_keys);
+            if (is_array($this->paypal_keys) && isset($this->paypal_keys['client_id'], $this->paypal_keys['currency'])) {
+                $this->dispatch('paypalKeysUpdated', [
+                    'client_id' => Crypt::decryptString($this->paypal_keys['client_id']),
+                    'currency' => $this->paypal_keys['currency'],
+                    'amount' => $nextStep->amount
+                ]);
+            }
+
+            // if (!empty($nextStep->file_type)) {
+            $this->dispatch('setFileType', json_decode($nextStep->file_type, true) ?? ['']);
+            // }
+
+        } catch (\Throwable $e) {
+            // \Log::error('Error in goToNext: ' . $e->getMessage(), [
+            //     'line' => $e->getLine(),
+            //     'file' => $e->getFile(),
+            //     'trace' => $e->getTraceAsString()
+            // ]);
+            logger( [
+                'Error in goToNext: ' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            // session()->flash('error', 'Something went wrong. Please try again.');
+        }
     }
 
     public function goToPrevious($id, $action)

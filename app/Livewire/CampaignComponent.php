@@ -61,28 +61,7 @@ class CampaignComponent extends Component
         $this->activeTab = $tab;
     }
 
-    // public function addStep($position)
-    // {
-    //     $newPosition = $position + 1;
 
-    //     $steps = $this->campaign->steps()->orderBy('position')->get();
-
-    //     foreach ($steps as $step) {
-    //         if ($step->position >= $newPosition) {
-    //             $step->update(['position' => $step->position + 1]);
-    //         }
-    //     }
-
-    //     $this->campaign->steps()->create([
-    //         'uuid' => Str::uuid(),
-    //         'name' => "Step $newPosition",
-    //         'position' => $newPosition,
-    //         'contact_detail' => $this->contact_detail,
-    //     ]);
-
-    //     $this->steps = $this->campaign->steps;
-    //     session()->flash('success', 'Step added successfully.');
-    // }
 
     public function updateAnswerType() {
 
@@ -138,7 +117,8 @@ class CampaignComponent extends Component
         
         $this->steps = $this->campaign->steps;
 
-        session()->flash('success', 'Step added successfully.');
+        // session()->flash('success', 'Step added successfully.');
+        $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     }
 
 
@@ -231,7 +211,8 @@ class CampaignComponent extends Component
         }
 
         $this->steps = $this->campaign->steps;
-        session()->flash('success', 'Step deleted and reordered successfully.');
+        $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
+        // session()->flash('success', 'Step deleted and reordered successfully.');
     }
 
     public function saveStepName(){
