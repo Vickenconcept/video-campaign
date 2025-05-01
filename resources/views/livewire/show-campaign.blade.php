@@ -16,7 +16,7 @@
 
   --}}
 
-  <x-seo::meta />
+    <x-seo::meta />
     @seo([
         'title' => 'Campain Video ask',
         'description' => 'Campain',
@@ -33,6 +33,8 @@
         $firstPosition = $steps->min('position');
 
     @endphp
+
+  
     @foreach ($steps as $step)
 
         @php
@@ -44,6 +46,7 @@
 
         @if ($step->id == $nextStep)
             {{-- <p>hello</p> --}}
+            @if ($step->id != optional($lastStep)->id)
             <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
                 {{-- <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition> --}}
                 @php
@@ -85,7 +88,8 @@
                     </div>
                 </div>
 
-                <div class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-black/30 md:bg-white flex justify-center items-center overflow-y-auto pb-10">
+                <div
+                    class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-black/30 md:bg-white flex justify-center items-center overflow-y-auto pb-10">
                     @if ($preview)
                         <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
                             <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
@@ -226,7 +230,19 @@
                     </div>
                 </div>
             </div>
+
+            @else
+                <div class="relative h-full w-full  overflow-hidden">
+                    <div class="h-full w-full bg-red-500">
+                        <img src="https://media.istockphoto.com/id/1397892955/photo/thank-you-message-for-card-presentation-business-expressing-gratitude-acknowledgment-and.jpg?s=612x612&w=0&k=20&c=7Lyf2sRAJnX_uiDy3ZEytmirul8pyJWm4l2fxiUtdvk="
+                            alt="" class="object-cover object-center w-full h-full">
+                    </div>
+    
+                </div>
+            @endif
+
         @endif
+
     @endforeach
 
 

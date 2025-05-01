@@ -4,7 +4,7 @@
     </div>
 
     @if (count($campaigns ?? []) > 0)
-        <div class="  space-y-10 " x-data="{ openDelete: false, openFolder: false }">
+        <div class="  space-y-10 " x-data="{ openDelete: false, openFolder: false, editModal: false }">
             <div class="flex justify-between">
                 <div>
                     <h3 class="font-semibold text-2xl">{{ $folder->name }}</h3>
@@ -78,7 +78,7 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button
+                                        <button @click="editModal = true" wire:click="setCampaign({{ $campaign->id }})"
                                             class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
                                             <p class="font-semibold text-sm">Settings</p>
                                         </button>
@@ -158,6 +158,81 @@
                     </div>
                 </div>
             </div>
+
+
+            {{-- editModal --}}
+            <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
+                x-show="editModal" style="display: none;">
+                <div @click.away="editModal = false"
+                    class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
+                    <div class=" h-full ">
+
+
+                        <div class="space-y-3 h-auto overflow-y-auto">
+
+                            <div class="flex justify-between items-center">
+                                <h5 class="text-center text-2xl font-semibold pb-1">Edit campaign
+                                </h5>
+
+                                <button type="button"
+                                    class="end-2.5 cursor-pointer text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                    @click="editModal = false">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+
+                                    <input type="text" wire:model="title" id="title" class="form-control "
+                                        placeholder="Enter Campaign title" />
+                                </div>
+
+                              
+                                <div
+                                    class="bg-gray-50 border border-gray-300 rounded-lg block w-full px-2.5 py-1  items-center flex justify-between">
+                                    <h5 class="font-semibold">Language</h5>
+                                    @php
+                                        $languages = [
+                                            'en' => 'English',
+                                            'fr' => 'French',
+                                            'es' => 'Spanish',
+                                            'de' => 'German',
+                                            'zh-CN' => 'Chinese',
+                                            'ar' => 'Arabic',
+                                            'hi' => 'Hindi',
+                                        ];
+                                    @endphp
+
+                                    <select wire:model="language" id="language"
+                                        class="bg-gray-300 text-gray-800 rounded-md p-2 font-medium">
+                                        <option value="">Select Language</option>
+                                        @foreach ($languages as $code => $name)
+                                            <option class="bg-white text-gray-700  font-medium"
+                                                value="{{ $code }}">
+                                                {{ $name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+                                <button @click="editModal = false" wire:click="editCampaign()" type="button"
+                                    class="btn cursor-pointer">Edit
+                                    Folder</button>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
 
@@ -231,7 +306,7 @@
                                     'fr' => 'French',
                                     'es' => 'Spanish',
                                     'de' => 'German',
-                                    'zh' => 'Chinese',
+                                    'zh-CN' => 'Chinese',
                                     'ar' => 'Arabic',
                                     'hi' => 'Hindi',
                                 ];
@@ -256,6 +331,8 @@
             </div>
         </div>
     </div>
+
+
 
 
     <script>

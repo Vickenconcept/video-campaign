@@ -1,5 +1,5 @@
 <div>
-    @if ($activeStep !== null)
+    @if ($activeStep !== null && $activeStep->id != optional($lastStep)->id)
         {{-- @if ($activeStep->answer_type == 'multi_choice') --}}
         <div>
             <ul class="space-y-3">
@@ -82,10 +82,9 @@
                 @endforelse
             </ul>
         </div>
-        {{-- @else
-            <div>
-                this is others
-            </div>
-        @endif --}}
+    @else
+        <div >
+            <p class="p-5 ">The Last step</p>
+        </div>
     @endif
 </div>

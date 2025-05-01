@@ -8,13 +8,16 @@ class LogicComponent extends Component
 {
 
 
-    public $activeStep;
+    public$campaign, $activeStep, $lastStep;
     public $multi_choice_question,$multi_choice_setting;
     // public $contact_detail, $formFields;
 
-    public function mount($activeStep)
+    public function mount($activeStep, $campaign)
     {
         $this->activeStep = $activeStep;
+        $this->campaign = $campaign;
+
+        $this->lastStep = $campaign->steps->sortByDesc('id')->first();
 
         if ($this->activeStep !== null) {
             $this->multi_choice_question = json_decode($activeStep->multi_choice_question, true) ?? [];
@@ -23,6 +26,7 @@ class LogicComponent extends Component
         if ($this->activeStep !== null) {
             $this->multi_choice_setting = json_decode($activeStep->multi_choice_setting, true) ?? [];
         }
+
        
     }
 

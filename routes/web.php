@@ -12,6 +12,7 @@ use App\Livewire\EspConnector;
 use App\Livewire\FolderComponent;
 use App\Livewire\FolderShowComponent;
 use App\Livewire\ShowCampaign;
+use App\Livewire\SingleResponse;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,6 +38,10 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::get('c/{uuid}/', ShowCampaign::class)->name('campaign.view');
+Route::get('R/{uuid}/', SingleResponse::class)->name('response.single');
+Route::get('thankyou', function () {
+    return 'thankyou';
+})->name('thankyou');
 
 
 Route::middleware(['auth'])->group(function () {

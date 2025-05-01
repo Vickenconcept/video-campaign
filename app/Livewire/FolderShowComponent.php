@@ -31,6 +31,13 @@ class FolderShowComponent extends Component
     {
 
         $this->campaignID = $id;
+
+        if ($this->campaignID) {
+            $campaign = $this->campaigns->find($this->campaignID);
+
+            $this->title =  $campaign->title;
+            $this->language = $campaign->language;
+        }
     }
     public function deleteForm()
     {
@@ -130,6 +137,23 @@ class FolderShowComponent extends Component
 
             $this->campaigns = $this->folder->campaigns;
             $this->dispatch('notify', status: 'success', msg: 'Moved successfully!');
+        }
+    }
+
+    public function editCampaign()
+    {
+        if ($this->campaignID) {
+            $campaign = $this->campaigns->find($this->campaignID);
+
+            if ($campaign) {
+                $campaign->update([
+                    'title' => $this->title,
+                    'language' => $this->language,
+                ]);
+            }
+
+            $this->campaigns = $this->folder->campaigns;
+            $this->dispatch('notify', status: 'success', msg: 'Updated successfully!');
         }
     }
 

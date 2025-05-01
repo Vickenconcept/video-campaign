@@ -13,7 +13,7 @@ use Livewire\Attributes\On;
 class CampaignComponent extends Component
 {
 
-    public $campaign, $title, $steps, $activeStep, $activeName, $user, $form, $multi_choice_setting;
+    public $campaign, $title, $steps,$lastStep, $activeStep, $activeName, $user, $form, $multi_choice_setting;
     public $id, $postion, $contact_detail = false;
 
     public $email , $name ;
@@ -26,6 +26,8 @@ class CampaignComponent extends Component
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
         $this->title = $this->campaign->title;
         $this->steps = $this->campaign->steps;
+
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
 
         $this->user = auth()->user();
 
@@ -92,6 +94,7 @@ class CampaignComponent extends Component
 
     public function addStep($position)
     {
+
         $newPosition = $position + 1;
 
         $steps = $this->campaign->steps()->orderBy('position')->get();
@@ -116,7 +119,7 @@ class CampaignComponent extends Component
         ]);
         
         $this->steps = $this->campaign->steps;
-
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
         // session()->flash('success', 'Step added successfully.');
         $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     }
@@ -124,6 +127,8 @@ class CampaignComponent extends Component
 
     public function goToNextStep($stepId, $action)
     {
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
+
         $step = Step::find($stepId);
         $nextStepId = $step->getNextStep($action);
 
@@ -211,8 +216,10 @@ class CampaignComponent extends Component
         }
 
         $this->steps = $this->campaign->steps;
+
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
+
         $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
-        // session()->flash('success', 'Step deleted and reordered successfully.');
     }
 
     public function saveStepName(){
@@ -230,6 +237,7 @@ class CampaignComponent extends Component
 
     public function setStep($id, $postion)
     {
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
         $this->id = $id;
         $this->postion = $postion;
 
@@ -240,7 +248,7 @@ class CampaignComponent extends Component
             $this->activeName = $this->activeStep->name ?? '';
 
         $this->answer_type = $this->activeStep->answer_type;
-        // dd($this->activeStep);
+        
     }
 
 
@@ -253,7 +261,6 @@ class CampaignComponent extends Component
     
         $url = route('campaign.view', ['uuid' => $this->campaign->uuid]);
     
-        // dd($url);
         Mail::to($this->email)->send(new InviteMail($url, $this->name));
     
         $this->name = '';

@@ -181,7 +181,7 @@ class AllResponse extends Component
 
 
         Response::create([
-            'step_id' => $this->activeResponse->step_id + 1,
+            'step_id' => $this->activeResponse->step_id,
             'uuid' => Str::uuid(),
             'user_token' => $this->activeResponse->user_token,
             'email' => $this->activeResponse->email ?? null,
@@ -207,7 +207,7 @@ class AllResponse extends Component
 
 
         Response::create([
-            'step_id' => $this->activeResponse->step_id + 1,
+            'step_id' => $this->activeResponse->step_id,
             'uuid' => Str::uuid(),
             'user_token' => $this->activeResponse->user_token,
             'email' => $this->activeResponse->email ?? null,

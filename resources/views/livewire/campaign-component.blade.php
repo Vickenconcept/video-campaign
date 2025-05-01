@@ -389,11 +389,11 @@
 
     <div class="flex gap-3 flex-wrap" id="zoomContainer" style="zoom: 0.9;">
         @php
-            $lastPosition = $steps->max('position');
-            $firstPosition = $steps->min('position');
+            $lastPosition = $steps->max('id');
+            $firstPosition = $steps->min('id');
         @endphp
 
-        @forelse ($steps->sortBy('position') as $step)
+        @forelse ($steps->sortBy('id') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
             <div class="w-52 h-48 flex relative ">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
@@ -408,7 +408,7 @@
                     <div class="h-full  grid grid-cols-2">
                         <div class="bg-slate-200 h-full flex justify-center items-center">
                             <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
-                            class="w-full h-full object-center object-cover">
+                                class="w-full h-full object-center object-cover">
                         </div>
                         <div class="bg-slate-100 h-full"></div>
 
@@ -426,7 +426,7 @@
                             </svg>
                         </button>
                         @if ($steps->count() > 1)
-                            @if ($step->position != $firstPosition)
+                            @if ($step->id != $firstPosition && $step->id != optional($lastStep)->id)
                                 <button ype="button" class="cursor-pointer"
                                     wire:click="deleteStep( {{ $step->id }},{{ $step->position }})">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -448,7 +448,7 @@
                     </div>
                 </div>
                 {{-- @if ($index < $steps->count() - 1) --}}
-                @if ($step->position < $lastPosition)
+                @if ($step->id < $lastPosition)
                     <div class="w-[10%] flex items-center pl-2">
                         <span>
                             {{-- <svg xmlns="http://www.w3.org/2000/svg" width="22.703" height="21.928">
@@ -456,10 +456,6 @@
                                     d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z" />
                             </svg> --}}
 
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg> --}}
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -495,30 +491,33 @@
 
                 <div class="grid grid-cols-3 h-full">
                     <div class="h-full lg:col-span-2 flex justify-center items-center">
-                        <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2"
-                            wire:key="display-{{ now() }}">
-                            <div class="h-full bg-slate-600">
-                                @if ($activeStep)
-                                    <video width="100%" controls class="mx-auto bg-slate-50 ">
-                                        <source src="{{ $activeStep->video_url }}" type="video/webm">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                @endif
+
+                        @if (optional($activeStep)->id == optional($lastStep)->id)
+
+                            <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden "
+                                wire:key="display-{{ now() }}">
+                                <div class="h-full w-full bg-red-500">
+                                    <img src="https://media.istockphoto.com/id/1397892955/photo/thank-you-message-for-card-presentation-business-expressing-gratitude-acknowledgment-and.jpg?s=612x612&w=0&k=20&c=7Lyf2sRAJnX_uiDy3ZEytmirul8pyJWm4l2fxiUtdvk="
+                                        alt="" class="object-cover object-center w-full h-full">
+                                </div>
                             </div>
-                            {{-- <div class="h-full bg-slate-600" x-data="{ videoLoaded: false }" x-init="setTimeout(() => videoLoaded = true, 100)">
-                                @if ($activeStep)
-                                    <div x-show="!videoLoaded" class="text-white text-center p-4">Loading video...</div>
+                        @else
+                            <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2"
+                                wire:key="display-{{ now() }}">
+                                <div class="h-full bg-slate-600">
+                                    @if ($activeStep)
+                                        <video width="100%" controls class="mx-auto bg-slate-50 ">
+                                            <source src="{{ $activeStep->video_url }}" type="video/webm">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    @endif
+                                </div>
 
-                                    <video x-show="videoLoaded" width="100%" controls class="mx-auto bg-slate-50">
-                                        <source src="{{ $activeStep->video_url }}" type="video/webm">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                @endif
-                            </div> --}}
 
+                                <div class="h-full bg-white"></div>
+                            </div>
+                        @endif
 
-                            <div class="h-full bg-white"></div>
-                        </div>
 
                     </div>
                     <div class="h-full lg:col-span-1 bg-white p-6  overflow-y-auto ">
@@ -619,7 +618,7 @@
                                 @endif
                                 @if ($activeTab === 'logic')
                                     <div class="">
-                                        <livewire:logic-component :activeStep="$activeStep"
+                                        <livewire:logic-component :activeStep="$activeStep" :campaign="$campaign"
                                             wire:key="multi-choice-{{ now() }}" />
                                     </div>
                                 @endif

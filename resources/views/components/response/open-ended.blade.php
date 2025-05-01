@@ -87,7 +87,6 @@
 
     <div x-show="openResponse == 'video'" style="display: none;">
         <div>
-            video
             <video x-ref="videoPlayer" autoplay muted controls class="w-full max-w-md"></video>
             <input type="file" wire:model="videoResponse" x-ref="videoUpload" class="hidden">
             <div class="my-4" x-data="{ isPlaying: false }">
@@ -125,7 +124,6 @@
     </div>
     <div x-show="openResponse == 'audio'" style="display: none;">
         <div>
-            audio
             <audio x-ref="audioPlayer" controls></audio>
             <input type="file" wire:model="audioResponse" x-ref="videoUpload" class="hidden">
             <div class="my-4" x-data="{ isPlaying: false }">

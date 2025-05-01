@@ -15,7 +15,7 @@ class ShowCampaign extends Component
 {
     use WithFileUploads;
 
-    public $campaign, $steps;
+    public $campaign, $steps,$lastStep;
     public $nextStep;
     public $preview;
     public $contactDetailShownStepId;
@@ -36,22 +36,6 @@ class ShowCampaign extends Component
     public function mount($uuid)
     {
 
-
-        // $currentUuid = session('user_uuid');
-        // $currentToken = session('user_token');
-
-        // if (!$currentUuid || $currentUuid !== $uuid) {
-        //     $newToken = Str::uuid()->toString();
-        //     session([
-        //         'user_uuid' => $uuid,
-        //         'user_token' => $newToken,
-        //     ]);
-
-        //     $this->userToken = $newToken;
-        // } else {
-        //     $this->userToken = $currentToken;
-        // }
-
         $currentUuid = Cache::get('user_uuid');
         $currentToken = Cache::get('user_token');
 
@@ -70,6 +54,8 @@ class ShowCampaign extends Component
         $this->selectedLang =  $this->campaign->language;
 
         $this->steps = $this->campaign->steps;
+
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
 
         $this->preview = request()->has('preview');
 
@@ -271,6 +257,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'text' => $this->textResponse,
             ]);

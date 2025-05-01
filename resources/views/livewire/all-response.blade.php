@@ -74,7 +74,7 @@
                 <div x-data="{ openDelete: false }" class="bg-white shadow-lg rounded-lg overflow-hidden">
                     <ul class="divide-y divide-gray-200 h-48 lg:h-[550px] overflow-y-scroll">
                         @forelse ($responses as $key =>  $response)
-                            <li class="p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}" ">
+                            <li x-data="{ isOpen: false }" class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}" ">
                                 <div class="flex items-center w-[100%] cursor-pointer"
                                     @click="activeResponse = @js($response)"
                                     wire:click="setResponse('{{ $response->user_token }}')">
@@ -93,10 +93,40 @@
                                     </div>
                                 </div>
                                 <div class="flex space-x-1">
-                                    <button @click="openDelete = true " wire:click="setActiveResponse('{{ $response->user_token }}')" class="text-gray-500 hover:text-gray-700 cursor-pointer ">
-                                        <i class='bx bxs-trash-alt text-xl text-red-500 hover:text-red-700' ></i>
-                            </button>
+
+                            <button @click="isOpen = true"
+                            class="text-gray-500 hover:text-gray-700 cursor-pointer ">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+
+                            
                 </div>
+
+                        <div x-show="isOpen" style="display: none;" @click.away="isOpen =false"
+                            class="absolute right-0 -bottom-16 z-10 border border-gray-300 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 overflow-hidden ">
+                            <ul class=" text-sm text-gray-700 ">
+                                </li>
+                                <li>
+                                    <button @click="openDelete = true " wire:click="setActiveResponse('{{ $response->user_token }}')"
+                                        class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                        <p class="font-semibold text-sm">Delete conversation</p>
+                                    </button>
+                                </li>
+                                <li>
+                                    <a href="mailto:{{ optional($response)->email }}"
+                                        class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                        <p class="font-semibold text-sm">
+                                            <span>Send an email</span>
+                                            <i class='bx bx-link-external'></i>
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                 </li>
     @empty
             <div class="text-xl font-semibild  py-5 h-full flex justify-center items-center">
@@ -203,16 +233,13 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        {{-- {{ $activeIndex }} --}}
-                                        {{-- <video controls class="mx-auto bg-slate-50/10 max-w-full  object-contain">
-                                        <source src="{{ optional($activeResponse)->video }}" type="video/webm">
-                                    </video> --}}
+                                       
 
                                         @if (!empty($res->video))
                                             <div>
                                                 <video controls
                                                     class="mx-auto bg-slate-50/10 max-w-full w-full  object-cover">
-                                                    <source src="{{ optional($activeResponse)->video }}"
+                                                    <source src="{{ optional($res)->video }}"
                                                         type="video/webm">
                                                 </video>
                                             </div>
@@ -225,8 +252,8 @@
                                                 </audio>
                                             </div>
                                         @elseif (!empty($res->text))
-                                            <div class="p-5">
-                                                <div class="flex items-ceter space-x-3">
+                                            <div class="p-5 h-full">
+                                                <div class="flex items-ceter space-x-3 h-full">
                                                     <span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 24 24" stroke-width="1.5"
@@ -235,8 +262,10 @@
                                                                 d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                                                         </svg>
                                                     </span>
-                                                    <span
-                                                        class="font-medium text-md capitalize max-w-sm">{{ $res->text }}</span>
+                                                    <div class="h-full overflow-y-auto w-full">
+                                                        <p
+                                                        class="font-medium text-md capitalize max-w-md  ">{{ $res->text }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         @elseif (!empty($res->file_upload))
