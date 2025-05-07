@@ -37,6 +37,7 @@ return new class extends Migration
             $table->text('pipio_video_id')->nullable();
             $table->text('pipio_status')->nullable();
             $table->text('thumbnail_url')->nullable();
+            $table->text('last_cover_image')->nullable();
             $table->boolean('is_pipio_processed')->default(false);
             $table->timestamps();
         });

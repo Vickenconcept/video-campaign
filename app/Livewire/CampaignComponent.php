@@ -5,18 +5,23 @@ namespace App\Livewire;
 use App\Mail\InviteMail;
 use App\Models\Campaign;
 use App\Models\Step;
+use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class CampaignComponent extends Component
 {
 
-    public $campaign, $title, $steps,$lastStep, $activeStep, $activeName, $user, $form, $multi_choice_setting;
+    use WithFileUploads;
+
+
+    public $campaign, $title, $steps, $lastStep, $activeStep, $activeName, $user, $form, $multi_choice_setting, $thank_you_image;
     public $id, $postion, $contact_detail = false;
 
-    public $email , $name ;
+    public $email, $name;
 
     public $activeTab = 'answer';
     public $answer_type = 'open_ended';
@@ -27,7 +32,7 @@ class CampaignComponent extends Component
         $this->title = $this->campaign->title;
         $this->steps = $this->campaign->steps;
 
-        $this->lastStep = $this->steps->sortByDesc('id')->first();
+        $this->lastStep = $this->steps->sortByDesc('position')->first();
 
         $this->user = auth()->user();
 
@@ -41,13 +46,11 @@ class CampaignComponent extends Component
         ]);
 
         $this->multi_choice_setting = json_encode([
-            ['name' => 'multiple_select', 'label' => 'Enable multiple selection','status' => false, 'info' => 'Allow multiple selection of multiple choice items.'],
-            ['name' => 'randomize', 'label' => 'Randomize','status' => false, 'info' => 'Change the oder of your choices everytime your campaign is viewed'],
-            ['name' => 'skip_data_collection', 'label' => 'Skip data collection','status' => false, 'info' => 'use this setting if you are using multiple choice for navigation only as to skip collection of data'],
-            ['name' => 'option_count', 'label' => 'Show option count','status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
+            ['name' => 'multiple_select', 'label' => 'Enable multiple selection', 'status' => false, 'info' => 'Allow multiple selection of multiple choice items.'],
+            ['name' => 'randomize', 'label' => 'Randomize', 'status' => false, 'info' => 'Change the oder of your choices everytime your campaign is viewed'],
+            ['name' => 'skip_data_collection', 'label' => 'Skip data collection', 'status' => false, 'info' => 'use this setting if you are using multiple choice for navigation only as to skip collection of data'],
+            ['name' => 'option_count', 'label' => 'Show option count', 'status' => false, 'info' => 'Display help text above multiple choice options showing the number of options available to select'],
         ]);
-
-        
     }
 
     public function saveTitle()
@@ -65,16 +68,34 @@ class CampaignComponent extends Component
 
 
 
-    public function updateAnswerType() {
+    // public function updateAnswerType()
+    // {
 
-        $multi_choice_question = $this->answer_type !== 'multi_choice' ? json_encode(['default' => 1]): null;
+    //     $multi_choice_question = $this->answer_type !== 'multi_choice' ? json_encode(['default' => 1]) : null;
 
-        $this->activeStep->update([
-            'answer_type' =>  $this->answer_type,
-            'multi_choice_question' =>  $multi_choice_question
-        ]);
+    //     $this->activeStep->update([
+    //         'answer_type' =>  $this->answer_type,
+    //         'multi_choice_question' =>  $multi_choice_question
+    //     ]);
+    //     $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
+    // }
+
+    public function updateAnswerType()
+    {
+        $data = [
+            'answer_type' => $this->answer_type,
+        ];
+
+        if ($this->answer_type === 'multi_choice') {
+            $data['multi_choice_question'] = json_encode(['default' => 1]);
+        }
+
+        $this->activeStep->update($data);
+
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
     }
+
+
 
     #[On('update-contact-detail')]
     public function update_contact_detail($tab)
@@ -92,22 +113,62 @@ class CampaignComponent extends Component
     }
 
 
+    // public function addStep($position)
+    // {
+
+    //     $newPosition = $position + 1;
+
+    //     $steps = $this->campaign->steps()->orderBy('position')->get();
+    //     foreach ($steps as $step) {
+    //         if ($step->position >= $newPosition) {
+    //             $step->update(['position' => $step->position + 1]);
+    //         }
+    //     }
+    //     $multi_choice_question = json_encode(['default' => 1]);
+    //     $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
+
+    //     // Create the new step
+    //     $newStep = $this->campaign->steps()->create([
+    //         'uuid' => Str::uuid(),
+    //         'name' => "default Step",
+    //         'position' => $newPosition,
+    //         'contact_detail' => $this->contact_detail,
+    //         'form' => $this->form,
+    //         'multi_choice_setting' => $this->multi_choice_setting,
+    //         'multi_choice_question' => $multi_choice_question,
+    //         'video_setting' => $video_setting,
+    //     ]);
+
+    //     $this->steps = $this->campaign->steps;
+    //     $this->lastStep = $this->steps->sortByDesc('id')->first();
+    //     // session()->flash('success', 'Step added successfully.');
+    //     $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
+    // }
+
     public function addStep($position)
     {
-
         $newPosition = $position + 1;
 
-        $steps = $this->campaign->steps()->orderBy('position')->get();
-        foreach ($steps as $step) {
-            if ($step->position >= $newPosition) {
-                $step->update(['position' => $step->position + 1]);
-            }
-        }
-        $multi_choice_question = json_encode(['default' => 1]);
-        $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
+        // Shift only steps after the inserted position
+        $this->campaign->steps()
+            ->where('position', '>=', $newPosition)
+            ->orderByDesc('position') 
+            ->get()
+            ->each(function ($step) {
+                $step->position += 1;
+                $step->save();
+            });
 
-        // Create the new step
-        $newStep = $this->campaign->steps()->create([
+        $multi_choice_question = json_encode(['default' => 1]);
+        $video_setting = json_encode([
+            'position' => 'top',
+            'fit' => true,
+            'overlay_text' => '',
+            'text_size' => 'text-sm',
+            'overlay_bg' => true,
+        ]);
+
+        $this->campaign->steps()->create([
             'uuid' => Str::uuid(),
             'name' => "default Step",
             'position' => $newPosition,
@@ -117,12 +178,13 @@ class CampaignComponent extends Component
             'multi_choice_question' => $multi_choice_question,
             'video_setting' => $video_setting,
         ]);
-        
-        $this->steps = $this->campaign->steps;
-        $this->lastStep = $this->steps->sortByDesc('id')->first();
-        // session()->flash('success', 'Step added successfully.');
+
+        $this->steps = $this->campaign->steps()->orderBy('position')->get();
+        $this->lastStep = $this->steps->last();
+
         $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     }
+
 
 
     public function goToNextStep($stepId, $action)
@@ -222,7 +284,8 @@ class CampaignComponent extends Component
         $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
     }
 
-    public function saveStepName(){
+    public function saveStepName()
+    {
 
         $this->activeStep->update([
             'name' =>  $this->activeName,
@@ -231,7 +294,6 @@ class CampaignComponent extends Component
         $this->steps = $this->campaign->steps;
 
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
-
     }
 
 
@@ -245,10 +307,9 @@ class CampaignComponent extends Component
             ->where('id', $this->id)
             ->first();
 
-            $this->activeName = $this->activeStep->name ?? '';
+        $this->activeName = $this->activeStep->name ?? '';
 
         $this->answer_type = $this->activeStep->answer_type;
-        
     }
 
 
@@ -258,17 +319,45 @@ class CampaignComponent extends Component
             'email' => 'required|email',
             'name' => 'nullable|string|max:255', // optional: if you want to validate name too
         ]);
-    
+
         $url = route('campaign.view', ['uuid' => $this->campaign->uuid]);
-    
+
         Mail::to($this->email)->send(new InviteMail($url, $this->name));
-    
+
         $this->name = '';
         $this->email = '';
-    
+
         session()->flash('success', 'Invitation email sent successfully!');
-    
+
         $this->dispatch('email-sent');
+    }
+
+
+    public function saveCoverImage()
+    {
+
+
+        $this->validate([
+            'thank_you_image'  => 'required|file'
+        ]);
+
+
+        $cloudinary = new Cloudinary();
+        $cloudinaryResponse = $cloudinary->uploadApi()->upload($this->thank_you_image->getRealPath(), [
+            'resource_type' => 'image',
+        ]);
+        $cloudinaryUrl = $cloudinaryResponse['secure_url'];
+
+
+
+        $this->activeStep->update([
+            'last_cover_image' => $cloudinaryUrl,
+        ]);
+
+
+        $this->steps = $this->campaign->steps;
+
+        $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
     }
 
     public function render()

@@ -271,6 +271,7 @@ class ShowCampaign extends Component
             return;
         }
 
+
         if (!$this->userToken) {
             return response()->json(['error' => 'User token not found'], 400);
         }
@@ -391,6 +392,9 @@ class ShowCampaign extends Component
     #[On('update-file')]
     public function update_file($url)
     {
+        if ($this->preview) {
+            return;
+        }
 
         if (!$this->userToken) {
             return response()->json(['error' => 'User token not found'], 400);

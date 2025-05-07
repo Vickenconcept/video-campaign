@@ -39,7 +39,7 @@
                                         ->when(is_object($activeStep), function ($query) use ($activeStep) {
                                             $query->where('id', '!=', $activeStep->id);
                                         })
-                                        ->orderBy('position')
+                                        ->orderBy('id')
                                         ->get();
                                 @endphp
                                 <p class="text-gray-500 text-xs font-semibold mb-2">Choose a destination</p>

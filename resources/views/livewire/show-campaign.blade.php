@@ -45,10 +45,8 @@
 
 
         @if ($step->id == $nextStep)
-            {{-- <p>hello</p> --}}
             @if ($step->id != optional($lastStep)->id)
             <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
-                {{-- <div class="h-full w-full  overflow-hidden grid grid-cols-2" wire:transition> --}}
                 @php
                     $fit = $video_setting['fit'] ?? false;
 
@@ -234,7 +232,7 @@
             @else
                 <div class="relative h-full w-full  overflow-hidden">
                     <div class="h-full w-full bg-red-500">
-                        <img src="https://media.istockphoto.com/id/1397892955/photo/thank-you-message-for-card-presentation-business-expressing-gratitude-acknowledgment-and.jpg?s=612x612&w=0&k=20&c=7Lyf2sRAJnX_uiDy3ZEytmirul8pyJWm4l2fxiUtdvk="
+                        <img src="{{ $step->last_cover_image }}"
                             alt="" class="object-cover object-center w-full h-full">
                     </div>
     

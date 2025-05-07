@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Response;
 use Livewire\Component;
 use Cloudinary\Cloudinary;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 
@@ -15,6 +16,7 @@ class AllResponse extends Component
     public $responses, $activeResponse, $responsesByToken, $activeIndex;
     public $audioResponse, $videoResponse, $textResponse, $active_response_token;
 
+    public $url, $email, $name, $message;
 
     public $filterEmail = false;
     public $filterVideo = false;
@@ -24,50 +26,7 @@ class AllResponse extends Component
 
 
 
-    // public function mount()
-    // {
-    //     $user = auth()->user();
 
-    //     $allResponses = $user->folders()
-    //         ->with('campaigns.steps.responses')
-    //         ->get()
-    //         ->flatMap(
-    //             fn($folder) =>
-    //             $folder->campaigns->flatMap(
-    //                 fn($campaign) =>
-    //                 $campaign->steps->flatMap(
-    //                     fn($step) =>
-    //                     $step->responses
-    //                 )
-    //             )
-    //         );
-
-    //     $this->responsesByToken = $allResponses->groupBy('user_token');
-
-
-    //     $this->responses = $allResponses
-    //         ->sortByDesc('created_at') // or use 'id' if you prefer
-    //         ->groupBy('user_token')
-    //         ->map(function ($responsesGroup) {
-    //             $merged = [];
-
-    //             foreach ($responsesGroup as $response) {
-    //                 foreach ($response->getAttributes() as $key => $value) {
-    //                     if (!empty($value) && empty($merged[$key])) {
-    //                         $merged[$key] = $value;
-    //                     }
-    //                 }
-    //             }
-
-    //             return (object) $merged;
-    //         })
-    //         ->values();
-
-
-    //     $latest = $allResponses->sortByDesc('created_at')->first();
-
-    //     $this->activeResponse = $this->responses->firstWhere('user_token', $latest->user_token ?? null);
-    // }
 
     public function mount()
     {
@@ -166,6 +125,54 @@ class AllResponse extends Component
         $this->active_response_token = $user_token;
     }
 
+    public function selectResponseById($id)
+    {
+        if ($id) {
+
+            $activeResponse = Response::firstWhere('id', $id);
+            $this->url =  route('response.single', ['uuid' => $activeResponse->uuid]);
+            $this->name =  $activeResponse->name;
+            $this->email =  $activeResponse->email;
+
+            return $this->skipRender();
+        }
+    }
+
+
+    public function sendResponse()
+    {
+
+
+        $this->validate([
+            'email' => 'required|email',
+            'name' => 'nullable|string|max:255', 
+        ]);
+
+        $name = $this->name;
+        $email = $this->email;
+        $message = $this->message;
+
+        $link = $this->url;
+
+
+        $mailBody = "
+            Name: {$name}\n
+            Email: {$email}\n
+            Message: {$message}\n\n
+            View the full response here: {$link}
+        ";
+
+
+        Mail::raw($mailBody, function ($msg) use ($email) {
+            $msg->to($email)
+                ->subject('Action Required');
+        });
+
+        $this->dispatch('notify', status: 'success', msg: 'Response sent successfully!');
+    }
+
+
+
 
     public function saveAudio()
     {
@@ -246,7 +253,6 @@ class AllResponse extends Component
             $this->activeResponse = null;
         }
         $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
-
     }
 
 

@@ -39,13 +39,15 @@ class FolderShowComponent extends Component
             $this->language = $campaign->language;
         }
     }
-    public function deleteForm()
+    public function deleteCampaign()
     {
         if ($this->campaignID) {
             $this->campaigns->find($this->campaignID)->delete();
         }
         $this->campaigns = $this->folder->campaigns;
 
+        $this->title = '';
+        $this->language = '';
         $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
     }
 
@@ -88,6 +90,17 @@ class FolderShowComponent extends Component
             'name' => 'step 1',
             'position' => 1,
             'contact_detail' => $this->contact_detail,
+            'form' => $form,
+            'multi_choice_setting' => $multi_choice_setting,
+            'multi_choice_question' => $multi_choice_question,
+            'video_setting' => $video_setting,
+
+        ]);
+
+        $campaign->steps()->create([
+            'uuid' => Str::uuid(),
+            'name' => 'step 1',
+            'position' => 0,
             'form' => $form,
             'multi_choice_setting' => $multi_choice_setting,
             'multi_choice_question' => $multi_choice_question,

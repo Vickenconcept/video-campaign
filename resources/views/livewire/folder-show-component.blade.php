@@ -110,7 +110,7 @@
 
                             <div class="flex justify-center space-x-2">
                                 <div>
-                                    <button type="button" @click="openDelete = false" wire:click="deleteForm()"
+                                    <button type="button" @click="openDelete = false" wire:click="deleteCampaign()"
                                         class="btn-danger cursor-pointer">
                                         Yes, Delete
                                     </button>

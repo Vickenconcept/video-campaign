@@ -393,7 +393,7 @@
             $firstPosition = $steps->min('id');
         @endphp
 
-        @forelse ($steps->sortBy('id') as $step)
+        @forelse ($steps->sortBy('position') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
             <div class="w-52 h-48 flex relative ">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
@@ -451,10 +451,6 @@
                 @if ($step->id < $lastPosition)
                     <div class="w-[10%] flex items-center pl-2">
                         <span>
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="22.703" height="21.928">
-                                <path
-                                    d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z" />
-                            </svg> --}}
 
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -489,7 +485,7 @@
             class=" w-[90%] md:w-[100%] h-[100%] shadow-inner  overflow-auto  transition-all relative duration-700">
             <div class=" h-full ">
 
-                <div class="grid grid-cols-3 h-full">
+                <div class="grid lg:grid-cols-3 h-full">
                     <div class="h-full lg:col-span-2 flex justify-center items-center">
 
                         @if (optional($activeStep)->id == optional($lastStep)->id)
@@ -497,7 +493,7 @@
                             <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden "
                                 wire:key="display-{{ now() }}">
                                 <div class="h-full w-full bg-red-500">
-                                    <img src="https://media.istockphoto.com/id/1397892955/photo/thank-you-message-for-card-presentation-business-expressing-gratitude-acknowledgment-and.jpg?s=612x612&w=0&k=20&c=7Lyf2sRAJnX_uiDy3ZEytmirul8pyJWm4l2fxiUtdvk="
+                                    <img src="{{ optional($activeStep)->last_cover_image }}"
                                         alt="" class="object-cover object-center w-full h-full">
                                 </div>
                             </div>
@@ -545,86 +541,137 @@
                         <section class=" h-[72%] overflow-y-auto">
 
                             <div class="space-y-5">
-                                @if ($activeTab === 'video')
-                                    <div class="">
-                                        <livewire:video-setup :activeStep="$activeStep"
-                                            wire:key="video-setup-{{ now() }}" />
-                                    </div>
-                                @endif
-                                @if ($activeTab === 'answer')
-                                    <div class="space-y-10">
-                                        <div>
-                                            <label for="answer_type" class="text-sm font-bold mb-1">Select answer
-                                                type:</label>
-                                            <select wire:model.live="answer_type" id="answer_type"
-                                                wire:change="updateAnswerType()" class="form-control">
-                                                <option value="open_ended" selected>Open Ended</option>
-                                                <option value="ai_chat">AI Chat</option>
-                                                <option value="multi_choice">Multiple Choice</option>
-                                                <option value="button">Button</option>
-                                                <option value="calender">Calendar</option>
-                                                <option value="live_call">Live Call</option>
-                                                <option value="NPS">NPS</option>
-                                                <option value="file_upload">File Upload</option>
-                                                <option value="payment">Payment</option>
-                                            </select>
+                                @if (optional($activeStep)->id != optional($lastStep)->id)
+                                    @if ($activeTab === 'video')
+                                        <div class="">
+                                            <livewire:video-setup :activeStep="$activeStep"
+                                                wire:key="video-setup-{{ now() }}" />
+                                        </div>
+                                    @endif
+                                    @if ($activeTab === 'answer')
+                                        <div class="space-y-10">
+                                            <div>
+                                                <label for="answer_type" class="text-sm font-bold mb-1">Select
+                                                    answer
+                                                    type:</label>
+                                                <select wire:model.live="answer_type" id="answer_type"
+                                                    wire:change="updateAnswerType()" class="form-control">
+                                                    <option value="open_ended" selected>Open Ended</option>
+                                                    <option value="ai_chat">AI Chat</option>
+                                                    <option value="multi_choice">Multiple Choice</option>
+                                                    <option value="button">Button</option>
+                                                    <option value="calender">Calendar</option>
+                                                    <option value="live_call">Live Call</option>
+                                                    <option value="NPS">NPS</option>
+                                                    <option value="file_upload">File Upload</option>
+                                                    <option value="payment">Payment</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                @if ($answer_type == 'open_ended')
+                                                    <div>
+                                                        <livewire:open-ended :activeStep="$activeStep"
+                                                            wire:key="open-ended-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'multi_choice')
+                                                    <div>
+                                                        <livewire:multi-choice :activeStep="$activeStep"
+                                                            wire:key="multi-choice-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'button')
+                                                    <div>
+                                                        <livewire:button-component :activeStep="$activeStep"
+                                                            wire:key="button-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'calender')
+                                                    <div>
+                                                        <livewire:calender-component :activeStep="$activeStep"
+                                                            wire:key="calender-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'payment')
+                                                    <div>
+                                                        <livewire:payment-component :activeStep="$activeStep" :campaign="$campaign"
+                                                            wire:key="payment-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'file_upload')
+                                                    <div>
+                                                        <livewire:file-upload :activeStep="$activeStep"
+                                                            wire:key="file-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'NPS')
+                                                    <div>
+                                                        <livewire:n-p-s-component :activeStep="$activeStep"
+                                                            wire:key="file-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if ($activeTab === 'logic')
+                                        <div class="">
+                                            <livewire:logic-component :activeStep="$activeStep" :campaign="$campaign"
+                                                wire:key="multi-choice-{{ now() }}" />
+                                        </div>
+                                    @endif
+                                @else
+                                    <x-session-msg />
+
+                                    <div>
+
+                                        {{-- <div class="container" style="width:364px;">
+
+                                            <input type="file" class="filepond" name="file" />
+
+                                        </div> --}}
+                                        <div class="relative">
+                                            <label title="Click to upload" for="button2"
+                                                class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
+                                                <div class="w-max relative">
+                                                    <img class="w-12"
+                                                        src="https://www.svgrepo.com/show/485545/upload-cicle.svg"
+                                                        alt="file upload icon" width="512" height="512">
+                                                </div>
+                                                <div class="relative">
+                                                    <span
+                                                        class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
+                                                        Upload a file
+                                                    </span>
+                                                    <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                                                </div>
+                                            </label>
+                                            <input type="file" wire:model="thank_you_image" id="button2"
+                                                class="hidden">
                                         </div>
 
-                                        <div>
-                                            @if ($answer_type == 'open_ended')
-                                                <div>
-                                                    <livewire:open-ended :activeStep="$activeStep"
-                                                        wire:key="open-ended-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'multi_choice')
-                                                <div>
-                                                    <livewire:multi-choice :activeStep="$activeStep"
-                                                        wire:key="multi-choice-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'button')
-                                                <div>
-                                                    <livewire:button-component :activeStep="$activeStep"
-                                                        wire:key="button-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'calender')
-                                                <div>
-                                                    <livewire:calender-component :activeStep="$activeStep"
-                                                        wire:key="calender-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'payment')
-                                                <div>
-                                                    <livewire:payment-component :activeStep="$activeStep" :campaign="$campaign"
-                                                        wire:key="payment-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'file_upload')
-                                                <div>
-                                                    <livewire:file-upload :activeStep="$activeStep"
-                                                        wire:key="file-{{ now() }}" />
-                                                </div>
-                                            @endif
-                                            @if ($answer_type == 'NPS')
-                                                <div>
-                                                    <livewire:n-p-s-component :activeStep="$activeStep"
-                                                        wire:key="file-{{ now() }}" />
-                                                </div>
-                                            @endif
+                                        <div class=" max-w-sm my-5">
+                                            {{-- <button class="cursor-pointer btn" wire:click="saveCoverImage()">Upload</button> --}}
+                                            <button class="btn cursor-pointer" wire:loading.attr="disabled"
+                                                wire:target="saveCoverImage" wire:click="saveCoverImage()">
+                                                <span wire:loading.remove wire:target="saveCoverImage">Upload</span>
+                                                <span wire:loading wire:target="saveCoverImage" class="">
+                                                    Loading...
+                                                </span>
+                                            </button>
                                         </div>
+
+
+
                                     </div>
-                                @endif
-                                @if ($activeTab === 'logic')
-                                    <div class="">
-                                        <livewire:logic-component :activeStep="$activeStep" :campaign="$campaign"
-                                            wire:key="multi-choice-{{ now() }}" />
-                                    </div>
+
+
                                 @endif
 
-                                <livewire:contact-form :activeStep="$activeStep ?? null" :activeTab="$activeTab"
-                                    wire:key="open-ended-{{ now() }}" />
+                                @if (optional($activeStep)->id != optional($lastStep)->id)
+                                    <livewire:contact-form :activeStep="$activeStep ?? null" :activeTab="$activeTab"
+                                        wire:key="open-ended-{{ now() }}" />
+                                @endif
                             </div>
                         </section>
                     </div>
@@ -637,12 +684,27 @@
 
 
 
+    {{-- <input type="file" class="filepond" name="file" />
+
+    <script>
+        FilePond.create(document.querySelector('.filepond'));
+    </script> --}}
+
+
+
+
+
+
+
+
+
     <style>
         button:disabled {
             background-color: gray;
             cursor: not-allowed;
         }
     </style>
+
 
     <script>
         let zoomLevels = [0.5, 0.75, 1, 1.25, 1.5]; // Define zoom steps

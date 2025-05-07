@@ -1,5 +1,5 @@
 <div>
-
+    <x-session-msg />
     <section class="grid lg:grid-cols-7 gap-5 px-5" x-data="{ activeResponse: null }">
         <div class="lg:col-span-2 ">
             <div class="relative mb-3" x-data="{ openDrawer: false }">
@@ -74,17 +74,17 @@
                 <div x-data="{ openDelete: false }" class="bg-white shadow-lg rounded-lg overflow-hidden">
                     <ul class="divide-y divide-gray-200 h-48 lg:h-[550px] overflow-y-scroll">
                         @forelse ($responses as $key =>  $response)
-                            <li x-data="{ isOpen: false }" class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}" ">
+                            <li x-data="{ isOpen: false }"
+                                class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}">
                                 <div class="flex items-center w-[100%] cursor-pointer"
                                     @click="activeResponse = @js($response)"
                                     wire:click="setResponse('{{ $response->user_token }}')">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden">
-                                            <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
+                                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                                        <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
                                             class="w-full h-full object-center object-cover">
-                                        </div>
+                                    </div>
                                     <div>
                                         <p class="ml-3 font-medium  capitalize truncate">
-                                            {{-- {{ $response->name }} --}}
                                             {{ $response->name ?? '' }}
                                         </p>
                                         <span class="ml-3 font-medium truncate text-xs text-gray-500">
@@ -93,46 +93,43 @@
                                     </div>
                                 </div>
                                 <div class="flex space-x-1">
-
-                            <button @click="isOpen = true"
-                            class="text-gray-500 hover:text-gray-700 cursor-pointer ">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16m-7 6h7" />
-                            </svg>
-                        </button>
-
-                            
-                </div>
-
-                        <div x-show="isOpen" style="display: none;" @click.away="isOpen =false"
-                            class="absolute right-0 -bottom-16 z-10 border border-gray-300 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 overflow-hidden ">
-                            <ul class=" text-sm text-gray-700 ">
-                                </li>
-                                <li>
-                                    <button @click="openDelete = true " wire:click="setActiveResponse('{{ $response->user_token }}')"
-                                        class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                        <p class="font-semibold text-sm">Delete conversation</p>
+                                    <button @click="isOpen = true"
+                                        class="text-gray-500 hover:text-gray-700 cursor-pointer ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 6h16M4 12h16m-7 6h7" />
+                                        </svg>
                                     </button>
-                                </li>
-                                <li>
-                                    <a href="mailto:{{ optional($response)->email }}"
-                                        class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                        <p class="font-semibold text-sm">
-                                            <span>Send an email</span>
-                                            <i class='bx bx-link-external'></i>
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                </li>
-    @empty
-            <div class="text-xl font-semibild  py-5 h-full flex justify-center items-center">
-                <p class="text-center">No Result found</p>
-            </div>
- @endforelse
+                                </div>
+
+                                <div x-show="isOpen" style="display: none;" @click.away="isOpen =false"
+                                    class="absolute right-0 -bottom-16 z-10 border border-gray-300 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 overflow-hidden ">
+                                    <ul class=" text-sm text-gray-700 ">
+                                        <li>
+                                            <button @click="openDelete = true "
+                                                wire:click="setActiveResponse('{{ $response->user_token }}')"
+                                                class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                                <p class="font-semibold text-sm">Delete conversation</p>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a href="mailto:{{ optional($response)->email }}"
+                                                class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                                <p class="font-semibold text-sm">
+                                                    <span>Send an email</span>
+                                                    <i class='bx bx-link-external'></i>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        @empty
+                            <div class="text-xl font-semibild  py-5 h-full flex justify-center items-center">
+                                <p class="text-center">No Result found</p>
+                            </div>
+                        @endforelse
                     </ul>
 
                     {{-- openDelete --}}
@@ -153,7 +150,8 @@
                                     <div class="flex justify-center space-x-2">
                                         <div>
                                             <button type="button" @click="openDelete = false"
-                                                wire:click="deleteResponsesByToken()" class="btn-danger cursor-pointer">
+                                                wire:click="deleteResponsesByToken()"
+                                                class="btn-danger cursor-pointer">
                                                 Yes, Delete
                                             </button>
                                         </div>
@@ -179,7 +177,6 @@
             class="lg:col-span-5  lg:h-[550px] bg-slate-100 rounded-lg overflow-hidden shadow-xl "
             wire:key="active-{{ now() }}">
             @php
-                // $individualResponses = $responsesByToken[optional($activeResponse)->user_token] ?? collect();
                 $individualResponses = ($responsesByToken[optional($activeResponse)->user_token] ?? collect())->sortBy(
                     'id',
                 );
@@ -203,20 +200,13 @@
                                                 <h5 class="font-bold text-green-500">{{ $res->name }}</h5>
                                                 <p class="font-semibold text-xs text-gray-500">
                                                     {{ \Carbon\Carbon::parse($res->created_at)->format('F j, Y') }}</p>
-                                                <p class="font-semibold text-sm text-green-500">{{ $res->email }}</p>
+                                                <p class="font-semibold text-sm text-green-500">{{ $res->email }}
+                                                </p>
                                                 <p class="font-semibold text-sm text-gray-500">{{ $res->phonenumber }}
                                                 </p>
                                                 <p class="font-semibold text-sm text-gray-500">{{ $res->productname }}
                                                 </p>
-                                                <p class="font-semibold ">
-                                                    {{-- @if ($res->consent)
-                                                <i class='bx bxs-message-square-check text-xl text-green-500'
-                                                    title="consent accepted"></i>
-                                            @else
-                                                <i class='bx bxs-message-square-x text-xl text-red-500'
-                                                    title="consent  not accepted"></i>
-                                            @endif --}}
-                                                </p>
+
                                             </div>
 
                                             <div>
@@ -233,14 +223,13 @@
                                                 </button>
                                             </div>
                                         </div>
-                                       
+
 
                                         @if (!empty($res->video))
                                             <div>
                                                 <video controls
                                                     class="mx-auto bg-slate-50/10 max-w-full w-full  object-cover">
-                                                    <source src="{{ optional($res)->video }}"
-                                                        type="video/webm">
+                                                    <source src="{{ optional($res)->video }}" type="video/webm">
                                                 </video>
                                             </div>
                                         @elseif (!empty($res->audio))
@@ -263,8 +252,8 @@
                                                         </svg>
                                                     </span>
                                                     <div class="h-full overflow-y-auto w-full">
-                                                        <p
-                                                        class="font-medium text-md capitalize max-w-md  ">{{ $res->text }}</p>
+                                                        <p class="font-medium text-md capitalize max-w-md  ">
+                                                            {{ $res->text }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -287,7 +276,6 @@
                                                         class="w-full h-[70%] rounded shadow "
                                                         frameborder="0"></iframe>
                                                 @elseif(in_array($extension, ['doc', 'docx', 'zip', 'csv', 'txt']))
-                                                    {{-- Show icon based on type --}}
                                                     <div class="text-center">
                                                         @if (in_array($extension, ['doc', 'docx']))
                                                             <span>📄 Word Document</span>
@@ -414,9 +402,6 @@
 
                                             </div>
                                         @endif
-                                        {{-- <div>
-                                        {{ $index }}
-                                    </div> --}}
                                     @endif
                                 @endforeach
                             </div>
@@ -426,7 +411,7 @@
 
 
 
-                    <div class="w-[15%] h-80 md:h-full lg:h-full bg-black/60">
+                    <div x-data="{ openSendResponse: false }" class="w-[15%] h-80 md:h-full lg:h-full bg-black/60">
                         <div class="overflow-y-auto space-y-1 h-full p-0.5 lg:p-3">
                             @foreach ($individualResponses as $index => $res)
                                 @if (
@@ -436,34 +421,117 @@
                                         !empty($res->file_upload) ||
                                         !empty($res->multi_option_response) ||
                                         !empty($res->nps_score))
-                                    <button wire:click="showResponse({{ $index }})"
-                                        class=" text-sm border {{ $res->type == 'creator' ? 'border-red-500 text-red-500' : '' }}  cursor-pointer rounded-md bg-white p-1 col-span-1 w-full h-16 flex justify-center items-center focus:ring-2 focus:outline-none focus:ring-gray-300">
-                                        @if (!empty($res->video))
-                                            <i class='bx bxs-videos text-3xl'></i>
-                                        @elseif (!empty($res->audio))
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-8">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
-                                            </svg>
-                                        @elseif (!empty($res->text))
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-8">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-                                            </svg>
-                                        @elseif (!empty($res->file_upload))
-                                            <i class='bx bx-file text-3xl'></i>
-                                        @elseif (!empty($res->multi_option_response))
-                                            <i class='bx bx-menu text-3xl'></i>
-                                        @elseif (!empty($res->nps_score))
-                                            <span class="lg:text-xl font-bold">NPS</span>
-                                        @endif
-                                    </button>
+                                    <div class="flex relative group">
+                                        <button wire:click="showResponse({{ $index }})"
+                                            wire:key="response-{{ $res->id }}"
+                                            class="  w-full text-sm border {{ $res->type == 'creator' ? 'border-red-500 text-red-500' : '' }}  cursor-pointer rounded-md bg-white p-1 col-span-1 w-full h-16 flex justify-center items-center focus:ring-2 focus:outline-none focus:ring-gray-300 ">
+
+
+
+                                            @if (!empty($res->video))
+                                                <i class='bx bxs-videos text-3xl'></i>
+                                            @elseif (!empty($res->audio))
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-8">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
+                                                </svg>
+                                            @elseif (!empty($res->text))
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-8">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                                                </svg>
+                                            @elseif (!empty($res->file_upload))
+                                                <i class='bx bx-file text-3xl'></i>
+                                            @elseif (!empty($res->multi_option_response))
+                                                <i class='bx bx-menu text-3xl'></i>
+                                            @elseif (!empty($res->nps_score))
+                                                <span class="lg:text-xl font-bold">NPS</span>
+                                            @endif
+                                        </button>
+                                        <button>
+                                            <div
+                                                class="absolute z-20 top-0 right-0 h-full w-1/3 text-right  hidden  group-hover:flex overflow-hidden">
+                                                <span class="">
+
+                                                    <div id="url-copy-button-{{ $res->id }}"
+                                                        class="-translate-y-[100%]">
+                                                        {{ route('response.single', ['uuid' => $res->uuid]) }}
+                                                    </div>
+                                                    <span
+                                                        onclick="toCopy(document.getElementById('url-copy-button-{{ $res->id }}'))"
+                                                        class="absolute end-2 top-1 cursor-pointer text-gray-500  hover:bg-gray-100  rounded-lg  inline-flex items-center justify-center"
+                                                        title="copy link">
+                                                        <span id="default-icon">
+                                                            <svg class="w-3.5 h-3.5" aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 18 20">
+                                                                <path
+                                                                    d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                                            </svg>
+                                                        </span>
+                                                    </span>
+                                                </span>
+
+
+                                                @if ($res->type == 'creator')
+                                                    <span @click="openSendResponse = true" wire:click="selectResponseById('{{ $res->id }}')"
+                                                        class="absolute end-2 cursor-pointer bottom-1 text-gray-500  hover:bg-gray-100  rounded-lg  inline-flex items-center justify-center">
+                                                        <i class='bx bx-share text-xl text-gray-600 '></i>
+                                                    </span>
+                                                @endif
+
+                                            </div>
+                                        </button>
+                                    </div>
                                 @endif
                             @endforeach
+                        </div>
+
+
+                        {{-- openSendResponse --}}
+                        <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
+                            x-show="openSendResponse" style="display: none;">
+                            <div @click.away="openSendResponse = false"
+                                class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
+                                <div class=" h-full ">
+
+
+                                    <div>
+                                        <form action="" class="space-y-3 mx-auto max-w-md mb-8">
+                                            <div>
+                                                <label for="">Name</label>
+                                                <input type="text" name="name" placeholder="Name"
+                                                    wire:model="name"
+                                                    class="text-gray-400 form-control text-md w-full">
+                                            </div>
+                                            <div>
+                                                <label for="">Email <span
+                                                        class="text-red-500">*</span></label>
+                                                <input type="email" name="email" placeholder="Email*"
+                                                    wire:model="email"
+                                                    class="text-gray-400 form-control text-md w-full">
+                                            </div>
+
+                                            <div >
+                                                <label for="">Message</label>
+                                                @include('components.summernote', ['responseID' => $res->id])
+                                            </div>
+                                            <button type="button" wire:loading.attr="disabled"
+                                                wire:target="sendResponse" class="btn cursor-pointer"
+                                                wire:click="sendResponse">
+                                                <span wire:loading.remove wire:target="sendResponse">send</span>
+
+                                                <span wire:loading wire:target="sendResponse">Loading ...</span>
+                                            </button>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -568,7 +636,6 @@
                             </div>
                         </div>
                         <div x-show="openResponse == 'text'" style="display: none;" class="w-full">
-                            {{-- <textarea name="" id="" rows="10" class="w-full" placeholder="Enter text here"></textarea> --}}
                             <textarea id="textResponse" x-model="textResponse" wire:model="textResponse"
                                 class="w-full p-3 bg-white rounded-md h-16 md:h-56" placeholder="Enter text here"
                                 @input="shouldContinue = textResponse.trim() !== ''"></textarea>
@@ -590,6 +657,15 @@
 
 
     <script>
+        function toCopy(copyDiv) {
+            console.log(copyDiv);
+            var range = document.createRange();
+            range.selectNode(copyDiv);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+        }
+
         function responseRecorder() {
             return {
                 openResponse: null,
@@ -750,4 +826,6 @@
             });
         });
     </script>
+
+
 </div>
