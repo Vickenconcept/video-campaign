@@ -29,12 +29,12 @@
 
 
     @php
-        $lastPosition = $steps->max('position');
-        $firstPosition = $steps->min('position');
+        $lastPosition = $steps->max('id');
+        $firstPosition = $steps->min('id');
 
     @endphp
 
-  
+
     @foreach ($steps as $step)
 
         @php
@@ -46,165 +46,169 @@
 
         @if ($step->id == $nextStep)
             @if ($step->id != optional($lastStep)->id)
-            <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
-                @php
-                    $fit = $video_setting['fit'] ?? false;
+                <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
+                    @php
+                        $fit = $video_setting['fit'] ?? false;
 
-                    $positionClasses = [
-                        'top-left' => 'items-start justify-start',
-                        'top-center' => 'items-start justify-center',
-                        'top-right' => 'items-start justify-end',
-                        'center-left' => 'items-center justify-start',
-                        'center' => 'items-center justify-center',
-                        'center-right' => 'items-center justify-end',
-                        'bottom-left' => 'items-end justify-start',
-                        'bottom-center' => 'items-end justify-center',
-                        'bottom-right' => 'items-end justify-end',
-                    ];
+                        $positionClasses = [
+                            'top-left' => 'items-start justify-start',
+                            'top-center' => 'items-start justify-center',
+                            'top-right' => 'items-start justify-end',
+                            'center-left' => 'items-center justify-start',
+                            'center' => 'items-center justify-center',
+                            'center-right' => 'items-center justify-end',
+                            'bottom-left' => 'items-end justify-start',
+                            'bottom-center' => 'items-end justify-center',
+                            'bottom-right' => 'items-end justify-end',
+                        ];
 
-                    $alignment = !$fit
-                        ? $positionClasses[$video_setting['position']] ?? 'items-center justify-center'
-                        : '';
-                @endphp
+                        $alignment = !$fit
+                            ? $positionClasses[$video_setting['position']] ?? 'items-center justify-center'
+                            : '';
+                    @endphp
 
-                <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
-                    <div class="relative max-w-full max-h-full">
-                        @if ($step->video_url)
-                            <video controls class="mx-auto bg-slate-50/10 max-w-full max-h-full object-contain">
-                                <source src="{{ $step->video_url }}" type="video/webm">
-                                Your browser does not support the video tag.
-                            </video>
-                        @endif
-                        @if (!empty($video_setting['overlay_text']))
-                            <div
-                                class="absolute @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto w-full left-0 top-0 p-5">
-                                <p
-                                    class="max-w-md mx-auto text-white text-center font-bold capitalize {{ $video_setting['text_size'] }}">
-                                    {{ $video_setting['overlay_text'] ?? '' }}</p>
+                    <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
+                        <div class="relative max-w-full max-h-full">
+                            @if ($step->video_url)
+                                <video controls class="mx-auto bg-slate-50/10 max-w-full max-h-full object-contain">
+                                    <source src="{{ $step->video_url }}" type="video/webm">
+                                    Your browser does not support the video tag.
+                                </video>
+                            @endif
+                            @if (!empty($video_setting['overlay_text']))
+                                <div
+                                    class="absolute @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto w-full left-0 top-0 p-5">
+                                    <p
+                                        class="max-w-md mx-auto text-white text-center font-bold capitalize {{ $video_setting['text_size'] }}">
+                                        {{ $video_setting['overlay_text'] ?? '' }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-black/30 md:bg-white flex justify-center items-center overflow-y-auto pb-10">
+                        @if ($preview)
+                            <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
+                                <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
+                                    You're in preview mode, answers won't be submitted
+                                </p>
                             </div>
                         @endif
-                    </div>
-                </div>
+                        <div
+                            class="h-[80%] w-[80%] md:border rounded-md flex justify-center items-center overflow-y-auto ">
+                            <div class="w-[80%] ">
+                                {{-- {{ $step->name }} --}}
+                                <div class="w-full">
+                                    @if ($step->contact_detail && $step->id === $contactDetailShownStepId)
+                                        @php
+                                            $form = json_decode($step->form, true);
+                                        @endphp
+                                        <div class="space-y-4">
+                                            @foreach ($activeForm as $field)
+                                                @if ($field['active'])
+                                                    <div class="space-y-2">
+                                                        <label for="{{ $field['name'] }}"
+                                                            class="block font-semibold text-gray-700 capitalize">
+                                                            {{ $field['label'] }}
+                                                            @if ($field['required'])
+                                                                <span class="text-red-500">*</span>
+                                                            @endif
+                                                        </label>
 
-                <div
-                    class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-black/30 md:bg-white flex justify-center items-center overflow-y-auto pb-10">
-                    @if ($preview)
-                        <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
-                            <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
-                                You're in preview mode, answers won't be submitted
-                            </p>
-                        </div>
-                    @endif
-                    <div class="h-[80%] w-[80%] md:border rounded-md flex justify-center items-center overflow-y-auto ">
-                        <div class="w-[80%] ">
-                            {{-- {{ $step->name }} --}}
-                            <div class="w-full">
-                                @if ($step->contact_detail && $step->id === $contactDetailShownStepId)
-                                    @php
-                                        $form = json_decode($step->form, true);
-                                    @endphp
-                                    <div class="space-y-4">
-                                        @foreach ($activeForm as $field)
-                                            @if ($field['active'])
-                                                <div class="space-y-2">
-                                                    <label for="{{ $field['name'] }}"
-                                                        class="block font-semibold text-gray-700 capitalize">
-                                                        {{ $field['label'] }}
-                                                        @if ($field['required'])
-                                                            <span class="text-red-500">*</span>
-                                                        @endif
-                                                    </label>
+                                                        @switch($field['type'])
+                                                            @case('text')
+                                                            @case('email')
 
-                                                    @switch($field['type'])
-                                                        @case('text')
-                                                        @case('email')
-
-                                                        @case('tel')
-                                                            <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
-                                                                id="{{ $field['name'] }}" class="form-control"
-                                                                placeholder="{{ $field['label'] }}"
-                                                                wire:model.live="{{ $field['name'] }}"
-                                                                @if ($field['required']) required @endif>
-                                                        @break
-
-                                                        @case('checkbox')
-                                                            <div class="flex items-center">
-                                                                <input type="checkbox" name="{{ $field['name'] }}"
-                                                                    id="{{ $field['name'] }}"
+                                                            @case('tel')
+                                                                <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
+                                                                    id="{{ $field['name'] }}" class="form-control"
+                                                                    placeholder="{{ $field['label'] }}"
                                                                     wire:model.live="{{ $field['name'] }}"
-                                                                    class="h-4 w-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
-                                                                <label for="{{ $field['name'] }}" class="ml-2 text-gray-700">
-                                                                    {{ $field['label'] }}
-                                                                </label>
-                                                            </div>
-                                                        @break
+                                                                    @if ($field['required']) required @endif>
+                                                            @break
 
-                                                        @default
-                                                            <input type="text" name="{{ $field['name'] }}"
-                                                                id="{{ $field['name'] }}" class="form-control"
-                                                                placeholder="{{ $field['label'] }}"
-                                                                wire:model.live="{{ $field['name'] }}">
-                                                    @endswitch
-                                                </div>
-                                            @endif
-                                        @endforeach
+                                                            @case('checkbox')
+                                                                <div class="flex items-center">
+                                                                    <input type="checkbox" name="{{ $field['name'] }}"
+                                                                        id="{{ $field['name'] }}"
+                                                                        wire:model.live="{{ $field['name'] }}"
+                                                                        class="h-4 w-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-500">
+                                                                    <label for="{{ $field['name'] }}"
+                                                                        class="ml-2 text-gray-700">
+                                                                        {{ $field['label'] }}
+                                                                    </label>
+                                                                </div>
+                                                            @break
 
-                                        <div class="flex space-x-3">
-                                            @if ($nextStep !== $firstPosition)
-                                                @foreach ($previous as $index => $prev)
-                                                    <button class="btn cursor-pointer"
-                                                        wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
-                                                        Back
-                                                    </button>
-                                                @endforeach
-                                            @endif
-
-
-                                            @foreach ($nexts as $index => $next)
-                                                @if ($loop->first)
-                                                    <button
-                                                        class="btn  {{ !$this->canContinue ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
-                                                        @if (!$this->canContinue) disabled @endif
-                                                        wire:click="goToNext({{ $step->id }},'{{ $index }}')">
-                                                        Next
-                                                    </button>
+                                                            @default
+                                                                <input type="text" name="{{ $field['name'] }}"
+                                                                    id="{{ $field['name'] }}" class="form-control"
+                                                                    placeholder="{{ $field['label'] }}"
+                                                                    wire:model.live="{{ $field['name'] }}">
+                                                        @endswitch
+                                                    </div>
                                                 @endif
                                             @endforeach
 
+                                            <div class="flex space-x-3">
+                                                @if ($nextStep !== $firstPosition)
+                                                    @foreach ($previous as $index => $prev)
+                                                        <button class="btn cursor-pointer"
+                                                            wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
+                                                            Back
+                                                        </button>
+                                                    @endforeach
+                                                @endif
+
+
+                                                @foreach ($nexts as $index => $next)
+                                                    @if ($loop->first)
+                                                        <button
+                                                            class="btn  {{ !$this->canContinue ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
+                                                            @if (!$this->canContinue) disabled @endif
+                                                            wire:click="goToNext({{ $step->id }},'{{ $index }}')">
+                                                            Next
+                                                        </button>
+                                                    @endif
+                                                @endforeach
+
+                                            </div>
                                         </div>
-                                    </div>
-                                @else
-                                    @if ($step->answer_type == 'open_ended')
-                                        @include('components.response.open-ended')
-                                    @endif
+                                    @else
+                                        @if ($step->answer_type == 'open_ended')
+                                            @include('components.response.open-ended')
+                                        @endif
 
-                                    @if ($step->answer_type == 'ai_chat')
-                                        <p>ai_chat</p>
-                                    @endif
+                                        @if ($step->answer_type == 'ai_chat')
+                                            <div class="{{ $preview ? 'select-none cursor-not-allowed blur-xs' : '' }}">
+                                                <livewire:ai-chat :preview="$preview" />
+                                            </div>
+                                        @endif
 
-                                    @if ($step->answer_type == 'multi_choice')
-                                        @include('components.response.multi-choice')
+                                        @if ($step->answer_type == 'multi_choice')
+                                            @include('components.response.multi-choice')
+                                        @endif
+                                        @if ($step->answer_type == 'button')
+                                            @include('components.response.button')
+                                        @endif
+                                        @if ($step->answer_type == 'calender')
+                                            @include('components.response.calender')
+                                        @endif
+                                        @if ($step->answer_type == 'payment')
+                                            @include('components.response.payment')
+                                        @endif
+                                        @if ($step->answer_type == 'file_upload')
+                                            @include('components.response.file_upload')
+                                        @endif
+                                        @if ($step->answer_type == 'NPS')
+                                            @include('components.response.NPS')
+                                        @endif
                                     @endif
-                                    @if ($step->answer_type == 'button')
-                                        @include('components.response.button')
-                                    @endif
-                                    @if ($step->answer_type == 'calender')
-                                        @include('components.response.calender')
-                                    @endif
-                                    @if ($step->answer_type == 'payment')
-                                        @include('components.response.payment')
-                                    @endif
-                                    @if ($step->answer_type == 'file_upload')
-                                        @include('components.response.file_upload')
-                                    @endif
-                                    @if ($step->answer_type == 'NPS')
-                                        @include('components.response.NPS')
-                                    @endif
-                                @endif
-                            </div>
+                                </div>
 
 
-                            {{-- @foreach ($previous as $index => $prev)
+                                {{-- @foreach ($previous as $index => $prev)
                                 <button class="btn"
                                     wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
                                     Back
@@ -212,7 +216,7 @@
                             @endforeach --}}
 
 
-                            {{-- @if ($lastPosition != $step->id)
+                                {{-- @if ($lastPosition != $step->id)
                                 @foreach ($nexts as $index => $next)
                                     <button class="btn"
                                         wire:click="goToNext({{ $step->id }},'{{ $index }}')">
@@ -224,18 +228,17 @@
                                     Finish
                                 </button>
                             @endif --}}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
             @else
                 <div class="relative h-full w-full  overflow-hidden">
                     <div class="h-full w-full bg-red-500">
-                        <img src="{{ $step->last_cover_image }}"
-                            alt="" class="object-cover object-center w-full h-full">
+                        <img src="{{ $step->last_cover_image }}" alt=""
+                            class="object-cover object-center w-full h-full">
                     </div>
-    
+
                 </div>
             @endif
 

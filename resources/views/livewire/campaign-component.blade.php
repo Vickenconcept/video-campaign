@@ -393,7 +393,7 @@
             $firstPosition = $steps->min('id');
         @endphp
 
-        @forelse ($steps->sortBy('position') as $step)
+        @forelse ($steps->sortBy('id') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
             <div class="w-52 h-48 flex relative ">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
@@ -405,12 +405,11 @@
                             {{ $step->position }}
                         </span>
                     </div>
-                    <div class="h-full  grid grid-cols-2">
+                    <div class="h-full ">
                         <div class="bg-slate-200 h-full flex justify-center items-center">
                             <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
                                 class="w-full h-full object-center object-cover">
                         </div>
-                        <div class="bg-slate-100 h-full"></div>
 
                     </div>
                 </div>
@@ -418,17 +417,20 @@
 
                 <div class="rounded-r-lg bg-gray-900 w-[15%] flex items-center justify-center ">
                     <div class="text-white bg-gray-900 text-center">
-                        <button type="button" class="cursor-pointer" wire:click="addStep({{ $step->position }})">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </button>
+                        @if ($steps->count() === 1 || $step->id != $lastPosition)
+                            <button type="button" class="cursor-pointer"
+                                wire:click="addStep({{ $step->position }})">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </button>
+                        @endif
                         @if ($steps->count() > 1)
                             @if ($step->id != $firstPosition && $step->id != optional($lastStep)->id)
                                 <button ype="button" class="cursor-pointer"
-                                    wire:click="deleteStep( {{ $step->id }},{{ $step->position }})">
+                                    wire:click="deleteStep( {{ $step->id }},{{ $step->position }})" wire:loading.attr="disabled">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -457,7 +459,6 @@
                                 stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                             </svg>
-
 
 
                         </span>
@@ -492,8 +493,8 @@
 
                             <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden "
                                 wire:key="display-{{ now() }}">
-                                <div class="h-full w-full bg-red-500">
-                                    <img src="{{ optional($activeStep)->last_cover_image }}"
+                                <div class="h-full w-full bg-slate-700">
+                                    <img src="{{ optional($activeStep)->last_cover_image ? optional($activeStep)->last_cover_image : 'https://placehold.co/600x400?font=roboto&text=Thank\nYou' }}"
                                         alt="" class="object-cover object-center w-full h-full">
                                 </div>
                             </div>
@@ -501,11 +502,14 @@
                             <div class="h-[70%] w-[70%]  rounded-2xl overflow-hidden grid grid-cols-2"
                                 wire:key="display-{{ now() }}">
                                 <div class="h-full bg-slate-600">
-                                    @if ($activeStep)
+                                    @if (!empty($activeStep->video_url))
                                         <video width="100%" controls class="mx-auto bg-slate-50 ">
                                             <source src="{{ $activeStep->video_url }}" type="video/webm">
                                             Your browser does not support the video tag.
                                         </video>
+                                    @else
+                                        <img src="{{ asset('images/video-thumbnail.jpg ') }}" alt=""
+                                            class="h-full w-full object-cover object-center">
                                     @endif
                                 </div>
 
@@ -609,6 +613,11 @@
                                                     <div>
                                                         <livewire:n-p-s-component :activeStep="$activeStep"
                                                             wire:key="file-{{ now() }}" />
+                                                    </div>
+                                                @endif
+                                                @if ($answer_type == 'ai_chat')
+                                                    <div>
+                                                        <livewire:ai-chat  wire:key="ai-{{ now() }}" />
                                                     </div>
                                                 @endif
                                             </div>

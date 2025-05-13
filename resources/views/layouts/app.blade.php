@@ -65,8 +65,6 @@
         <div class="h-full sm:ml-64 bg-white pt-20 overflow-y-hidden">
             {{-- <button id="upload_widget" class="cloudinary-button">Upload files</button> --}}
 
-
-
             {{ $slot }}
         </div>
     </div>

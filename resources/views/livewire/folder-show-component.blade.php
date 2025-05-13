@@ -323,8 +323,7 @@
 
                         </div>
                         <button data-modal-hide="create-modal" wire:click="createCampaign()" type="button"
-                            class="btn cursor-pointer">Create
-                            Folder</button>
+                            class="btn cursor-pointer">Create campaign</button>
 
                     </div>
                 </div>

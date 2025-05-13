@@ -29,10 +29,11 @@ class CampaignComponent extends Component
     public function mount($uuid)
     {
         $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
+
         $this->title = $this->campaign->title;
         $this->steps = $this->campaign->steps;
 
-        $this->lastStep = $this->steps->sortByDesc('position')->first();
+        $this->lastStep = $this->steps->sortByDesc('id')->first();
 
         $this->user = auth()->user();
 
@@ -67,18 +68,6 @@ class CampaignComponent extends Component
     }
 
 
-
-    // public function updateAnswerType()
-    // {
-
-    //     $multi_choice_question = $this->answer_type !== 'multi_choice' ? json_encode(['default' => 1]) : null;
-
-    //     $this->activeStep->update([
-    //         'answer_type' =>  $this->answer_type,
-    //         'multi_choice_question' =>  $multi_choice_question
-    //     ]);
-    //     $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
-    // }
 
     public function updateAnswerType()
     {
@@ -145,33 +134,25 @@ class CampaignComponent extends Component
     //     $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     // }
 
-    public function addStep($position)
+    public function addStep()
     {
-        $newPosition = $position + 1;
-
-        // Shift only steps after the inserted position
-        $this->campaign->steps()
-            ->where('position', '>=', $newPosition)
-            ->orderByDesc('position') 
-            ->get()
-            ->each(function ($step) {
-                $step->position += 1;
-                $step->save();
-            });
-
         $multi_choice_question = json_encode(['default' => 1]);
         $video_setting = json_encode([
             'position' => 'top',
             'fit' => true,
             'overlay_text' => '',
             'text_size' => 'text-sm',
-            'overlay_bg' => true,
+            'overlay_bg' => true
         ]);
 
+        // Temporarily assign the next position to satisfy NOT NULL constraint
+        $maxPosition = $this->campaign->steps()->max('position') ?? 0;
+
+        // Create new step
         $this->campaign->steps()->create([
             'uuid' => Str::uuid(),
             'name' => "default Step",
-            'position' => $newPosition,
+            'position' => $maxPosition + 1, // temporary
             'contact_detail' => $this->contact_detail,
             'form' => $this->form,
             'multi_choice_setting' => $this->multi_choice_setting,
@@ -179,11 +160,22 @@ class CampaignComponent extends Component
             'video_setting' => $video_setting,
         ]);
 
-        $this->steps = $this->campaign->steps()->orderBy('position')->get();
-        $this->lastStep = $this->steps->last();
+        // Reassign positions based on ascending ID
+        $steps = $this->campaign->steps()->orderBy('id')->get();
+        foreach ($steps as $index => $step) {
+            $step->update(['position' => $index + 1]);
+        }
+
+        $this->steps = $steps;
+        $this->lastStep = $steps->last();
 
         $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     }
+
+
+
+
+
 
 
 
@@ -243,6 +235,7 @@ class CampaignComponent extends Component
     {
         $step = $this->campaign->steps()->find($stepId);
 
+
         if (!$step) {
             return;
         }
@@ -265,24 +258,42 @@ class CampaignComponent extends Component
     }
 
 
-    public function deleteStep($id, $position)
+    // public function deleteStep($id, $position)
+    // {
+    //     $this->campaign->steps()->where('id', $id)->delete();
+
+    //     $steps = $this->campaign->steps()->where('position', '>', $position)
+    //         ->orderBy('position')
+    //         ->get();
+
+    //     foreach ($steps as $step) {
+    //         $step->update(['position' => $step->position - 1]);
+    //     }
+
+    //     $this->steps = $this->campaign->steps;
+
+    //     $this->lastStep = $this->steps->sortByDesc('id')->first();
+
+    //     $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
+    // }
+
+    public function deleteStep($id)
     {
         $this->campaign->steps()->where('id', $id)->delete();
 
-        $steps = $this->campaign->steps()->where('position', '>', $position)
-            ->orderBy('position')
-            ->get();
 
-        foreach ($steps as $step) {
-            $step->update(['position' => $step->position - 1]);
+        $steps = $this->campaign->steps()->orderBy('id')->get();
+
+        foreach ($steps as $index => $step) {
+            $step->update(['position' => $index + 1]);
         }
 
-        $this->steps = $this->campaign->steps;
-
-        $this->lastStep = $this->steps->sortByDesc('id')->first();
+        $this->steps = $this->campaign->steps()->orderBy('position')->get();
+        $this->lastStep = $this->steps->last();
 
         $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
     }
+
 
     public function saveStepName()
     {
@@ -306,6 +317,8 @@ class CampaignComponent extends Component
         $this->activeStep = $this->campaign->steps()
             ->where('id', $this->id)
             ->first();
+
+       
 
         $this->activeName = $this->activeStep->name ?? '';
 

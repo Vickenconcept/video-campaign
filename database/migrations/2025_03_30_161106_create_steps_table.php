@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->foreignId('campaign_id')->constrained('campaigns')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->index();
             $table->text('video_url')->nullable();
             $table->json('video_setting')->nullable();
-            $table->integer('position');
+            $table->integer('position')->index();
             $table->json('form')->nullable();
             $table->json('multi_choice_question')->nullable();
             $table->json('multi_choice_setting')->nullable();

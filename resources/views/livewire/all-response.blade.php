@@ -2,77 +2,119 @@
     <x-session-msg />
     <section class="grid lg:grid-cols-7 gap-5 px-5" x-data="{ activeResponse: null }">
         <div class="lg:col-span-2 ">
-            <div class="relative mb-3" x-data="{ openDrawer: false }">
-                <div class="flex justify-end">
-                    <button @click="openDrawer = true"
-                        class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white shadow border border-gray-300 bg-white cursor-pointer">
-                        <i class='bx bx-slider text-xl'></i>
-                    </button>
-                </div>
-                <div x-show="openDrawer" @click.away="openDrawer = false" style="display: none"
-                    class="absolute z-10 right-0 top-0 bg-gray-50 shadow-xl p-3 rounded-md space-y-1">
-                    <div class="flex justify-between items-center mb-3">
-                        <h5 class="font-semibold ">Filter By:</h5>
-                        <button @click="openDrawer = false" class="cursor-pointer">
-                            <i class='bx bx-x-circle hover:text-black'></i>
+            @if ($user_token == null)
+                <div class="relative mb-3" x-data="{ openDrawer: false, openRespondAll: false }">
+                    <div class="flex justify-end">
+                        <button @click="openRespondAll = true"
+                            class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white shadow border border-gray-300 bg-white cursor-pointer">
+                            Reply all
+                        </button>
+
+
+                        <button @click="openDrawer = true"
+                            class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white shadow border border-gray-300 bg-white cursor-pointer">
+                            <i class='bx bx-slider text-xl'></i>
                         </button>
                     </div>
-                    <div
-                        class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
-                        <h5 class="font-semibold text-gray-900 text-sm">Has Email</h5>
-                        <label class="relative inline-flex items-center  cursor-pointer">
-                            <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterEmail">
-                            <div
-                                class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
-                            </div>
-                        </label>
+                    <div x-show="openDrawer" @click.away="openDrawer = false" style="display: none"
+                        class="absolute z-10 right-0 top-0 bg-gray-50 shadow-xl p-3 rounded-md space-y-1">
+                        <div class="flex justify-between items-center mb-3">
+                            <h5 class="font-semibold ">Filter By:</h5>
+                            <button @click="openDrawer = false" class="cursor-pointer">
+                                <i class='bx bx-x-circle hover:text-black'></i>
+                            </button>
+                        </div>
+                        <div
+                            class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
+                            <h5 class="font-semibold text-gray-900 text-sm">Has Email</h5>
+                            <label class="relative inline-flex items-center  cursor-pointer">
+                                <input type="checkbox" value="1" class="sr-only peer"
+                                    wire:model.live="filterEmail">
+                                <div
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                </div>
+                            </label>
+                        </div>
+                        <div
+                            class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
+                            <h5 class="font-semibold text-gray-900 text-sm">Has Video</h5>
+                            <label class="relative inline-flex items-center  cursor-pointer">
+                                <input type="checkbox" value="1" class="sr-only peer"
+                                    wire:model.live="filterVideo">
+                                <div
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                </div>
+                            </label>
+                        </div>
+                        <div
+                            class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
+                            <h5 class="font-semibold text-gray-900 text-sm">Has Text</h5>
+                            <label class="relative inline-flex items-center  cursor-pointer">
+                                <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterText">
+                                <div
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                </div>
+                            </label>
+                        </div>
+                        <div
+                            class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
+                            <h5 class="font-semibold text-gray-900 text-sm">Has Audio</h5>
+                            <label class="relative inline-flex items-center  cursor-pointer">
+                                <input type="checkbox" value="1" class="sr-only peer"
+                                    wire:model.live="filterAudio">
+                                <div
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                </div>
+                            </label>
+                        </div>
+                        <div
+                            class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
+                            <h5 class="font-semibold text-gray-900 text-sm">Has NPS Score</h5>
+                            <label class="relative inline-flex items-center  cursor-pointer">
+                                <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterNps">
+                                <div
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                </div>
+                            </label>
+                        </div>
                     </div>
-                    <div
-                        class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
-                        <h5 class="font-semibold text-gray-900 text-sm">Has Video</h5>
-                        <label class="relative inline-flex items-center  cursor-pointer">
-                            <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterVideo">
-                            <div
-                                class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+
+                    {{-- openRespondAll --}}
+                    <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
+                        x-show="openRespondAll" style="display: none;">
+                        <div @click.away="openRespondAll = false"
+                            class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
+                            <div class=" h-full ">
+
+
+                                <div>
+                                    <form action="" class="space-y-3 mx-auto max-w-md mb-8">
+                                        <h4 class="my-4 text-xl font-semibold">
+                                            Reply all
+                                        </h4>
+                                        <div>
+                                            <label for="">Message</label>
+                                            <textarea wire:model="message_2" id="" rows="6" class="form-control" required></textarea>
+                                        </div>
+                                        <button @click="openRespondAll = false" type="button" wire:loading.attr="disabled" wire:target="respondAll"
+                                            class="btn cursor-pointer" wire:click="respondAll">
+                                            <span wire:loading.remove wire:target="respondAll">send</span>
+
+                                            <span wire:loading wire:target="respondAll">Loading ...</span>
+                                        </button>
+
+                                    </form>
+                                </div>
                             </div>
-                        </label>
-                    </div>
-                    <div
-                        class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
-                        <h5 class="font-semibold text-gray-900 text-sm">Has Text</h5>
-                        <label class="relative inline-flex items-center  cursor-pointer">
-                            <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterText">
-                            <div
-                                class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
-                            </div>
-                        </label>
-                    </div>
-                    <div
-                        class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
-                        <h5 class="font-semibold text-gray-900 text-sm">Has Audio</h5>
-                        <label class="relative inline-flex items-center  cursor-pointer">
-                            <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterAudio">
-                            <div
-                                class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
-                            </div>
-                        </label>
-                    </div>
-                    <div
-                        class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
-                        <h5 class="font-semibold text-gray-900 text-sm">Has NPS Score</h5>
-                        <label class="relative inline-flex items-center  cursor-pointer">
-                            <input type="checkbox" value="1" class="sr-only peer" wire:model.live="filterNps">
-                            <div
-                                class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
-                            </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <div class="max-w-sm mx-auto">
-                <div x-data="{ openDelete: false }" class="bg-white shadow-lg rounded-lg overflow-hidden">
-                    <ul class="divide-y divide-gray-200 h-48 lg:h-[550px] overflow-y-scroll">
+                <div x-data="{ openDelete: false , openEdit : false}" class="bg-white shadow-lg rounded-lg overflow-hidden">
+                    <ul
+                        class="divide-y divide-gray-200 h-48 lg:h-[550px] {{ $user_token == null ? 'overflow-y-scroll' : '' }}">
                         @forelse ($responses as $key =>  $response)
                             <li x-data="{ isOpen: false }"
                                 class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}">
@@ -104,8 +146,26 @@
                                 </div>
 
                                 <div x-show="isOpen" style="display: none;" @click.away="isOpen =false"
-                                    class="absolute right-0 -bottom-16 z-10 border border-gray-300 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 overflow-hidden ">
+                                    class="absolute right-0 {{ $user_token == null ? '-bottom-22' : '-bottom-22' }} z-10 border border-gray-300 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 overflow-hidden ">
                                     <ul class=" text-sm text-gray-700 ">
+                                        @if ($user_token == null)
+                                            <li>
+                                                <a href="{{ route('response.index', ['user_token' => optional($response)->user_token]) }}"
+                                                    wire:click="setActiveResponse('{{ $response->user_token }}')"
+                                                    class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                                    <p class="font-semibold text-sm">Open</p>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($user_token != null)
+                                            <li>
+                                                <button @click="openEdit = true "
+                                                    wire:click="setResponse('{{ $response->user_token }}')"
+                                                    class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
+                                                    <p class="font-semibold text-sm">Edit contact</p>
+                                                </button>
+                                            </li>
+                                        @endif
                                         <li>
                                             <button @click="openDelete = true "
                                                 wire:click="setActiveResponse('{{ $response->user_token }}')"
@@ -161,6 +221,48 @@
                                                 No, Cancle
                                             </button>
                                         </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- openEdit --}}
+                    <div class="fixed items-center justify-center  flex top-0 left-0 mx-auto w-full h-full bg-gray-500/30 z-50 transition duration-1000 ease-in-out"
+                        x-show="openEdit" style="display: none;">
+                        <div @click.away="openEdit = false"
+                            class="bg-white w-[90%] md:w-[40%]  shadow-inner  border rounded-2xl overflow-auto  py-6 px-8 transition-all relative duration-700">
+                            <div class=" h-full ">
+
+
+                                <div class="my-10 space-y-3">
+
+                                    <div>
+                                        <form action="" class="space-y-3 mx-auto max-w-md mb-8">
+                                            <h4 class="my-4 text-xl font-semibold">
+                                                Edit contact detail
+                                            </h4>
+                                            <div>
+                                                <label for="">Name</label>
+                                                <input wire:model="name" id="" placeholder="Smith Joe" class="form-control" required/>
+                                            </div>
+                                            <div>
+                                                <label for="">Email</label>
+                                                <input wire:model="email" id="" placeholder="example@gmail.com" class="form-control" required/>
+                                            </div>
+                                            <div>
+                                                <label for="">Phonenumber</label>
+                                                <input wire:model="phonenumber" id="" placeholder="23456.." class="form-control" required/>
+                                            </div>
+                                            <button @click="openEdit = false" type="button" wire:loading.attr="disabled" wire:target="editContact()"
+                                                class="btn cursor-pointer" wire:click="editContact()">
+                                                <span wire:loading.remove wire:target="editContact()">Update</span>
+    
+                                                <span wire:loading wire:target="editContact()">Loading ...</span>
+                                            </button>
+    
+                                        </form>
                                     </div>
 
                                 </div>
@@ -478,7 +580,8 @@
 
 
                                                 @if ($res->type == 'creator')
-                                                    <span @click="openSendResponse = true" wire:click="selectResponseById('{{ $res->id }}')"
+                                                    <span @click="openSendResponse = true"
+                                                        wire:click="selectResponseById('{{ $res->id }}')"
                                                         class="absolute end-2 cursor-pointer bottom-1 text-gray-500  hover:bg-gray-100  rounded-lg  inline-flex items-center justify-center">
                                                         <i class='bx bx-share text-xl text-gray-600 '></i>
                                                     </span>
@@ -502,6 +605,9 @@
 
                                     <div>
                                         <form action="" class="space-y-3 mx-auto max-w-md mb-8">
+                                            <h4 class="my-4 text-xl font-semibold">
+                                                Send response
+                                            </h4>
                                             <div>
                                                 <label for="">Name</label>
                                                 <input type="text" name="name" placeholder="Name"
@@ -516,11 +622,13 @@
                                                     class="text-gray-400 form-control text-md w-full">
                                             </div>
 
-                                            <div >
+                                            <div>
                                                 <label for="">Message</label>
-                                                @include('components.summernote', ['responseID' => $res->id])
+                                                @include('components.summernote', [
+                                                    'responseID' => $res->id,
+                                                ])
                                             </div>
-                                            <button type="button" wire:loading.attr="disabled"
+                                            <button @click="openSendResponse = false" type="button" wire:loading.attr="disabled"
                                                 wire:target="sendResponse" class="btn cursor-pointer"
                                                 wire:click="sendResponse">
                                                 <span wire:loading.remove wire:target="sendResponse">send</span>
@@ -664,6 +772,14 @@
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
             document.execCommand("copy");
+
+            Toastify({
+                text: `Copied!`,
+                position: "center",
+                duration: 3000,
+                backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
+            }).showToast();
+
         }
 
         function responseRecorder() {

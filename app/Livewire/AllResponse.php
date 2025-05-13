@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Jobs\SendRawMailJob;
 use App\Models\Response;
 use Livewire\Component;
 use Cloudinary\Cloudinary;
@@ -16,7 +17,7 @@ class AllResponse extends Component
     public $responses, $activeResponse, $responsesByToken, $activeIndex;
     public $audioResponse, $videoResponse, $textResponse, $active_response_token;
 
-    public $url, $email, $name, $message;
+    public $url, $email, $name, $phonenumber, $message, $message_2;
 
     public $filterEmail = false;
     public $filterVideo = false;
@@ -25,13 +26,66 @@ class AllResponse extends Component
     public $filterNps = false;
 
 
+    public ?string $user_token = null;
+    public ?string $dateFilter = null; // 'day', 'week', 'month', 'year'
 
 
 
-    public function mount()
+
+    public function mount($user_token = null)
     {
+        $this->user_token = $user_token;
+        $this->message_2 = " Copy and paste response link\n ";
         $this->loadResponses();
     }
+
+
+    // public function loadResponses()
+    // {
+    //     $user = auth()->user();
+
+    //     $allResponses = $user->folders()
+    //         ->with('campaigns.steps.responses')
+    //         ->get()
+    //         ->flatMap(
+    //             fn($folder) =>
+    //             $folder->campaigns->flatMap(
+    //                 fn($campaign) =>
+    //                 $campaign->steps->flatMap(
+    //                     fn($step) =>
+    //                     $step->responses
+    //                 )
+    //             )
+    //         );
+
+    //     $filteredResponses = $this->applyFilters($allResponses);
+
+    //     $this->responsesByToken = $filteredResponses->groupBy('user_token');
+
+    //     $this->responses = $filteredResponses
+    //         ->sortByDesc('created_at')
+    //         ->groupBy('user_token')
+    //         ->map(function ($responsesGroup) {
+    //             $merged = [];
+
+    //             foreach ($responsesGroup as $response) {
+    //                 foreach ($response->getAttributes() as $key => $value) {
+    //                     if (!empty($value) && empty($merged[$key])) {
+    //                         $merged[$key] = $value;
+    //                     }
+    //                 }
+    //             }
+
+    //             return (object) $merged;
+    //         })
+    //         ->values();
+
+    //     $latest = $filteredResponses->sortByDesc('created_at')->first();
+
+    //     $this->activeResponse = $this->responses->firstWhere('user_token', $latest->user_token ?? null);
+    // }
+
+
     public function loadResponses()
     {
         $user = auth()->user();
@@ -49,6 +103,27 @@ class AllResponse extends Component
                     )
                 )
             );
+
+        // Filter by user_token if available
+        if ($this->user_token) {
+            $allResponses = $allResponses->where('user_token', $this->user_token);
+        }
+
+        // Apply date filtering
+        if ($this->dateFilter) {
+            $allResponses = $allResponses->filter(function ($response) {
+                $created = \Carbon\Carbon::parse($response->created_at);
+                $now = now();
+
+                return match ($this->dateFilter) {
+                    'day' => $created->isToday(),
+                    'week' => $created->isSameWeek($now),
+                    'month' => $created->isSameMonth($now),
+                    'year' => $created->isSameYear($now),
+                    default => true,
+                };
+            });
+        }
 
         $filteredResponses = $this->applyFilters($allResponses);
 
@@ -76,6 +151,7 @@ class AllResponse extends Component
 
         $this->activeResponse = $this->responses->firstWhere('user_token', $latest->user_token ?? null);
     }
+
 
 
     public function applyFilters($responses)
@@ -113,7 +189,11 @@ class AllResponse extends Component
     public function setResponse($user_token)
     {
         $this->activeResponse = $this->responses->firstWhere('user_token', $user_token);
+        $this->email = optional($this->activeResponse)->email;
+        $this->name = optional($this->activeResponse)->name;
+        $this->phonenumber = optional($this->activeResponse)->phonenumber;
     }
+   
 
     public function showResponse($index)
     {
@@ -141,11 +221,9 @@ class AllResponse extends Component
 
     public function sendResponse()
     {
-
-
         $this->validate([
             'email' => 'required|email',
-            'name' => 'nullable|string|max:255', 
+            'name' => 'nullable|string|max:255',
         ]);
 
         $name = $this->name;
@@ -173,6 +251,43 @@ class AllResponse extends Component
 
 
 
+    public function respondAll()
+    {
+        $responses = Response::all();
+
+        $message = $this->message_2;
+        // $link = $this->url;
+
+
+        $sentEmails = [];
+
+        foreach ($responses as $response) {
+            $email = $response->email;
+
+            if (in_array($email, $sentEmails)) {
+                continue;
+            }
+
+            $sentEmails[] = $email;
+
+            $name = $response->name;
+
+            $mailBody = "
+                Name: {$name}\n
+                Email: {$email}\n
+                Message: {$message}\n\n
+                ";
+
+            SendRawMailJob::dispatch($email, $mailBody);
+        }
+
+        $this->dispatch('notify', status: 'success', msg: 'Responses sent successfully!');
+    }
+
+
+
+
+
 
     public function saveAudio()
     {
@@ -188,11 +303,11 @@ class AllResponse extends Component
 
 
         Response::create([
-            'step_id' => $this->activeResponse->step_id,
+            'step_id' => optional($this->activeResponse)->step_id,
             'uuid' => Str::uuid(),
-            'user_token' => $this->activeResponse->user_token,
-            'email' => $this->activeResponse->email ?? null,
-            'name' => $this->activeResponse->name ?? null,
+            'user_token' => optional($this->activeResponse)->user_token,
+            'email' => optional($this->activeResponse)->email ?? null,
+            'name' => optional($this->activeResponse)->name ?? null,
             'audio' => $cloudinaryUrl,
             'type' => 'creator'
         ]);
@@ -214,11 +329,11 @@ class AllResponse extends Component
 
 
         Response::create([
-            'step_id' => $this->activeResponse->step_id,
+            'step_id' => optional($this->activeResponse)->step_id,
             'uuid' => Str::uuid(),
-            'user_token' => $this->activeResponse->user_token,
-            'email' => $this->activeResponse->email ?? null,
-            'name' => $this->activeResponse->name ?? null,
+            'user_token' => optional($this->activeResponse)->user_token,
+            'email' => optional($this->activeResponse)->email ?? null,
+            'name' => optional($this->activeResponse)->name ?? null,
             'video' => $cloudinaryUrl,
             'type' => 'creator'
         ]);
@@ -229,11 +344,11 @@ class AllResponse extends Component
     public function saveText()
     {
         Response::create([
-            'step_id' => $this->activeResponse->step_id,
+            'step_id' => optional($this->activeResponse)->step_id,
             'uuid' => Str::uuid(),
-            'user_token' => $this->activeResponse->user_token,
-            'email' => $this->activeResponse->email ?? null,
-            'name' => $this->activeResponse->name ?? null,
+            'user_token' => optional($this->activeResponse)->user_token,
+            'email' => optional($this->activeResponse)->email ?? null,
+            'name' => optional($this->activeResponse)->name ?? null,
             'text' => $this->textResponse,
             'type' => 'creator'
         ]);
@@ -249,10 +364,28 @@ class AllResponse extends Component
 
         $this->loadResponses();
 
-        if ($this->activeResponse && $this->activeResponse->user_token === $this->active_response_token) {
+        if ($this->activeResponse && optional($this->activeResponse)->user_token === $this->active_response_token) {
             $this->activeResponse = null;
         }
         $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
+    }
+
+
+    public function editContact()
+    {
+
+        $activeResponse = Response::firstWhere('id', optional($this->activeResponse)->id);
+
+        $activeResponse->update([
+            'email' =>  $this->email ,
+            'name' =>  $this->name ,
+            'phonenumber' =>  $this->phonenumber ,
+        ]);
+
+        $this->loadResponses();
+        
+        $this->dispatch('notify', status: 'success', msg: 'Updated successfully!');
+        
     }
 
 

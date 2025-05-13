@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('folder/{uuid}', FolderShowComponent::class)->name('folder.show');
 
     Route::get('campaign/{uuid}', CampaignComponent::class)->name('campaign.show');
-    Route::get('response', AllResponse::class)->name('response.index');
+    Route::get('response/{user_token?}', AllResponse::class)->name('response.index');
 
 
     Route::get('connect/esp', EspConnector::class)->name('esp.connect');

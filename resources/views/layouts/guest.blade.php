@@ -20,6 +20,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -34,9 +35,9 @@
     @livewireStyles
 </head>
 
-<body class="h-full">
+<body class="h-full !font-['Poppins']">
     <marquee direction="right" scrollamount="60" class="z-50 fixed w-full hidden" id="hiddenLinearPreloader">
-        <div class="bg-gradient-to-r from-[#0F1523] from-70%  to-[#B5FFAB] w-[700px] p-1 rounded-full"></div>
+        <div class="bg-gradient-to-r from-gray-800 from-70%  to-gray-200 w-[700px] p-1 rounded-full"></div>
     </marquee>
     {{ $slot }}
 

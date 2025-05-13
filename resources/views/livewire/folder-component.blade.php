@@ -1,9 +1,6 @@
-<div>
-    {{-- x-data="{ folder: null, editFolder: false }" --}}
-    {{-- <x-session-msg /> --}}
-
+<div class="py-5  md:px-3 overflow-y-auto h-full">
     <div
-        class="py-5 border-b md:px-3 flex flex-col md:flex-row justify-between items-center mb-8 space-y-2 md:space-y-0 ">
+        class="border-b py-5  flex flex-col md:flex-row justify-between items-center mb-8 space-y-2 md:space-y-0 ">
         <div class="w-full md:w-auto">
             <select wire:model.live="sortOrder"class="form-control ">
                 <option value="latest">Latest</option>

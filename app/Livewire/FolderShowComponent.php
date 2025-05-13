@@ -97,16 +97,16 @@ class FolderShowComponent extends Component
 
         ]);
 
-        $campaign->steps()->create([
-            'uuid' => Str::uuid(),
-            'name' => 'step 1',
-            'position' => 0,
-            'form' => $form,
-            'multi_choice_setting' => $multi_choice_setting,
-            'multi_choice_question' => $multi_choice_question,
-            'video_setting' => $video_setting,
+        // $campaign->steps()->create([
+        //     'uuid' => Str::uuid(),
+        //     'name' => 'step 1',
+        //     'position' => 0,
+        //     'form' => $form,
+        //     'multi_choice_setting' => $multi_choice_setting,
+        //     'multi_choice_question' => $multi_choice_question,
+        //     'video_setting' => $video_setting,
 
-        ]);
+        // ]);
 
         session()->flash('success', 'Campaign successfully created.');
 

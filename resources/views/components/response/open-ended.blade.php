@@ -54,7 +54,7 @@
                 @endforeach --}}
                         @if ($lastPosition != $step->id)
                             @foreach ($nexts as $index => $next)
-                                <button class="btn cursor-pointer" x-show="shouldContinue"  wire:loading.attr="disabled"
+                                <button class="btn cursor-pointer" x-show="shouldContinue" wire:loading.attr="disabled"
                                     wire:target="goToNext"
                                     wire:click="goToNext({{ $step->id }},'{{ $index }}')">
                                     <span wire:loading.remove wire:target="goToNext">Continue</span>
@@ -107,7 +107,7 @@
         <div class="flex space-x-3">
             @if ($lastPosition != $step->id)
                 @foreach ($nexts as $index => $next)
-                    <button class="btn cursor-pointer" x-show="shouldContinue"  wire:loading.attr="disabled"
+                    <button class="btn cursor-pointer" x-show="shouldContinue" wire:loading.attr="disabled"
                         wire:target="goToNext" wire:click="goToNext({{ $step->id }},'{{ $index }}')">
                         <span wire:loading.remove wire:target="goToNext">Continue</span>
                         <span wire:loading wire:target="goToNext" class="">
@@ -144,7 +144,7 @@
         <div class="flex space-x-3">
             @if ($lastPosition != $step->id)
                 @foreach ($nexts as $index => $next)
-                    <button class="btn cursor-pointer" x-show="shouldContinue"  wire:loading.attr="disabled"
+                    <button class="btn cursor-pointer" x-show="shouldContinue" wire:loading.attr="disabled"
                         wire:target="goToNext" wire:click="goToNext({{ $step->id }},'{{ $index }}')">
                         <span wire:loading.remove wire:target="goToNext">Continue</span>
                         <span wire:loading wire:target="goToNext" class="">
@@ -172,7 +172,7 @@
             @endforeach --}}
             @if ($lastPosition != $step->id)
                 @foreach ($nexts as $index => $next)
-                    <button class="btn cursor-pointer" x-show="shouldContinue"  wire:loading.attr="disabled"
+                    <button class="btn cursor-pointer" x-show="shouldContinue" wire:loading.attr="disabled"
                         wire:target="goToNext" wire:click="goToNext({{ $step->id }},'{{ $index }}')">
                         <span wire:loading.remove wire:target="goToNext">Continue</span>
                         <span wire:loading wire:target="goToNext" class="">
