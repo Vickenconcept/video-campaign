@@ -62,9 +62,7 @@
         <x-navbar />
         <x-sidebar />
 
-        <div class="h-full sm:ml-64 bg-white pt-20 overflow-y-hidden">
-            {{-- <button id="upload_widget" class="cloudinary-button">Upload files</button> --}}
-
+        <div class="h-full sm:ml-64 bg-gray-100 pt-20 overflow-y-hidden">
             {{ $slot }}
         </div>
     </div>
