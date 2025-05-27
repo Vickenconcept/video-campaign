@@ -20,9 +20,9 @@ class AiChat extends Component
 
     public function mount($preview = null)
     {
+        // session()->flush();
+        $this->preview = $preview;
 
-        $this->preview =$preview;
-        
         if (auth()->check()) {
             $this->auth_id = auth()->id();
         } else {
@@ -35,53 +35,6 @@ class AiChat extends Component
         $this->messages = session("chat_messages_{$this->auth_id}", []);
     }
 
-    // public function sendMessage()
-    // {
-    //     if (empty(trim($this->message))) {
-    //         return;
-    //     }
-
-    //     $this->messages[] = [
-    //         'role' => 'user',
-    //         'content' => $this->message,
-    //         'timestamp' => now()->format('g:i A')
-    //     ];
-
-    //     // Store in session
-    //     session(["chat_messages_{$this->auth_id}" => $this->messages]);
-
-    //     $userMessage = $this->message;
-    //     $this->message = ''; 
-
-    //     $this->dispatch('showLoading');
-    //     $this->isLoading = true;
-
-    //     try {
-    //         // Get response from ChatGPT service
-    //         $chatGptService = app(ChatGptService::class);
-    //         $response = $chatGptService->generateContent($userMessage);
-
-    //         // Add AI response to chat
-    //         $this->messages[] = [
-    //             'role' => 'assistant',
-    //             'content' => $response,
-    //             'timestamp' => now()->format('g:i A')
-    //         ];
-    //     } catch (\Exception $e) {
-    //         // Add error message
-    //         $this->messages[] = [
-    //             'role' => 'assistant',
-    //             'content' => 'Sorry, there was an error processing your request. Please try again.',
-    //             'timestamp' => now()->format('g:i A')
-    //         ];
-    //     } finally {
-    //         $this->isLoading = false;
-    //         session(["chat_messages_{$this->auth_id}" => $this->messages]);
-    //     }
-
-    //     // Trigger scroll to bottom
-    //     $this->dispatch('scrollToBottom');
-    // }
 
     public function sendMessage()
     {
@@ -105,12 +58,40 @@ class AiChat extends Component
 
         $this->dispatch('handleAiResponse', $userMessage);
     }
+
+    // #[On('handleAiResponse')]
+    // public function handleAiResponse($userMessage)
+    // {
+    //     try {
+    //         $chatGptService = app(ChatGptService::class);
+    //         $response = $chatGptService->generateContent($userMessage);
+
+    //         $this->messages[] = [
+    //             'role' => 'assistant',
+    //             'content' => $response,
+    //             'timestamp' => now()->format('g:i A')
+    //         ];
+    //     } catch (\Exception $e) {
+    //         $this->messages[] = [
+    //             'role' => 'assistant',
+    //             'content' => 'Sorry, there was an error processing your request. Please try again.',
+    //             'timestamp' => now()->format('g:i A')
+    //         ];
+    //     } finally {
+    //         $this->isLoading = false;
+    //         session(["chat_messages_{$this->auth_id}" => $this->messages]);
+    //         $this->dispatch('scrollToBottom');
+    //     }
+    // }
+
     #[On('handleAiResponse')]
     public function handleAiResponse($userMessage)
     {
         try {
             $chatGptService = app(ChatGptService::class);
             $response = $chatGptService->generateContent($userMessage);
+
+            $response = is_string($response) ? $response : 'Sorry, I could not generate a response.';
 
             $this->messages[] = [
                 'role' => 'assistant',
@@ -129,6 +110,7 @@ class AiChat extends Component
             $this->dispatch('scrollToBottom');
         }
     }
+
 
 
     public function clearChat()

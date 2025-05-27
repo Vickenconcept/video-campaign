@@ -1,11 +1,11 @@
 <x-guest-layout>
-    <div class="flex justify-center items-center h-screen bg-gradient-to-b from-[#D0E8FF] to-[#B5FFAB] ">
+    <div class="flex justify-center items-center h-screen bg-white">
         <div class="w-[40%] mx-auto">
             <form method="POST" action="{{ route('password.update') }}"
-                class="shadow-md rounded-2xl bg-slate-200 bg-opacity-50 px-8 pt-6 pb-8 mb-4">
+                class="shadow-md rounded-2xl bg-sgray-50 px-8 pt-6 pb-8 mb-4">
                 @csrf
                 <h4 class="text-3xl text-center">Reset Password</h4>
-                <div class="mb-4">
+                <div class="my-4">
                     @if ($errors->any())
                         <div class="bg-red-200 text-red-500 p-4">
                             <ul>
@@ -26,7 +26,7 @@
                             <label for="password_confirmation" class="input-label">Email</label>
                         </div>
 
-                        <input id="email" class="form-control" type="email" name="email" required
+                        <input id="email" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="email" name="email" required
                             autocomplete="current-email" placeholder="Enter your email address" />
 
                     </div>
@@ -35,7 +35,7 @@
                             <label for="password_confirmation" class="input-label">Password </label>
                         </div>
 
-                        <input id="password" class="form-control" type="password" name="password" required
+                        <input id="password" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="password" name="password" required
                             autocomplete="current-password" placeholder="Enter your password " />
 
                     </div>
@@ -45,15 +45,15 @@
                         </div>
                         <div class="">
                             <input id="password_confirmation" name="password_confirmation" type="password" placeholder="*****"
-                                class="form-control">
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
                     <div class="">
-                        <input id="token" name="token" type="hidden" class="form-control"
+                        <input id="token" name="token" type="hidden" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             value="{{ $token }}">
                     </div>
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="bg-black hover:bg-slate-900 hover:shadow px-4 py-1.5 font-semibold text-blue-50 rounded-md w-full transition duration-500 ease-in-out">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-900 hover:shadow px-4 py-1.5 font-semibold text-blue-50 rounded-md w-full transition duration-500 ease-in-out">
                             <span id="hiddenText" class="hidden"> <i class='bx bx-loader-alt animate-spin'></i></span>
                             <span>RESET</span>
                         </button>

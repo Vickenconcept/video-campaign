@@ -94,7 +94,6 @@ class ShowCampaign extends Component
     public function goToNext($id = 0, $action = 'defualt')
     {
         try {
-            // [ everything inside goToNext as is... ]
 
             if (!$this->preview) {
                 if (trim($this->textResponse) !== '') {
@@ -196,6 +195,7 @@ class ShowCampaign extends Component
         if ($action) {
             $previous = $step->getPreviousStep($action);
         }
+        $this->dispatch('$refresh');
 
 
         $this->nextStep = $previous;
@@ -236,9 +236,6 @@ class ShowCampaign extends Component
         }
     }
 
-
-    // $filename = 'video_' . time() . '.webm';
-    // $path = $this->videoResponse->storeAs('response-videos', $filename, 'public');
 
 
     public function saveText()
@@ -358,7 +355,6 @@ class ShowCampaign extends Component
 
         $multi_choice_setting = json_decode($step->multi_choice_setting, true);
 
-        // dd($multi_choice_setting);
 
         $skipDataStatus = false;
 
@@ -435,6 +431,7 @@ class ShowCampaign extends Component
             ]);
         } else {
             $step->responses()->create([
+                'uuid' => Str::uuid(),
                 'user_token' => $this->userToken,
                 'nps_score' => $this->NPSScore,
             ]);

@@ -9,6 +9,7 @@ use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Cache;
 
 class AllResponse extends Component
 {
@@ -28,6 +29,7 @@ class AllResponse extends Component
 
     public ?string $user_token = null;
     public ?string $dateFilter = null; // 'day', 'week', 'month', 'year'
+    public ?string $customDate = null;
 
 
 
@@ -40,85 +42,53 @@ class AllResponse extends Component
     }
 
 
-    // public function loadResponses()
-    // {
-    //     $user = auth()->user();
-
-    //     $allResponses = $user->folders()
-    //         ->with('campaigns.steps.responses')
-    //         ->get()
-    //         ->flatMap(
-    //             fn($folder) =>
-    //             $folder->campaigns->flatMap(
-    //                 fn($campaign) =>
-    //                 $campaign->steps->flatMap(
-    //                     fn($step) =>
-    //                     $step->responses
-    //                 )
-    //             )
-    //         );
-
-    //     $filteredResponses = $this->applyFilters($allResponses);
-
-    //     $this->responsesByToken = $filteredResponses->groupBy('user_token');
-
-    //     $this->responses = $filteredResponses
-    //         ->sortByDesc('created_at')
-    //         ->groupBy('user_token')
-    //         ->map(function ($responsesGroup) {
-    //             $merged = [];
-
-    //             foreach ($responsesGroup as $response) {
-    //                 foreach ($response->getAttributes() as $key => $value) {
-    //                     if (!empty($value) && empty($merged[$key])) {
-    //                         $merged[$key] = $value;
-    //                     }
-    //                 }
-    //             }
-
-    //             return (object) $merged;
-    //         })
-    //         ->values();
-
-    //     $latest = $filteredResponses->sortByDesc('created_at')->first();
-
-    //     $this->activeResponse = $this->responses->firstWhere('user_token', $latest->user_token ?? null);
-    // }
 
 
     public function loadResponses()
     {
         $user = auth()->user();
 
-        $allResponses = $user->folders()
-            ->with('campaigns.steps.responses')
-            ->get()
-            ->flatMap(
-                fn($folder) =>
-                $folder->campaigns->flatMap(
-                    fn($campaign) =>
-                    $campaign->steps->flatMap(
-                        fn($step) =>
-                        $step->responses
-                    )
+        $userId = $user->id;
+        $cacheKey = 'responses_data_user_' . $userId;
+
+        $folders = Cache::remember($cacheKey, 60, function () use ($user) {
+            return $user->folders()
+                ->with('campaigns.steps.responses')
+                ->get();
+        });
+
+        $allResponses = $folders->flatMap(
+            fn($folder) =>
+            $folder->campaigns->flatMap(
+                fn($campaign) =>
+                $campaign->steps->flatMap(
+                    fn($step) =>
+                    $step->responses
                 )
-            );
+            )
+        );
 
         // Filter by user_token if available
         if ($this->user_token) {
             $allResponses = $allResponses->where('user_token', $this->user_token);
         }
 
-        // Apply date filtering
-        if ($this->dateFilter) {
+
+        if ($this->customDate) {
+            $allResponses = $allResponses->filter(function ($response) {
+                $created = \Carbon\Carbon::parse($response->created_at);
+                return $created->isSameDay(\Carbon\Carbon::parse($this->customDate));
+            });
+        } elseif ($this->dateFilter) {
             $allResponses = $allResponses->filter(function ($response) {
                 $created = \Carbon\Carbon::parse($response->created_at);
                 $now = now();
-
                 return match ($this->dateFilter) {
                     'day' => $created->isToday(),
                     'week' => $created->isSameWeek($now),
                     'month' => $created->isSameMonth($now),
+                    'last_month' => $created->isSameMonth($now->copy()->subMonth()),
+                    'last_2_months' => $created->between($now->copy()->subMonths(2)->startOfMonth(), $now->copy()->subMonth()->endOfMonth()),
                     'year' => $created->isSameYear($now),
                     default => true,
                 };
@@ -150,6 +120,8 @@ class AllResponse extends Component
         $latest = $filteredResponses->sortByDesc('created_at')->first();
 
         $this->activeResponse = $this->responses->firstWhere('user_token', $latest->user_token ?? null);
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
 
@@ -162,6 +134,8 @@ class AllResponse extends Component
             'filterText' => $this->filterText,
             'filterAudio' => $this->filterAudio,
             'filterNps' => $this->filterNps,
+            'dateFilter' => $this->dateFilter,
+            'customDate' => $this->customDate,
         ];
 
         if (!array_filter($filters)) {
@@ -173,13 +147,15 @@ class AllResponse extends Component
                 ($filters['filterVideo'] && !empty($response->video)) ||
                 ($filters['filterText'] && !empty($response->text)) ||
                 ($filters['filterAudio'] && !empty($response->audio)) ||
+                ($filters['dateFilter'] && !empty($response->created_at)) ||
+                ($filters['customDate'] && !empty($response->created_at)) ||
                 ($filters['filterNps'] && !empty($response->nps_score));
         });
     }
 
     public function updated($propertyName)
     {
-        if (in_array($propertyName, ['filterEmail', 'filterVideo', 'filterText', 'filterAudio', 'filterNps'])) {
+        if (in_array($propertyName, ['filterEmail', 'filterVideo', 'filterText', 'filterAudio', 'filterNps', 'dateFilter', 'customDate'])) {
             $this->loadResponses();
         }
     }
@@ -193,7 +169,7 @@ class AllResponse extends Component
         $this->name = optional($this->activeResponse)->name;
         $this->phonenumber = optional($this->activeResponse)->phonenumber;
     }
-   
+
 
     public function showResponse($index)
     {
@@ -313,6 +289,8 @@ class AllResponse extends Component
         ]);
         $this->dispatch('notify', status: 'success', msg: 'Replyed successfully!');
         $this->dispatch('refreshPage');
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
     public function saveVideo()
@@ -339,6 +317,8 @@ class AllResponse extends Component
         ]);
         $this->dispatch('notify', status: 'success', msg: 'Replyed successfully!');
         $this->dispatch('refreshPage');
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
     public function saveText()
@@ -356,6 +336,8 @@ class AllResponse extends Component
 
         $this->dispatch('notify', status: 'success', msg: 'Replyed successfully!');
         $this->dispatch('refreshPage');
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
     public function deleteResponsesByToken()
@@ -368,6 +350,8 @@ class AllResponse extends Component
             $this->activeResponse = null;
         }
         $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
 
@@ -377,18 +361,29 @@ class AllResponse extends Component
         $activeResponse = Response::firstWhere('id', optional($this->activeResponse)->id);
 
         $activeResponse->update([
-            'email' =>  $this->email ,
-            'name' =>  $this->name ,
-            'phonenumber' =>  $this->phonenumber ,
+            'email' =>  $this->email,
+            'name' =>  $this->name,
+            'phonenumber' =>  $this->phonenumber,
         ]);
 
         $this->loadResponses();
-        
+
         $this->dispatch('notify', status: 'success', msg: 'Updated successfully!');
-        
+
+        Cache::forget('responses_data_user_' . auth()->id());
     }
 
-
+    public function clearFilters()
+    {
+        $this->dateFilter = null;
+        $this->customDate = null;
+        $this->filterEmail = false;
+        $this->filterVideo = false;
+        $this->filterText = false;
+        $this->filterAudio = false;
+        $this->filterNps = false;
+        $this->loadResponses();
+    }
 
     public function render()
     {

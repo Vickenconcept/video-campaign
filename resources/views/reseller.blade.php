@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('title')
-    {{ "reseller" }}
-@endsection
+        {{ 'reseller' }}
+    @endsection
     <div x-data="{ openModal: false }" class="px-3 pb-32 overflow-y-auto h-screen">
         <div class=" flex justify-between">
             <div class=" flex space-x-1 items-baseline">
@@ -9,9 +9,8 @@
             </div>
 
             <div class=" mb-8">
-                <button
-                    class="btn cursor-pointer"
-                    @click="openModal = true"><i class="bx bx-plus mr-2"></i> Register user</button>
+                <button class="btn cursor-pointer" @click="openModal = true"><i class="bx bx-plus mr-2"></i> Register
+                    user</button>
             </div>
         </div>
         <div class=" ">

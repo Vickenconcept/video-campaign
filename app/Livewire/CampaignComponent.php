@@ -65,6 +65,7 @@ class CampaignComponent extends Component
     public function goToTab($tab)
     {
         $this->activeTab = $tab;
+        // $this->dispatch('$refresh');
     }
 
 
@@ -148,7 +149,6 @@ class CampaignComponent extends Component
         // Temporarily assign the next position to satisfy NOT NULL constraint
         $maxPosition = $this->campaign->steps()->max('position') ?? 0;
 
-        // Create new step
         $this->campaign->steps()->create([
             'uuid' => Str::uuid(),
             'name' => "default Step",
@@ -160,7 +160,6 @@ class CampaignComponent extends Component
             'video_setting' => $video_setting,
         ]);
 
-        // Reassign positions based on ascending ID
         $steps = $this->campaign->steps()->orderBy('id')->get();
         foreach ($steps as $index => $step) {
             $step->update(['position' => $index + 1]);
@@ -171,8 +170,6 @@ class CampaignComponent extends Component
 
         $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
     }
-
-
 
 
 
@@ -258,24 +255,6 @@ class CampaignComponent extends Component
     }
 
 
-    // public function deleteStep($id, $position)
-    // {
-    //     $this->campaign->steps()->where('id', $id)->delete();
-
-    //     $steps = $this->campaign->steps()->where('position', '>', $position)
-    //         ->orderBy('position')
-    //         ->get();
-
-    //     foreach ($steps as $step) {
-    //         $step->update(['position' => $step->position - 1]);
-    //     }
-
-    //     $this->steps = $this->campaign->steps;
-
-    //     $this->lastStep = $this->steps->sortByDesc('id')->first();
-
-    //     $this->dispatch('notify', status: 'success', msg: 'Step deleted.');
-    // }
 
     public function deleteStep($id)
     {

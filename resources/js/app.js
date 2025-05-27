@@ -10,9 +10,13 @@ import 'toastify-js/src/toastify.css';
 // Import Toastify JS
 window.Toastify = Toastify;
 
-import Alpine from 'alpinejs';
-Alpine.data('notification', notification);
+// import Alpine from 'alpinejs';
+// Alpine.data('notification', notification);
 
 // window.Alpine = Alpine;
 
 // Alpine.start();
+
+// document.addEventListener('livewire:initialized', () => {
+//     window.Alpine.data('notification', notification);
+// });

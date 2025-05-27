@@ -53,7 +53,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="bg-orange-100 text-orange-500 py-10 text-center rounded col-span-4" colspan="4">No Data
+                        <td class="bg-indigo-100 text-indigo-500 py-10 text-center rounded col-span-4" colspan="4">No Data
                             Yet.</td>
                     </tr>
                 @endforelse

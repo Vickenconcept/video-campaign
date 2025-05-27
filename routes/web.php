@@ -72,4 +72,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('mail-chip/connect', [ESPController::class, 'connectMailchimp'])->name('mail-chip.connect');
     Route::post('get-response/connect', [ESPController::class, 'connectGetRespones'])->name('get-response.connect');
     Route::post('convert-kit/connect', [ESPController::class, 'connectCOnvertKit'])->name('convert-kit.connect');
+
+    Route::view('/support', 'support')->name('support.index');
 });

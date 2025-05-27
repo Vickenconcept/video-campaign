@@ -1,4 +1,7 @@
 <div class="py-5  md:px-3 overflow-y-auto h-full">
+    @section('title')
+        {{ 'Folders' }}
+    @endsection
     <div
         class="border-b py-5  flex flex-col md:flex-row justify-between items-center mb-8 space-y-2 md:space-y-0 ">
         <div class="w-full md:w-auto">

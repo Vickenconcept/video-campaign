@@ -1,10 +1,15 @@
 <div>
+    @section('title')
+        {{ 'All Response' }}
+    @endsection
     <x-session-msg />
     <section class="grid lg:grid-cols-7 gap-5 px-5" x-data="{ activeResponse: null }">
         <div class="lg:col-span-2 ">
             @if ($user_token == null)
                 <div class="relative mb-3" x-data="{ openDrawer: false, openRespondAll: false }">
-                    <div class="flex justify-end">
+                    <div class="flex justify-end relative" x-data="{ openDropDown: false }">
+
+
                         <button @click="openRespondAll = true"
                             class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white shadow border border-gray-300 bg-white cursor-pointer">
                             Reply all
@@ -24,6 +29,9 @@
                                 <i class='bx bx-x-circle hover:text-black'></i>
                             </button>
                         </div>
+                        <button type="button" wire:click="clearFilters"
+                            class="rounded-full px-1 py-0.5 bg-red-200 hover:bg-red-300 shadow border border-red-300 text-red-800 cursor-pointer w-full mt-2 text-xs">Clear
+                            Filters</button>
                         <div
                             class="bg-gray-50 border border-gray-300 bg-white rounded-lg block w-full px-2 py-1.5  items-center flex justify-between">
                             <h5 class="font-semibold text-gray-900 text-sm">Has Email</h5>
@@ -77,6 +85,38 @@
                                 </div>
                             </label>
                         </div>
+                        <div class="flex justify-end relative" x-data="{ openDropDown: false }">
+                            <button @click="openDropDown = true"
+                                class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white w-full shadow border border-gray-300 bg-white cursor-pointer">
+                                Filter By Date
+                            </button>
+                            <div @click.away="openDropDown =false" x-show="openDropDown" style="display: none;"
+                                class="absolute top-0 left-0 bg-white shadow-xl rounded-md p-2 z-30">
+                                <div class="flex justify-end items-center mb-3">
+                                    <button @click="openDropDown = false" class="cursor-pointer">
+                                        <i class='bx bx-x-circle hover:text-black'></i>
+                                    </button>
+                                </div>
+                                <div>
+                                    <label for="dateFilter" class="block">Filter by:</label>
+                                    <select wire:model.live="dateFilter" id="dateFilter"
+                                        class="rounded-md px-4 py-2 bg-gray-200 hover:bg-white shadow border border-gray-300 bg-white cursor-pointer w-full">
+                                        <option value="">All</option>
+                                        <option value="day">Today</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month">This Month</option>
+                                        <option value="last_month">Last Month</option>
+                                        <option value="last_2_months">Last 2 Months</option>
+                                        <option value="year">This Year</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="customDate">Or pick a date:</label>
+                                    <input type="date" wire:model.live="customDate" id="customDate"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- openRespondAll --}}
@@ -96,7 +136,8 @@
                                             <label for="">Message</label>
                                             <textarea wire:model="message_2" id="" rows="6" class="form-control" required></textarea>
                                         </div>
-                                        <button @click="openRespondAll = false" type="button" wire:loading.attr="disabled" wire:target="respondAll"
+                                        <button @click="openRespondAll = false" type="button"
+                                            wire:loading.attr="disabled" wire:target="respondAll"
                                             class="btn cursor-pointer" wire:click="respondAll">
                                             <span wire:loading.remove wire:target="respondAll">send</span>
 
@@ -112,25 +153,29 @@
             @endif
 
             <div class="max-w-sm mx-auto">
-                <div x-data="{ openDelete: false , openEdit : false}" class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div x-data="{ openDelete: false, openEdit: false }" class="bg-white shadow-lg rounded-lg overflow-hidden">
                     <ul
                         class="divide-y divide-gray-200 h-48 lg:h-[550px] {{ $user_token == null ? 'overflow-y-scroll' : '' }}">
                         @forelse ($responses as $key =>  $response)
                             <li x-data="{ isOpen: false }"
-                                class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500 border-2 ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-slate-500 shadow-2xl' : 'border-transparent' }}">
+                                class=" relative p-3 flex justify-between items-center user-card hover:shadow-2xl transition duration-500  ease-in-out rounded-md {{ $activeResponse->id == $response->id ? 'border-2 border-slate-500 shadow-2xl' : 'border-b' }}">
                                 <div class="flex items-center w-[100%] cursor-pointer"
                                     @click="activeResponse = @js($response)"
                                     wire:click="setResponse('{{ $response->user_token }}')">
-                                    <div class="w-10 h-10 rounded-full overflow-hidden">
-                                        <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
-                                            class="w-full h-full object-center object-cover">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden p-1">
+                                        {{-- <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
+                                            class="w-full h-full object-center object-cover"> --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                              </svg>
+                                              
                                     </div>
                                     <div>
                                         <p class="ml-3 font-medium  capitalize truncate">
                                             {{ $response->name ?? '' }}
                                         </p>
                                         <span class="ml-3 font-medium truncate text-xs text-gray-500">
-                                            {{ $response->email ?? '' }}
+                                            {{ $response->email ?? 'NA' }}
                                         </span>
                                     </div>
                                 </div>
@@ -245,23 +290,27 @@
                                             </h4>
                                             <div>
                                                 <label for="">Name</label>
-                                                <input wire:model="name" id="" placeholder="Smith Joe" class="form-control" required/>
+                                                <input wire:model="name" id="" placeholder="Smith Joe"
+                                                    class="form-control" required />
                                             </div>
                                             <div>
                                                 <label for="">Email</label>
-                                                <input wire:model="email" id="" placeholder="example@gmail.com" class="form-control" required/>
+                                                <input wire:model="email" id=""
+                                                    placeholder="example@gmail.com" class="form-control" required />
                                             </div>
                                             <div>
                                                 <label for="">Phonenumber</label>
-                                                <input wire:model="phonenumber" id="" placeholder="23456.." class="form-control" required/>
+                                                <input wire:model="phonenumber" id="" placeholder="23456.."
+                                                    class="form-control" required />
                                             </div>
-                                            <button @click="openEdit = false" type="button" wire:loading.attr="disabled" wire:target="editContact()"
+                                            <button @click="openEdit = false" type="button"
+                                                wire:loading.attr="disabled" wire:target="editContact()"
                                                 class="btn cursor-pointer" wire:click="editContact()">
                                                 <span wire:loading.remove wire:target="editContact()">Update</span>
-    
+
                                                 <span wire:loading wire:target="editContact()">Loading ...</span>
                                             </button>
-    
+
                                         </form>
                                     </div>
 
@@ -628,9 +677,9 @@
                                                     'responseID' => $res->id,
                                                 ])
                                             </div>
-                                            <button @click="openSendResponse = false" type="button" wire:loading.attr="disabled"
-                                                wire:target="sendResponse" class="btn cursor-pointer"
-                                                wire:click="sendResponse">
+                                            <button @click="openSendResponse = false" type="button"
+                                                wire:loading.attr="disabled" wire:target="sendResponse"
+                                                class="btn cursor-pointer" wire:click="sendResponse">
                                                 <span wire:loading.remove wire:target="sendResponse">send</span>
 
                                                 <span wire:loading wire:target="sendResponse">Loading ...</span>

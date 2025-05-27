@@ -1,14 +1,17 @@
 <div class="overflow-auto h-full" x-data="multiSelect()" x-init="$watch('selectedEmails', value => $wire.selectedEmails = value)">
-    {{-- <div class="overflow-auto h-full" x-data="{ activeTab: 'mailchimp' }"> --}}
-    <div class="container mx-auto px-4 py-8">
+    @section('title')
+        {{ 'ESP Connect' }}
+    @endsection
+    <div class="container mx-auto max-w-screen-md px-4 py-8">
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-2xl font-bold mb-6">Email Service Provider Connections</h2>
+            <x-session-msg />
 
             <!-- Tabs Navigation -->
-            <div class="flex border-b mb-6">
+            <div class="flex flex-wrap border-b mb-6">
                 <button @click="activeTab = 'mailchimp'"
-                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'mailchimp', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'mailchimp' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900 bg-gray-50 rounded-t-sm !font-bold': activeTab === 'mailchimp', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'mailchimp' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 cursor-pointer border-transparent font-medium text-sm">
                     Mailchimp
                     @if ($connectionStatus['mailchimp'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -20,8 +23,8 @@
                 </button>
 
                 <button @click="activeTab = 'getresponse'"
-                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'getresponse', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'getresponse' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900 bg-gray-50 rounded-t-sm !font-bold': activeTab === 'getresponse', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'getresponse' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 cursor-pointer border-transparent font-medium text-sm">
                     GetResponse
                     @if ($connectionStatus['getresponse'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -33,8 +36,8 @@
                 </button>
 
                 <button @click="activeTab = 'convertkit'"
-                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'convertkit', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'convertkit' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900 bg-gray-50 rounded-t-sm !font-bold': activeTab === 'convertkit', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'convertkit' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 cursor-pointer border-transparent font-medium text-sm">
                     ConvertKit
                     @if ($connectionStatus['convertkit'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -45,8 +48,8 @@
                     @endif
                 </button>
                 <button @click="activeTab = 'activecampaign'"
-                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'activecampaign', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'activecampaign' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                    :class="{ 'border-slate-900 text-slate-900 bg-gray-50 rounded-t-sm !font-bold': activeTab === 'activecampaign', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'activecampaign' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 cursor-pointer border-transparent font-medium text-sm">
                     Activecampaign
                     @if ($connectionStatus['activecampaign'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -56,9 +59,9 @@
                         </svg>
                     @endif
                 </button>
-                <button @click="activeTab = 'hubspot'"
-                    :class="{ 'border-slate-900 text-slate-900': activeTab === 'hubspot', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'hubspot' }"
-                    class="py-4 px-6 inline-flex items-center border-b-2 border-transparent font-medium text-sm">
+                {{-- <button @click="activeTab = 'hubspot'"
+                    :class="{ 'border-slate-900 text-slate-900 bg-gray-50 rounded-t-sm !font-bold': activeTab === 'hubspot', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'hubspot' }"
+                    class="py-4 px-6 inline-flex items-center border-b-2 cursor-pointer border-transparent font-medium text-sm">
                     Hubspot
                     @if ($connectionStatus['hubspot'])
                         <svg class="w-5 h-5 ml-2 text-green-500" fill="none" stroke="currentColor"
@@ -67,7 +70,7 @@
                             </path>
                         </svg>
                     @endif
-                </button>
+                </button> --}}
             </div>
 
             <!-- Tab Panes -->
@@ -126,10 +129,11 @@
                             </label>
                             <input wire:model="getResponseApiKey" class="form-control" id="getResponseApiKey"
                                 type="text" placeholder="Enter your GetResponse API key">
-                                <p class="text-xs text-gray-500 mt-1">
-                                    Find this in Getresponse tools >Integrations and API > API  or
-                                    <a href="https://app.getresponse.com/api" class="hover:underline text-blue-500" target="_blank">Get here</a>
-                                </p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Find this in Getresponse tools >Integrations and API > API or
+                                <a href="https://app.getresponse.com/api" class="hover:underline text-blue-500"
+                                    target="_blank">Get here</a>
+                            </p>
                         </div>
 
 
@@ -255,42 +259,29 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="hubspotApiKey">
                                 HubSpot API Key
                             </label>
-                            <input wire:model="hubspotApiKey"
-                                class="form-control"
-                                id="hubspotApiKey" type="text" placeholder="Enter your HubSpot API key">
+                            <input wire:model="hubspotApiKey" class="form-control" id="hubspotApiKey" type="text"
+                                placeholder="Enter your HubSpot API key">
                             <p class="text-xs text-gray-500 mt-1">Find this in HubSpot Settings > Integrations > API
                                 Key</p>
                         </div>
 
-                        {{-- <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
-                            <span wire:loading.remove wire:target="connectHubSpot">
-                                @if ($hubspotAuth)
-                                    Reconnect
-                                @else
-                                    Connect
-                                @endif HubSpot
-                            </span>
-                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
-                        </button> --}}
-
 
                         @if ($hubspotAuth)
-                        <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
-                            <span wire:loading.remove wire:target="connectHubSpot">Connected!
-                            </span>
-                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
-                        </button>
-                    @endif
-                    @if (!$hubspotAuth)
-                        <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
-                            <span wire:loading.remove wire:target="connectHubSpot">Connect
-                                Hubspot</span>
-                            <span wire:loading wire:target="connectHubSpot">Connecting...</span>
-                        </button>
-                    @endif
+                            <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                                <span wire:loading.remove wire:target="connectHubSpot">Connected!
+                                </span>
+                                <span wire:loading wire:target="connectHubSpot">Connecting...</span>
+                            </button>
+                        @endif
+                        @if (!$hubspotAuth)
+                            <button type="submit" wire:loading.attr="disabled" wire:target="connectHubSpot"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
+                                <span wire:loading.remove wire:target="connectHubSpot">Connect
+                                    Hubspot</span>
+                                <span wire:loading wire:target="connectHubSpot">Connecting...</span>
+                            </button>
+                        @endif
                     </form>
 
                 </div>
@@ -323,9 +314,9 @@
                                 @if ($connectionStatus['activecampaign'])
                                     <option value="activecampaign">ActiveCampaign</option>
                                 @endif
-                                @if ($connectionStatus['hubspot'])
+                                {{-- @if ($connectionStatus['hubspot'])
                                     <option value="hubspot">Hubspot</option>
-                                @endif
+                                @endif --}}
                             </select>
                         </div>
                         <div x-show="activeTab != 'activecampaign' && activeTab != 'hubspot'">
@@ -402,6 +393,7 @@
                         </div>
                     </div>
 
+                    <x-session-msg />
                     <button type="submit" wire:loading.attr="disabled" wire:target="migrateSubscriber"
                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline">
                         <span wire:loading.remove wire:target="migrateSubscriber"> Migrate Subscriber </span>

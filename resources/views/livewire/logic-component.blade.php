@@ -32,7 +32,7 @@
                                 </div>
                             </li>
                             <div x-show="openDrawer"
-                                class="absolute -bottom-44 z-10 left-0 w-[60%] h-48 overflow-y-auto rounded-lg shadow-2xl bg-white p-5 ">
+                                class="absolute -bottom-44 z-10 left-0 w-[80%] xl:w-[60%] h-48 overflow-y-auto rounded-lg shadow-2xl bg-white p-5 ">
                                 @php
                                     $campaignId = is_object($activeStep) ? $activeStep->campaign_id : $activeStep;
                                     $otherSteps = \App\Models\Step::where('campaign_id', $campaignId)

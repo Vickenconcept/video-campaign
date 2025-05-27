@@ -1,4 +1,7 @@
 <x-app-layout>
+    @section('title')
+        {{ 'Tutorial' }}
+    @endsection
     <section x-data="{ modalIsOpen: false, video: null, title: null }" class="pb-6">
 
         <h1 class="text-xl font-bold px-10 py-6">Tutorial Clips</h1>
