@@ -63,7 +63,7 @@
         <div id="main-section" class="h-full sm:ml-64 bg-gray-100 pt-20 overflow-y-hidden relative">
             <div>
                 <button id="toggle-btn"
-                    class=" p-2 rounded-r-md cursor-pointer bg-indigo-600 text-white absolute top-5 -left-3 z-40 flex items-center justify-center">
+                    class=" p-2 hidden lg:flex rounded-r-md cursor-pointer bg-indigo-600 text-white absolute top-5 -left-3 z-40 flex items-center justify-center">
                     <i class='bx  bx-sidebar ml-2 text-xl'  ></i> 
                 </button>
             </div>

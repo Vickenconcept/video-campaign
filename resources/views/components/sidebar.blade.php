@@ -2,7 +2,7 @@
     class="fixed top-0 left-0 z-40 w-64 h-screen  transition-transform -translate-x-full bg-indigo-600  sm:translate-x-0  p-3 "
     aria-label="Sidebar">
     <div class=" h-full rounded-xl px-3 pb-4 ">
-        <div class="py-5 mb-2 border-b-2 border-slate-300">
+        <div class="py-5 mb-2 border-b-2 border-slate-300 flex justify-between">
             <a href="/home" class="flex items-end text-white">
                 {{-- <img src="{{ asset('images/logo.svg') }}" class="h-10 me-3" alt=" Logo" /> --}}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12 text-white">
@@ -10,6 +10,16 @@
                   </svg> 
                   <span style="font-family: 'Dancing Script', cursive !important;" class="font-semibold text-xl">Me</span>
             </a>
+
+            <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+            type="button"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 ">
+            <span class="sr-only">Open sidebar</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              
+        </button>
         </div>
         <div class="h-[85%] pb-4 overflow-y-auto ">
             <ul class=" font-medium flex flex-col justify-between h-full">

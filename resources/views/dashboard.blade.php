@@ -2,7 +2,7 @@
     @section('title')
         {{ 'Dashboard' }}
     @endsection
-    <div class="max-w-5xl mx-auto py-5">
+    <div class="max-w-5xl mx-auto py-5 px-3 xl:px-0">
         <h4 class="text-2xl font-semibold mb-8">Hey, Welcome Back</h4>
         @php
             $user = auth()->user();

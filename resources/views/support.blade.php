@@ -2,7 +2,7 @@
     @section('title')
         <span class="">Support</span>
     @endsection
-    <div class="container mx-auto py-8">
+    <div class="container mx-auto py-8 px-3 lg:px-0">
 
         <div class="max-w-xl mx-auto mt-10 bg-white shadow-xl rounded-xl p-6 border border-gray-200">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank you for your patronage.</h2>

@@ -1,4 +1,4 @@
-<div class="py-5  md:px-3 overflow-y-auto h-full">
+<div class="py-5  px-3  md:px-3 overflow-y-auto h-full">
     @section('title')
         {{ 'Folders' }}
     @endsection
