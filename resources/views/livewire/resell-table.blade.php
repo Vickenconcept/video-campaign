@@ -1,18 +1,18 @@
 <div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+        <table class="w-full text-sm text-left rtl:text-right text-white0 ">
             <thead class="text-xs text-gray-700 uppercase ">
                 <tr>
-                    <th scope="col" class="px-6 py-3 bg-gray-50 ">
+                    <th scope="col" class="px-6 py-3 bg-white ">
                         Name
                     </th>
-                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                    <th scope="col" class="px-6 py-3 bg-gray-50">
                         Email
                     </th>
-                    <th scope="col" class="px-6 py-3 bg-gray-50 ">
+                    <th scope="col" class="px-6 py-3 bg-white ">
                         Date
                     </th>
-                    <th scope="col" class="px-6 py-3 bg-gray-100">
+                    <th scope="col" class="px-6 py-3 bg-gray-50">
 
                     </th>
                 </tr>
@@ -21,16 +21,16 @@
                 @forelse ($users as $user)
                     <tr class="border-b border-gray-200 ">
                         <th scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50  ">
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-white  ">
                             {{ $user->name }}
                         </th>
-                        <td class="px-6 py-4 bg-gray-100">
+                        <td class="px-6 py-4 bg-gray-50">
                             {{ $user->email }}
                         </td>
-                        <td class="px-6 py-4 bg-gray-50 ">
+                        <td class="px-6 py-4 bg-white ">
                             {{ $user->created_at }}
                         </td>
-                        <td class="px-6 py-4 bg-gray-100">
+                        <td class="px-6 py-4 bg-gray-50">
 
                             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"> <i
                                     class='bx bxs-trash text-xl text-red-500 hover:text-red-700'></i>

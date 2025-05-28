@@ -393,7 +393,7 @@
 
         @forelse ($steps->sortBy('id') as $step)
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
-            <div class="w-52 h-48 flex relative">
+            <div class="w-56 h-52 flex relative">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
                     class=" cursor-pointer shadow-xl rounded-l-lg border-3 border-gray-300 w-[75%]   bg-white hover:shadow-sm transition duration-500 ease-in-out overflow-auto">
                     <div

@@ -5,7 +5,7 @@
     <div
         class="border-b py-5  flex flex-col md:flex-row justify-between items-center mb-8 space-y-2 md:space-y-0 ">
         <div class="w-full md:w-auto">
-            <select wire:model.live="sortOrder"class="form-control ">
+            <select wire:model.live="sortOrder"class="form-control">
                 <option value="latest">Latest</option>
                 <option value="oldest">Oldest</option>
             </select>
@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <input type="search" id="search" wire:model.live="search"
-                    class="block w-full p-3 ps-10 text-sm text-gray-900 border-0 md:border border-gray-300 rounded-lg md:bg-gray-50 focus:ring-[#0F1523] focus:border-[#0F1523]  "
+                    class="block w-full p-3 ps-10 text-sm text-gray-900 border-0 md:border border-gray-300 rounded-lg md:bg-gray-50 focus:ring-indigo-600 focus:border-indigo-600  "
                     placeholder="Search">
             </div>
 
@@ -43,7 +43,7 @@
     <section>
         <ul class="w-full  divide-gray-200  grid sm:grid-cols-3 gap-5" x-data="{ folder: null, editFolder: false, openDelete: false }">
             @forelse ($folders as $folder)
-                <div class="p-4 bg-gray-50  rounded-2xl shadow-sm space-y-14 border-2 hover:!border-[#0F1523] ">
+                <div class="p-4 bg-white  rounded-xl shadow-sm space-y-14 border-2 hover:!border-indigo-600 ">
                     <div class="flex justify-between">
                         <span class="  rounded-full">
 
