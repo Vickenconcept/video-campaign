@@ -1,9 +1,5 @@
 <div class="space-y-6">
-    {{-- Close your eyes. Count to one. That is how long forever feels. --}}
-
-    {{-- @if ($activeStep !== null)
-        {{  $activeStep}}
-    @endif --}}
+   
     @if ($activeTab === 'answer' || $activeTab == 'contactForm' )
         <div class="space-y-3">
             <div class="flex justify-between items-center ">
@@ -19,7 +15,7 @@
 
             @if ($contact_detail && $activeTab !== 'contactForm')
                 <div>
-                    <p class="font-semibold text-sm">Contact form is showing on steps 1, 2</p>
+                    {{-- <p class="font-semibold text-sm">Contact form is showing on steps 1, 2</p> --}}
                     <button wire:click="update_active_tab()"
                         class="cursor-pointer font-bold text-sm underline text-green-500 hover:text-green-600 tracking-wider">Edit
                         contact form</button>
@@ -31,10 +27,6 @@
 
     @if ($contact_detail && $activeTab == 'contactForm')
         @if ($activeStep !== null && !empty($activeStep->form))
-            @php
-                // $formFields = json_decode($activeStep->form, true);
-            @endphp
-
             <div >
                 @foreach ($formFields as $index => $field)
                     {{-- @if ($field['active']) --}}

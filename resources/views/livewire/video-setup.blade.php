@@ -140,7 +140,7 @@
                         <div class="grid grid-cols-3 gap-2">
                             <template x-for="(avatar, index) in $wire.avatars" :key="avatar.id">
                                 <div x-show="index > 0"
-                                    class="cursor-pointer p-2 rounded-lg transition-all duration-200 border border-gray-300 rounded-sm bg-slate-100 hover:shadow-md"
+                                    class="cursor-pointer p-2 rounded-lg transition-all duration-200 border border-gray-300 rounded-sm bg-white hover:shadow-md"
                                     :class="{ 'ring-2 ring-slate-900 bg-slate-50': selectedAvatar === avatar.id }"
                                     @click="selectedAvatar = avatar.id; $wire.selectAvatar(avatar.id)">
                                     <img :src="avatar.image_url ? avatar.image_url : 'https://placehold.co/60x60'"

@@ -52,13 +52,35 @@
                     @endphp
 
                     <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
-                        <div class="relative max-w-full max-h-full w-full">
+                        <div class="relative max-w-full max-h-full w-full group" x-data="{ playing: false }"
+                            x-init="$refs.player.addEventListener('play', () => playing = true);
+                            $refs.player.addEventListener('pause', () => playing = false);">
+
                             @if ($step->video_url)
-                                <video controls
-                                    class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain">
+                                <video x-ref="player"
+                                    class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
+                                    :controls="false">
                                     <source src="{{ $step->video_url }}" type="video/webm">
                                     Your browser does not support the video tag.
                                 </video>
+
+                                <!-- Custom Play/Pause button shown only on hover -->
+                                <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
+                                    <button @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
+                                        class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
+                                        <svg x-show="!playing" style="display: none" xmlns="http://www.w3.org/2000/svg" class="size-20"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M14.752 11.168l-5.197-3.028A1 1 0 008 9.028v5.944a1 1 0 001.555.832l5.197-3.028a1 1 0 000-1.664z" />
+                                        </svg>
+
+                                        <svg x-show="playing" style="display: none" xmlns="http://www.w3.org/2000/svg" class="size-20"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M10 9v6m4-6v6" />
+                                        </svg>
+                                    </button>
+                                </div>
                             @endif
                             @if (!empty($video_setting['overlay_text']))
                                 <div
@@ -161,59 +183,45 @@
                                             </div>
                                         </div>
                                     @else
-                                        @if ($step->answer_type == 'open_ended')
-                                            @include('components.response.open-ended')
-                                        @endif
+                                        @switch($step->answer_type)
+                                            @case('open_ended')
+                                                @include('components.response.open-ended')
+                                            @break
 
-                                        @if ($step->answer_type == 'ai_chat')
-                                            <div
-                                                class="{{ $preview ? 'select-none cursor-not-allowed blur-xs' : '' }}">
-                                                <livewire:ai-chat :preview="$preview" />
-                                            </div>
-                                        @endif
+                                            @case('ai_chat')
+                                                <div class="{{ $preview ? 'select-none cursor-not-allowed blur-xs' : '' }}">
+                                                    <livewire:ai-chat :preview="$preview" />
+                                                </div>
+                                            @break
 
-                                        @if ($step->answer_type == 'multi_choice')
-                                            @include('components.response.multi-choice')
-                                        @endif
-                                        @if ($step->answer_type == 'button')
-                                            @include('components.response.button')
-                                        @endif
-                                        @if ($step->answer_type == 'calender')
-                                            @include('components.response.calender')
-                                        @endif
-                                        @if ($step->answer_type == 'payment')
-                                            @include('components.response.payment')
-                                        @endif
-                                        @if ($step->answer_type == 'file_upload')
-                                            @include('components.response.file_upload')
-                                        @endif
-                                        @if ($step->answer_type == 'NPS')
-                                            @include('components.response.NPS')
-                                        @endif
+                                            @case('multi_choice')
+                                                @include('components.response.multi-choice')
+                                            @break
+
+                                            @case('button')
+                                                @include('components.response.button')
+                                            @break
+
+                                            @case('calender')
+                                                @include('components.response.calender')
+                                            @break
+
+                                            @case('payment')
+                                                @include('components.response.payment')
+                                            @break
+
+                                            @case('file_upload')
+                                                @include('components.response.file_upload')
+                                            @break
+
+                                            @case('NPS')
+                                                @include('components.response.NPS')
+                                            @break
+                                        @endswitch
                                     @endif
+
                                 </div>
 
-
-                                {{-- @foreach ($previous as $index => $prev)
-                                <button class="btn"
-                                    wire:click="goToPrevious({{ $step->id }},'{{ $index }}')">
-                                    Back
-                                </button>
-                            @endforeach --}}
-
-
-                                {{-- @if ($lastPosition != $step->id)
-                                @foreach ($nexts as $index => $next)
-                                    <button class="btn"
-                                        wire:click="goToNext({{ $step->id }},'{{ $index }}')">
-                                        {{ $index }}
-                                    </button>
-                                @endforeach
-                            @else
-                                <button class="btn">
-                                    Finish
-                                </button>
-                            @endif --}}
                             </div>
                         </div>
                     </div>
@@ -466,56 +474,6 @@
 
 
     <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Livewire.on('setFileType', (file_type) => {
-                let formatAllowed = file_type.flat();
-
-                var myWidget = cloudinary.createUploadWidget({
-                    cloudName: "dp0bpzh9b",
-                    uploadPreset: "video-campaign",
-                    resourceType: "raw",
-                    clientAllowedFormats: formatAllowed,
-                    maxFileSize: 500000000
-                }, (error, result) => {
-                    if (!error && result && result.event === "success") {
-                        // console.log("Done! Here is the image info: ", result.info);
-                        let response = result.info;
-
-                        Livewire.dispatch('update-file', {
-                            url: response.secure_url
-                        })
-                    }
-                });
-
-                function openWidget() {
-                    myWidget.open();
-                }
-
-                function attachUploadListener() {
-                    const uploadButton = document.getElementById("upload_widget");
-                    if (uploadButton) {
-                        // Remove any existing event listeners to prevent duplicates
-                        uploadButton.removeEventListener("click", openWidget);
-                        uploadButton.addEventListener("click", openWidget);
-                    }
-                }
-
-                // Initial check if button exists
-                attachUploadListener();
-
-                // Observe the DOM for button appearing dynamically
-                const observer = new MutationObserver(() => {
-                    attachUploadListener();
-                });
-
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            });
-        });
-    </script> --}}
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

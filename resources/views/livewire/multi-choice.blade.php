@@ -37,8 +37,11 @@
 
     <div class="space-y-2">
         @foreach ($settings as $index => $setting)
-            <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3 " >
-                <h5 class="text-gray-800 font-semibold">{{ $setting['label'] }}</h5>
+            <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3 "  >
+                <h5 class="text-gray-800 font-semibold">
+                    <span>{{ $setting['label'] }}</span> 
+                    <span title="{{ $setting['info'] }}" class="cursor-pointer"><i class='bx bxs-help-circle'></i> </span>
+                </h5>
                 <label class="relative inline-flex items-center  cursor-pointer"
                     wire:click="toggleSettingStatus({{ $index }})">
                     <input type="checkbox" value="1" class="sr-only peer" wire:model="settings.{{ $index }}.status">

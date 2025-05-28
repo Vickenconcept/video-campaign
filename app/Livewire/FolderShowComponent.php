@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 
 class FolderShowComponent extends Component
 {
+
+    public array $selectedCampaigns = [];
+
+
+
     public $folder, $all_folder, $campaigns, $campaignID;
     public $user, $selectedFolder;
 
@@ -97,17 +102,6 @@ class FolderShowComponent extends Component
 
         ]);
 
-        // $campaign->steps()->create([
-        //     'uuid' => Str::uuid(),
-        //     'name' => 'step 1',
-        //     'position' => 0,
-        //     'form' => $form,
-        //     'multi_choice_setting' => $multi_choice_setting,
-        //     'multi_choice_question' => $multi_choice_question,
-        //     'video_setting' => $video_setting,
-
-        // ]);
-
         session()->flash('success', 'Campaign successfully created.');
 
         return redirect()->route('campaign.show', ['uuid' => $campaign->uuid]);
@@ -168,6 +162,25 @@ class FolderShowComponent extends Component
             $this->campaigns = $this->folder->campaigns;
             $this->dispatch('notify', status: 'success', msg: 'Updated successfully!');
         }
+    }
+
+
+    public function toggleSelectCampaign($campaignId)
+    {
+        if (in_array($campaignId, $this->selectedCampaigns)) {
+            $this->selectedCampaigns = array_diff($this->selectedCampaigns, [$campaignId]);
+        } else {
+            $this->selectedCampaigns[] = $campaignId;
+        }
+    }
+
+    public function deleteSelected()
+    {
+        \App\Models\Campaign::whereIn('id', $this->selectedCampaigns)->delete();
+
+        $this->selectedCampaigns = [];
+        $this->campaigns = $this->folder->campaigns;
+        $this->dispatch('notify', status: 'success', msg: 'Deleted successfully!');
     }
 
 

@@ -21,14 +21,14 @@ class AuthController extends Controller
         $requestData['is_admin'] = 1;
 
         $user = User::create($requestData);
-        Mail::to($requestData['email'])->send(new WelcomeMail($requestData['password']));
-
+        
         $folder = $user->folders()->create([
             'uuid' => Str::uuid(),
-            'name' => 'New Folder',
+            'name' => 'Default Folder',
             'status' => 1,
         ]);
-
+        
+        Mail::to($requestData['email'])->send(new WelcomeMail($requestData['password']));
         return redirect()->to('login');
     }
 

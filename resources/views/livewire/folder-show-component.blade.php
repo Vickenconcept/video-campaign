@@ -16,15 +16,41 @@
                 </div>
             </div>
 
+            @if (count($selectedCampaigns) > 0)
+                <div class="mb-4">
+                    <button wire:click="deleteSelected"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer">
+                        Delete Selected ({{ count($selectedCampaigns) }})
+                    </button>
+                </div>
+            @endif
+
             <section class="" wire:key="section-{{ now() }}">
                 <ul class=" grid lg:grid-cols-4 gap-5 ">
                     @forelse ($campaigns as $campaign)
                         <div class="relative" x-data="{ isOpen: false }" wire:key="campaign-{{ $campaign->id }}">
                             <div
-                                class="hover:shadow-2xl shadow-md transition duration-500 ease-in-out rounded-xl border border-gray-300 overflow-hidden">
-                                <div class="bg-gray-500 h-40 overflow-hidden">
+                                class="relative  hover:shadow-2xl shadow-md transition duration-500 ease-in-out rounded-xl border border-gray-300 overflow-hidden">
+                                <div class="group bg-gray-500 h-40 overflow-hidden relative">
                                     <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
-                                        class="w-full h-full object-center object-cover">
+                                    class="w-full h-full object-center object-cover">
+                                    <div
+                                        class="absolute top-0 left-0 p-2 z-30 w-full @if (count($selectedCampaigns) > 0) @else  hidden @endif  group-hover:flex">
+                                        <div class="flex items-center">
+                                            <input id="checkbox1-{{ $campaign->id }}" type="checkbox"
+                                                wire:change="toggleSelectCampaign({{ $campaign->id }})" class="hidden peer"
+                                                {{ in_array($campaign->id, $selectedCampaigns) ? 'checked' : '' }} />
+                                            <label for="checkbox1-{{ $campaign->id }}"
+                                                class="relative flex items-center justify-center p-1 peer-checked:before:hidden before:block before:absolute before:w-full before:h-full before:bg-white w-6 h-6 cursor-pointer bg-indigo-500 border rounded overflow-hidden">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-full fill-white"
+                                                    viewBox="0 0 520 520">
+                                                    <path
+                                                        d="M79.423 240.755a47.529 47.529 0 0 0-36.737 77.522l120.73 147.894a43.136 43.136 0 0 0 36.066 16.009c14.654-.787 27.884-8.626 36.319-21.515L486.588 56.773a6.13 6.13 0 0 1 .128-.2c2.353-3.613 1.59-10.773-3.267-15.271a13.321 13.321 0 0 0-19.362 1.343q-.135.166-.278.327L210.887 328.736a10.961 10.961 0 0 1-15.585.843l-83.94-76.386a47.319 47.319 0 0 0-31.939-12.438z"
+                                                        data-name="7-Check" data-original="#000000" />
+                                                </svg>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="p-3 flex justify-between items-center user-card ">
                                     <div class="flex items-center w-[60%] cursor-pointer"
@@ -65,7 +91,8 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button @click="openDelete = true" wire:click="setCampaign({{ $campaign->id }})"
+                                        <button @click="openDelete = true"
+                                            wire:click="setCampaign({{ $campaign->id }})"
                                             class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
                                             <p class="font-semibold text-sm">Delete</p>
                                         </button>
@@ -193,7 +220,7 @@
                                         placeholder="Enter Campaign title" />
                                 </div>
 
-                              
+
                                 <div
                                     class="bg-gray-50 border border-gray-300 rounded-lg block w-full px-2.5 py-1  items-center flex justify-between">
                                     <h5 class="font-semibold">Language</h5>
@@ -293,7 +320,7 @@
                                 <input type="checkbox" value="1" class="sr-only peer"
                                     wire:model="contact_detail">
                                 <div
-                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                                    class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-400  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-indigo-400">
                                 </div>
                             </label>
                         </div>
