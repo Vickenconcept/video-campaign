@@ -148,7 +148,7 @@
                                     </button>
                                 </div>
                                 <div>
-                                    <button type="button" @click="openDelete = false" class="btn2 cursor-pointer">
+                                    <button type="button" @click="openDelete = false" class="btn3 cursor-pointer">
                                         No, Cancle
                                     </button>
                                 </div>

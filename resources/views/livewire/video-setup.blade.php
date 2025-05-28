@@ -2,7 +2,7 @@
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
 
 
-    <div class="flex justify-center mb-5" >
+    <div class="flex justify-center mb-5">
         <button type="button" class="whitespace-nowrap flex flex-wrap" x-show="upload_type == 'upload'"
             style="display: none">
             <span
@@ -43,7 +43,7 @@
 
 
     <div class="bg-slate-100 flex justify-center py-10 rounded-md border-2 border-gray-300"
-        x-show="upload_type == 'upload'" >
+        x-show="upload_type == 'upload'">
         <div class="text-center">
             <button id="upload_widget" class="cloudinary-button">Upload files</button>
             <p class="text-sm font-semibold mt-2 text-slate-700">Click button to upload video , max of 100mb</p>
@@ -84,7 +84,10 @@
 
                 <div>
                     <div class="">
-                        <img src="{{ asset('images/moving_ball.gif') }}" alt="" style="opacity: 0.8;">
+                        {{-- <img src="{{ asset('images/moving_ball.gif') }}" alt="" style="opacity: 0.8;"> --}}
+                        <span>
+                            <i class='bx bx-loader animate-spin text-3xl text-indigo-600'></i>
+                        </span>
                     </div>
 
                     <p class="font-medium" x-data="{
@@ -336,11 +339,12 @@
             </div>
             <div>
                 <label for="" class="text-sm font-semibold">Overlay text:</label>
-                <textarea rows="3" wire:model.live="overlay_text" wire:keydown.debounce.2000ms="update_overlay_text('overlay_text')" class="form-control" placeholder="Enter overlay text"></textarea>
+                <textarea rows="3" wire:model.live="overlay_text"
+                    wire:keydown.debounce.2000ms="update_overlay_text('overlay_text')" class="form-control"
+                    placeholder="Enter overlay text"></textarea>
             </div>
             @if ($overlay_text != '')
-                <div
-                    class="w-full py-1  items-center flex justify-between">
+                <div class="w-full py-1  items-center flex justify-between">
                     <h5 class="font-semibold">Text Size</h5>
                     @php
                         $texts = [
@@ -352,7 +356,7 @@
                         ];
                     @endphp
 
-                    <select wire:model.change="text_size" wire:change="update_text_size('text_size')" 
+                    <select wire:model.change="text_size" wire:change="update_text_size('text_size')"
                         class="bg-gray-300 text-gray-800 rounded-md p-2 font-medium">
                         <option value="">Text size</option>
                         @foreach ($texts as $code => $name)

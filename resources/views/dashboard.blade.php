@@ -33,7 +33,7 @@
                 ->get();
         @endphp
         <div id="stats" class="grid gird-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-black/60 to-white/5 p-6 rounded-lg">
+            <div class="bg-black/70 to-white/5 p-6 rounded-lg">
                 <div class="flex flex-row space-x-4 items-center">
                     <div id="stats-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-black/60 p-6 rounded-lg">
+            <div class="bg-black/70 p-6 rounded-lg">
                 <div class="flex flex-row space-x-4 items-center">
                     <div id="stats-1">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -93,7 +93,7 @@
             <h1 class="font-bold py-4 uppercase">Latest Responses</h1>
             <div class="overflow-x-scroll">
                 <table class="w-full whitespace-nowrap">
-                    <thead class="bg-black/60 text-white">
+                    <thead class="bg-black/70 text-white">
                         <tr>
                             <th class="text-left py-3 px-2 rounded-l-lg">Name</th>
                             <th class="text-left py-3 px-2">Email</th>

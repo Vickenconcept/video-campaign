@@ -3,8 +3,12 @@
     aria-label="Sidebar">
     <div class=" h-full rounded-xl px-3 pb-4 ">
         <div class="py-5 mb-2 border-b-2 border-slate-300">
-            <a href="/home" class="">
-                <img src="{{ asset('images/logo.svg') }}" class="h-10 me-3" alt="FluenceGrid Logo" />
+            <a href="/home" class="flex items-end text-white">
+                {{-- <img src="{{ asset('images/logo.svg') }}" class="h-10 me-3" alt=" Logo" /> --}}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                  </svg> 
+                  <span style="font-family: 'Dancing Script', cursive !important;" class="font-semibold text-xl">Me</span>
             </a>
         </div>
         <div class="h-[85%] pb-4 overflow-y-auto ">
@@ -46,7 +50,7 @@
                         <a href="{{ route('esp.connect') }}"
                             class="flex items-center p-2 text-gray-50 hover:text-indigo-600 rounded-lg  hover:bg-gray-50 group transition duration-500 ease-in-out {{ request()->routeIs('esp.connect') ? 'bg-gray-50 text-indigo-600' : '' }}">
                             <i
-                                class='bx bx-home-smile text-xl mr-2  group-hover:text-gray-50 group-hover:bg-indigo-600 transition duration-500 ease-in-out px-1 py-0.5 rounded-md {{ request()->routeIs('esp.connect') ? 'text-gray-50 bg-indigo-600' : 'text-indigo-600 bg-slate-50' }}'></i>
+                                class='bx bx-rectangle text-xl mr-2  group-hover:text-gray-50 group-hover:bg-indigo-600 transition duration-500 ease-in-out px-1 py-0.5 rounded-md {{ request()->routeIs('esp.connect') ? 'text-gray-50 bg-indigo-600' : 'text-indigo-600 bg-slate-50' }}'></i>
                             <span class="">Connect ESP</span>
                         </a>
                     </li>
@@ -61,20 +65,22 @@
                     </li>
 
 
-                    <li>
-                        <a href="{{ route('support.index') }}"
-                            class="flex items-center p-2 text-gray-50 hover:text-indigo-600 rounded-lg  hover:bg-gray-50 group transition duration-500 ease-in-out {{ request()->routeIs('support.index') ? 'bg-gray-50 text-indigo-600' : '' }}">
-                            <i
-                                class='bx bx-video text-xl mr-2  group-hover:text-gray-50 group-hover:bg-indigo-600 transition duration-500 ease-in-out px-1 py-0.5 rounded-md {{ request()->routeIs('support.index') ? 'text-gray-50 bg-indigo-600' : 'text-indigo-600 bg-slate-50' }}'></i>
-                            <span class="text-sm">Support</span>
-                        </a>
-                    </li>
+
                 </div>
 
 
 
-                <div class="spacec-y-2">
-                    <hr class="border border-slate-300">
+                <div class="space-y-3">
+                    <hr class="border border-slate-300 block ">
+
+                    <li>
+                        <a href="{{ route('support.index') }}"
+                            class="flex items-center p-2 text-gray-50 hover:text-indigo-600 rounded-lg  hover:bg-gray-50 group transition duration-500 ease-in-out {{ request()->routeIs('support.index') ? 'bg-gray-50 text-indigo-600' : '' }}">
+                            <i
+                                class='bx bx-support text-xl mr-2  group-hover:text-gray-50 group-hover:bg-indigo-600 transition duration-500 ease-in-out px-1 py-0.5 rounded-md {{ request()->routeIs('support.index') ? 'text-gray-50 bg-indigo-600' : 'text-indigo-600 bg-slate-50' }}'></i>
+                            <span class="text-sm">Support</span>
+                        </a>
+                    </li>
 
 
                     <li class="">

@@ -88,6 +88,16 @@
     <div x-show="openResponse == 'video'" style="display: none;">
         <div>
             <video x-ref="videoPlayer" autoplay muted controls class="w-full max-w-md"></video>
+            <div class="flex items-center gap-2 mt-4">
+                <div class="flex items-center gap-1 text-red-600 font-semibold animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M12 14a3.993 3.993 0 0 0 4-4V5a4 4 0 0 0-8 0v5a3.993 3.993 0 0 0 4 4zm6-4a6.006 6.006 0 0 1-5 5.917V19h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-3.083A6.006 6.006 0 0 1 6 10a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 0 1 2 0z" />
+                    </svg>
+                    <span>Recording: <span x-text="countdown"></span>s</span>
+                </div>
+            </div>
             <input type="file" wire:model="videoResponse" x-ref="videoUpload" class="hidden">
             <div class="my-4" x-data="{ isPlaying: false }">
                 <button x-show="!isPlaying"
@@ -124,7 +134,18 @@
     </div>
     <div x-show="openResponse == 'audio'" style="display: none;">
         <div>
-            <audio x-ref="audioPlayer" controls></audio>
+            <audio x-ref="audioPlayer" controls class="w-full"></audio>
+            <div class="flex items-center gap-2 mt-4">
+                <div class="flex items-center gap-1 text-red-600 font-semibold animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M12 14a3.993 3.993 0 0 0 4-4V5a4 4 0 0 0-8 0v5a3.993 3.993 0 0 0 4 4zm6-4a6.006 6.006 0 0 1-5 5.917V19h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-3.083A6.006 6.006 0 0 1 6 10a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 0 1 2 0z" />
+                    </svg>
+                    <span>Recording: <span x-text="countdown"></span>s</span>
+                </div>
+            </div>
+
             <input type="file" wire:model="audioResponse" x-ref="videoUpload" class="hidden">
             <div class="my-4" x-data="{ isPlaying: false }">
                 <button x-show="!isPlaying"

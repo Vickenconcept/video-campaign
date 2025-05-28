@@ -15,7 +15,7 @@ class ShowCampaign extends Component
 {
     use WithFileUploads;
 
-    public $campaign, $steps,$lastStep;
+    public $campaign, $steps, $lastStep;
     public $nextStep;
     public $preview;
     public $contactDetailShownStepId;
@@ -177,7 +177,7 @@ class ShowCampaign extends Component
             //     'file' => $e->getFile(),
             //     'trace' => $e->getTraceAsString()
             // ]);
-            logger( [
+            logger([
                 'Error in goToNext: ' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
@@ -350,21 +350,20 @@ class ShowCampaign extends Component
             return response()->json(['error' => 'User token not found'], 400);
         }
 
-
         $step = $this->steps->findorFail($this->nextStep);
-
+        
         $multi_choice_setting = json_decode($step->multi_choice_setting, true);
-
-
+        
+        
         $skipDataStatus = false;
-
+        
         foreach ($multi_choice_setting as $setting) {
             if ($setting['name'] === 'skip_data_collection') {
                 $skipDataStatus = $setting['status'];
                 break;
             }
         }
-
+        
         if ($skipDataStatus) {
             return;
         }

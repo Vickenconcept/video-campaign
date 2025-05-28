@@ -54,7 +54,8 @@
                     <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
                         <div class="relative max-w-full max-h-full w-full">
                             @if ($step->video_url)
-                                <video controls class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain">
+                                <video controls
+                                    class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain">
                                     <source src="{{ $step->video_url }}" type="video/webm">
                                     Your browser does not support the video tag.
                                 </video>
@@ -73,7 +74,7 @@
                     <div
                         class="absolute w-full left-0 bottom-0 md:relative md:h-full bg-slate-50/80 md:bg-white flex justify-center items-center overflow-y-auto px-3 pb-3 pt-5  md:pt-0 md:px-0 md:pb-10">
                         @if ($preview)
-                            <div class="absolute h-auto w-full left-0 top-0 p-1 bg-gray-800">
+                            <div class="absolute h-auto w-full left-0 top-0 p-1 bg-indigo-600">
                                 <p class="max-w-md mx-auto text-white text-center font-medium text-sm">
                                     You're in preview mode, answers won't be submitted
                                 </p>
@@ -165,7 +166,8 @@
                                         @endif
 
                                         @if ($step->answer_type == 'ai_chat')
-                                            <div class="{{ $preview ? 'select-none cursor-not-allowed blur-xs' : '' }}">
+                                            <div
+                                                class="{{ $preview ? 'select-none cursor-not-allowed blur-xs' : '' }}">
                                                 <livewire:ai-chat :preview="$preview" />
                                             </div>
                                         @endif
@@ -219,8 +221,8 @@
             @else
                 <div class="relative h-full w-full  overflow-hidden">
                     <div class="h-full w-full bg-gray-500">
-                        <img src="{{ $step->last_cover_image? $step->last_cover_image: 'https://placehold.co/600x400?font=roboto&text=Thank\nYou' }}" alt=""
-                            class="object-cover object-center w-full h-full">
+                        <img src="{{ $step->last_cover_image ? $step->last_cover_image : 'https://placehold.co/600x400?font=roboto&text=Thank\nYou' }}"
+                            alt="" class="object-cover object-center w-full h-full">
                     </div>
 
                 </div>
@@ -232,8 +234,6 @@
 
 
     <!-- Paypal -->
-
-
     <script>
         let clientID = '';
         let currency = '';
@@ -289,11 +289,25 @@
                 videoStream: null,
                 shouldContinue: false,
                 textResponse: @entangle('textResponse'),
+                countdown: 60,
+                countdownInterval: null,
 
 
 
                 startAudioRecording() {
                     console.log('Audio recording started');
+
+                    this.countdown = 60;
+
+                    // Start countdown
+                    this.countdownInterval = setInterval(() => {
+                        if (this.countdown > 0) {
+                            this.countdown--;
+                        } else {
+                            clearInterval(this.countdownInterval);
+                        }
+                    }, 1000);
+
                     navigator.mediaDevices.getUserMedia({
                         audio: true
                     }).then(stream => {
@@ -329,13 +343,7 @@
                             const audioFile = dataTransfer.files[0];
                             console.log(audioFile);
 
-                            // let id = @json($nextStep);
 
-                            // @this.upload('audioResponse', audioFile, () => {
-                            //     @this.call('saveAudio', id);
-                            // }, () => {
-                            //     alert('Something went wrong while uploading your audio');
-                            // });
                             @this.upload('audioResponse', audioFile, () => {
                                 @this.call('saveAudio');
                             }, () => {
@@ -348,20 +356,43 @@
 
                         this.mediaRecorder.start();
                         setTimeout(() => this.stopAudioRecording(),
-                            30000);
+                            60000);
                     });
                 },
 
 
 
+
                 stopAudioRecording() {
-                    this.mediaRecorder.stop();
+                    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+                        this.mediaRecorder.stop();
+                    }
+
+                    if (this.mediaRecorder.stream) {
+                        this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    }
+
+                    clearInterval(this.countdownInterval);
+
                     setTimeout(() => {
                         this.shouldContinue = true;
                     }, 2000);
                 },
 
+
                 startVideoRecording() {
+
+                    this.countdown = 60;
+
+                    // Start countdown
+                    this.countdownInterval = setInterval(() => {
+                        if (this.countdown > 0) {
+                            this.countdown--;
+                        } else {
+                            clearInterval(this.countdownInterval);
+                        }
+                    }, 1000);
+
                     navigator.mediaDevices.getUserMedia({
                         video: true,
                         audio: true
@@ -407,43 +438,35 @@
                         };
 
                         this.mediaRecorder.start();
-                        setTimeout(() => this.stopVideoRecording(), 30000);
+                        setTimeout(() => this.stopVideoRecording(), 60000);
                     });
                 },
 
 
-
-
                 stopVideoRecording() {
-                    this.mediaRecorder.stop();
-                    // this.shouldContinue = true;
+                    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+                        this.mediaRecorder.stop();
+                    }
+
+                    // Stop the camera stream completely
+                    if (this.mediaRecorder.stream) {
+                        this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    }
+
+                    clearInterval(this.countdownInterval);
+
                     setTimeout(() => {
                         this.shouldContinue = true;
                     }, 2000);
-                    // Stop all tracks in the stream (this will turn off the camera)
-
-                    // if (this.mediaStream) {
-                    //     const tracks = this.mediaStream.getTracks();
-                    //     tracks.forEach(track => track.stop());
-                    // }
-
-                    // // Optionally, reset the mediaRecorder and mediaStream if needed
-                    // this.mediaRecorder = null;
-                    // this.mediaStream = null;
-
-                    // // You can also hide the video element or camera feed if it's still showing
-                    // const videoElement = document.querySelector('video');
-                    // if (videoElement) {
-                    //     videoElement.srcObject = null; // Stops the video feed from showing
-                    // }
                 }
+
             }
         }
     </script>
 
 
     <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
-    <script>
+    {{-- <script>
         document.addEventListener("DOMContentLoaded", function() {
             Livewire.on('setFileType', (file_type) => {
                 let formatAllowed = file_type.flat();
@@ -492,7 +515,68 @@
                 });
             });
         });
+    </script> --}}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Livewire.on('setFileType', (file_type) => {
+                let formatAllowed = file_type.flat();
+
+                var myWidget = cloudinary.createUploadWidget({
+                    cloudName: "dp0bpzh9b",
+                    uploadPreset: "video-campaign",
+                    resourceType: "raw",
+                    clientAllowedFormats: formatAllowed,
+                    maxFileSize: 500000000
+                }, (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        let response = result.info;
+
+                        Livewire.dispatch('update-file', {
+                            url: response.secure_url
+                        });
+
+                        // alert("✅ File uploaded successfully!");
+                        Toastify({
+                            text: `Uploaded!, close and continue`,
+                            position: "center",
+                            duration: 3000,
+                            backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
+                        }).showToast();
+
+                        myWidget.close();
+                        if (uploadButton) {
+                            uploadButton.removeEventListener("click", openWidget);
+                        }
+                    }
+                });
+
+                function openWidget() {
+                    myWidget.open();
+                }
+
+                function attachUploadListener() {
+                    const uploadButton = document.getElementById("upload_widget");
+                    if (uploadButton) {
+                        uploadButton.removeEventListener("click", openWidget);
+                        uploadButton.addEventListener("click", openWidget);
+                    }
+                }
+
+                attachUploadListener();
+
+                const observer = new MutationObserver(() => {
+                    attachUploadListener();
+                });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            });
+        });
     </script>
+
 
     <script>
         const userLang = @json($selectedLang);

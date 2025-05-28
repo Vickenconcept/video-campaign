@@ -12,7 +12,7 @@
         'description' => 'Influencers Management Hub',
         'image' => asset('images/login-image.png'),
         'site_name' => config('app.name'),
-        'favicon' => asset('images/fav-image.png'),
+        'favicon' =>  asset('favicon.ico'),
     ])
 
     <title>Influence</title>
@@ -23,9 +23,6 @@
 
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-Dbbx3F5k.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-CE5Kpj__.css') }}"> --}}
 
 
 
@@ -48,8 +45,6 @@
         iframe.goog-te-banner-frame {
             display: none !important;
         }
-
-
 
 
 
@@ -148,7 +143,7 @@
 
 <body class="h-full">
     <marquee direction="right" scrollamount="60" class="z-[10000] fixed w-full hidden" id="hiddenLinearPreloader">
-        <div class="bg-gradient-to-r from-[#0F1523] from-70%  to-[#B5FFAB] w-[700px] p-1 rounded-full"></div>
+        <div class="bg-gradient-to-r from-gray-900 from-70%  to-indigo-500 w-[700px] p-1 rounded-full"></div>
     </marquee>
     {{-- <div id="google_translate_element" class=""></div> --}}
     <div id="google_translate_element"

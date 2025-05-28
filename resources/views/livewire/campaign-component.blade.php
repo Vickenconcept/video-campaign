@@ -6,7 +6,7 @@
         'description' => 'Campain',
         'image' => asset('images/video-thumbnail.jpg'),
         'site_name' => config('app.name'),
-        'favicon' => asset('images/fav-image.png'),
+        'favicon' => asset('favicon.ico'),
     ])
     <x-session-msg />
     <div>
@@ -395,7 +395,7 @@
             {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
             <div class="w-52 h-48 flex relative">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
-                    class=" cursor-pointer shadow-xl rounded-l-lg border-3 border-gray-300 w-[75%]   bg-white hover:shadow-sm transition duration-500 ease-in-out overflow-hidden">
+                    class=" cursor-pointer shadow-xl rounded-l-lg border-3 border-gray-300 w-[75%]   bg-white hover:shadow-sm transition duration-500 ease-in-out overflow-auto">
                     <div
                         class="bg-white text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize flex justify-between ">
                         <span>{{ $step->name }} </span>
@@ -403,22 +403,68 @@
                             {{ $step->position }}
                         </span>
                     </div>
-                    <div class="h-full ">
+                    <div class="h-auto ">
                         <div class="bg-slate-200 h-full flex justify-center items-center">
                             @if ($step->id != optional($lastStep)->id)
                                 <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
                                     class="w-full h-full object-center object-cover">
+                            @else
+                                <div style="font-family: 'Dancing Script', cursive !important;"  class="h-full text-2xl font-semibold py-5 ">
+                                    End
+                                </div>
                             @endif
                         </div>
+
+
+
+                        @if ($step->id != $lastPosition)
+                            <div class=" p-1 overflow-auto z-50">
+                                @php
+
+                                    $multi_choice_question = json_decode($step->multi_choice_question, true) ?? [];
+                                    $multi_choice_setting = json_decode($step->multi_choice_setting, true) ?? [];
+                                    $isMultipleSelectEnabled =
+                                        collect($multi_choice_setting)->firstWhere('name', 'multiple_select')[
+                                            'status'
+                                        ] ?? false;
+                                @endphp
+
+                                @foreach ($multi_choice_question as $index => $option)
+                                    @php
+                                        $nextPostion = \App\Models\Step::find($option);
+                                    @endphp
+                                    @if (!$isMultipleSelectEnabled || $loop->first)
+                                        <p class="flex space-x-1">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499" />
+                                                </svg>
+
+                                            </span>
+                                            <span
+                                                class="text-gray-500 text-xs font-semibold mb-2 rounded-full bg-indigo-700 text-white py-1 px-2">
+                                                {{ $nextPostion->position }}
+                                            </span>
+                                        </p>
+                                    @endif
+                                @endforeach
+
+                            </div>
+                        @endif
 
                     </div>
                 </div>
 
 
+
+
                 <div class="rounded-r-lg bg-gray-900 w-[15%] flex items-center justify-center ">
                     <div class="text-white bg-gray-900 text-center">
                         @if ($steps->count() === 1 || $step->id != $lastPosition)
-                            <button type="button" class="cursor-pointer"
+                            <button type="button" class="cursor-pointer" title="Add Step"
                                 wire:click="addStep({{ $step->position }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -429,7 +475,7 @@
                         @endif
                         @if ($steps->count() > 1)
                             @if ($step->id != $firstPosition && $step->id != optional($lastStep)->id)
-                                <button ype="button" class="cursor-pointer"
+                                <button ype="button" class="cursor-pointer" title="Delete Step"
                                     wire:click="deleteStep( {{ $step->id }},{{ $step->position }})"
                                     wire:loading.attr="disabled">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -441,27 +487,22 @@
                                 </button>
                             @endif
                         @endif
-                        <button>
+                        {{-- <button>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
-                {{-- @if ($index < $steps->count() - 1) --}}
                 @if ($step->id < $lastPosition)
                     <div class="w-[10%] flex items-center pl-2">
                         <span>
-
-
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                             </svg>
-
-
                         </span>
                     </div>
                 @endif
@@ -523,7 +564,7 @@
                     </div>
                     <div class="h-full md:col-span-1 lg:col-span-1 bg-white p-6  overflow-y-auto ">
                         <div class="flex justify-end">
-                            <button class="cursor-pointer" @click="editStep = false">
+                            <button class="cursor-pointer" @click="editStep = false" wire:click="closeTab">
                                 <i class="bx bx-x text-3xl font-bold hover:text-gray-600"></i>
                             </button>
                         </div>
@@ -534,28 +575,34 @@
 
                         @if (optional($activeStep)->id != optional($lastStep)->id)
                             <div class="grid grid-cols-3 gap-1 py-3">
-                               
+
                                 <div>
-                                    <button class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'video' ? 'border-2 border-black' : '' }} "
-                                        wire:click="goToTab('video')"
+                                    <button {{ $activeTab === 'video' ? 'disabled' : '' }}
+                                        class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'video' ? 'border-2 border-black' : '' }} "
+                                        wire:loading.attr="disabled" wire:click="goToTab('video')"
                                         wire:target="goToTab">
+                                        <span wire:loading wire:target="goToTab"><i
+                                                class='bx bx-loader animate-spin text-md'></i> </span>
                                         <span> video</span>
                                     </button>
                                 </div>
                                 <div>
-                                    <button class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'answer' ? 'border-2 border-black' : '' }} "
-                                        wire:click="goToTab('answer')"
+                                    <button {{ $activeTab === 'answer' ? 'disabled' : '' }}
+                                        class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'answer' ? 'border-2 border-black' : '' }} "
+                                        wire:loading.attr="disabled" wire:click="goToTab('answer')"
                                         wire:target="goToTab">
-                                        
+                                        <span wire:loading wire:target="goToTab"><i
+                                                class='bx bx-loader animate-spin text-md'></i> </span>
                                         <span> answer</span>
                                     </button>
                                 </div>
                                 <div>
-                                    <button class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'logic' ? 'border-2 border-black' : '' }} "
-                                        wire:click="goToTab('logic')"
+                                    <button {{ $activeTab === 'logic' ? 'disabled' : '' }}
+                                        class="btn cursor-pointer flex items-center spacex-1 {{ $activeTab === 'logic' ? 'border-2 border-black' : '' }} "
+                                        wire:loading.attr="disabled" wire:click="goToTab('logic')"
                                         wire:target="goToTab">
-                                        {{-- <span wire:loading wire:target="goToTab"><i
-                                                class='bx bx-loader animate-spin text-md'></i> </span> --}}
+                                        <span wire:loading wire:target="goToTab"><i
+                                                class='bx bx-loader animate-spin text-md'></i> </span>
                                         <span> logic</span>
                                     </button>
                                 </div>
@@ -717,18 +764,6 @@
 
 
 
-    {{-- <input type="file" class="filepond" name="file" />
-
-    <script>
-        FilePond.create(document.querySelector('.filepond'));
-    </script> --}}
-
-
-
-
-
-
-
 
 
     <style>
@@ -804,7 +839,7 @@
                     cloudName: "dp0bpzh9b",
                     uploadPreset: "video-campaign",
                     resourceType: "video",
-                    clientAllowedFormats: ["mp4", "avi", "mov", "webm"],
+                    clientAllowedFormats: ["mp4", "avi", "mov", "webm", "MKV"],
                     maxFileSize: 500000000
                 }, (error, result) => {
                     if (!error && result && result.event === "success") {
@@ -814,6 +849,18 @@
                         Livewire.dispatch('update-video', {
                             url: response.secure_url
                         })
+
+                        Toastify({
+                            text: `Uploaded! Successfully`,
+                            position: "center",
+                            duration: 3000,
+                            backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
+                        }).showToast();
+
+                        myWidget.close();
+                        if (uploadButton) {
+                            uploadButton.removeEventListener("click", openWidget);
+                        }
                     }
                 });
 
@@ -908,7 +955,8 @@
 
                 if (errorMessage && errorMessage.includes('Component not found')) {
                     console.warn('🔄 Livewire component missing. Reloading page...');
-                    // window.location.reload();
+                    alert('Error occure: refreshing page')
+                    window.location.reload();
                 }
             });
         </script>

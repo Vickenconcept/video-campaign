@@ -54,6 +54,10 @@ class CampaignComponent extends Component
         ]);
     }
 
+    public function closeTab()
+    {
+        $this->dispatch('$refresh');
+    }
     public function saveTitle()
     {
         $this->campaign->update([
@@ -64,6 +68,10 @@ class CampaignComponent extends Component
     }
     public function goToTab($tab)
     {
+        if ($this->activeTab === $tab) {
+            return;    
+        }
+    
         $this->activeTab = $tab;
         // $this->dispatch('$refresh');
     }
@@ -76,9 +84,9 @@ class CampaignComponent extends Component
             'answer_type' => $this->answer_type,
         ];
 
-        if ($this->answer_type === 'multi_choice') {
+        // if ($this->answer_type === 'multi_choice') {
             $data['multi_choice_question'] = json_encode(['default' => 1]);
-        }
+        // }
 
         $this->activeStep->update($data);
 
@@ -103,37 +111,6 @@ class CampaignComponent extends Component
     }
 
 
-    // public function addStep($position)
-    // {
-
-    //     $newPosition = $position + 1;
-
-    //     $steps = $this->campaign->steps()->orderBy('position')->get();
-    //     foreach ($steps as $step) {
-    //         if ($step->position >= $newPosition) {
-    //             $step->update(['position' => $step->position + 1]);
-    //         }
-    //     }
-    //     $multi_choice_question = json_encode(['default' => 1]);
-    //     $video_setting = json_encode(['position' => 'top', 'fit' => true, 'overlay_text' => '', 'text_size' => 'text-sm' , 'overlay_bg' => true]);
-
-    //     // Create the new step
-    //     $newStep = $this->campaign->steps()->create([
-    //         'uuid' => Str::uuid(),
-    //         'name' => "default Step",
-    //         'position' => $newPosition,
-    //         'contact_detail' => $this->contact_detail,
-    //         'form' => $this->form,
-    //         'multi_choice_setting' => $this->multi_choice_setting,
-    //         'multi_choice_question' => $multi_choice_question,
-    //         'video_setting' => $video_setting,
-    //     ]);
-
-    //     $this->steps = $this->campaign->steps;
-    //     $this->lastStep = $this->steps->sortByDesc('id')->first();
-    //     // session()->flash('success', 'Step added successfully.');
-    //     $this->dispatch('notify', status: 'success', msg: 'Step added successfully!');
-    // }
 
     public function addStep()
     {

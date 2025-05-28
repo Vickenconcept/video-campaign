@@ -141,7 +141,8 @@ class VideoSetup extends Component
             $this->dispatch('videoGenerationStarted-' . $this->activeStep->id);
             // }
         } catch (\Exception $e) {
-            $this->addError('video', 'Failed to generate video: ' . $e->getMessage());
+            $this->addError('video', 'Failed to generate video: ');
+            // $this->addError('video', 'Failed to generate video: ' . $e->getMessage());
         }
     }
 

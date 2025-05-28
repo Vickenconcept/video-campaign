@@ -165,18 +165,28 @@
                                     <div class="w-10 h-10 rounded-full overflow-hidden p-1">
                                         {{-- <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
                                             class="w-full h-full object-center object-cover"> --}}
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                              </svg>
-                                              
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-8">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
+
                                     </div>
-                                    <div>
-                                        <p class="ml-3 font-medium  capitalize truncate">
-                                            {{ $response->name ?? '' }}
-                                        </p>
-                                        <span class="ml-3 font-medium truncate text-xs text-gray-500">
-                                            {{ $response->email ?? 'NA' }}
-                                        </span>
+                                    <div class="w-full">
+                                        @if (!empty($response->name))
+                                            <p class="ml-3 font-medium  capitalize truncate">
+                                                {{ $response->name }}
+                                            </p>
+                                        @else
+                                            <p class="rounded-full bg-gray-200 p-1 w-[80%] animate-pulse "></p>
+                                        @endif
+                                        @if (!empty($response->email))
+                                            <span class="ml-3 font-medium truncate text-xs text-gray-500">
+                                                {{ $response->email }}
+                                            </span>
+                                        @else
+                                            <p class="rounded-full bg-gray-300 p-1 w-[50%] animate-pulse mt-2 "></p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="flex space-x-1">
@@ -262,7 +272,7 @@
                                         </div>
                                         <div>
                                             <button type="button" @click="openDelete = false"
-                                                class="btn2 cursor-pointer">
+                                                class="btn3 cursor-pointer">
                                                 No, Cancle
                                             </button>
                                         </div>
@@ -325,7 +335,7 @@
 
 
         <div x-data="{ openResponseOptions: false, openResponse: null }"
-            class="lg:col-span-5  lg:h-[550px] bg-slate-100 rounded-lg overflow-hidden shadow-xl "
+            class="lg:col-span-5  lg:h-[580px] bg-white rounded-lg overflow-hidden shadow-xl "
             wire:key="active-{{ now() }}">
             @php
                 $individualResponses = ($responsesByToken[optional($activeResponse)->user_token] ?? collect())->sortBy(

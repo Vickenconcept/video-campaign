@@ -2,7 +2,7 @@
 <div class="flex flex-col h-[60vh] max-w-3xl mx-auto">
     <div class="flex flex-col h-full bg-white border rounded-lg shadow-lg overflow-hidden">
         <!-- Chat header -->
-        <div class="bg-blue-600 p-4 text-white flex justify-between items-center  border-b">
+        <div class="bg-indigo-600 p-4 text-white flex justify-between items-center  border-b">
             <div class="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -57,7 +57,7 @@
                         <div
                             class="max-w-[80%] rounded-lg px-4 py-2 
                             {{ $msg['role'] === 'user'
-                                ? 'bg-blue-600 text-white rounded-br-none'
+                                ? 'bg-indigo-600 text-white rounded-br-none'
                                 : 'bg-gray-100 text-gray-800 rounded-bl-none' }}">
                             {{-- <div class="break-words">{!! nl2br(e($msg['content'])) !!}</div> --}}
                             <div class="break-words">{!! nl2br(Str::markdown($msg['content'])) !!}</div>
@@ -94,10 +94,10 @@
         <div class="p-4 border-t">
             <form wire:submit.prevent="sendMessage" class="flex items-center gap-2">
                 <input wire:model.live="message" wire:keydown.enter="sendMessage" placeholder="Type your message..."
-                    class="flex-1 border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="flex-1 border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     {{ $isLoading ? 'disabled' : '' }} {{ $preview ? 'readonly' : '' }} autocomplete="off">
                 <button type="submit"
-                    class="p-2 rounded-full bg-blue-600 text-white disabled:opacity-50 cursor-pointer"
+                    class="p-2 rounded-full bg-indigo-600 text-white disabled:opacity-50 cursor-pointer"
                     {{ $isLoading || !trim($message) ? 'disabled' : '' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

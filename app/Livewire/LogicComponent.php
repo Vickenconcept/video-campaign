@@ -43,9 +43,11 @@ class LogicComponent extends Component
                 'multi_choice_question' => json_encode($options)
             ]);
 
+            
             $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
             // $this->activeStep = $this->activeStep;
             $this->multi_choice_question = json_decode($this->activeStep->multi_choice_question, true);
+
         }
     }
 
