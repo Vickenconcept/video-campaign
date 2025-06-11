@@ -100,6 +100,7 @@ class CampaignComponent extends Component
     {
         $this->activeTab = $tab;
     }
+
     #[On('update-video')]
     public function update_video($url)
     {

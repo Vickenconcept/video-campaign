@@ -275,38 +275,6 @@
                                         </div>
                                         <div x-show="showTab == 'social_share'" style="display: none;">
                                             <p class="text-xl font-semibold">Social share</p>
-                                            {{-- <div id="social-links" class="mt-4 mx-auto max-w-lg ">
-                                                <ul class="flex gap-4 items-center bg-red-500">
-                                                    <li>
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
-                                                            class="text-blue-600 hover:text-blue-800 text-2xl"
-                                                            target="_blank" title="Share on Facebook">
-                                                            <span class="fab fa-facebook-square"></span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="https://twitter.com/intent/tweet?text=Share+title&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
-                                                            class="text-blue-400 hover:text-blue-600 text-2xl"
-                                                            target="_blank" title="Share on Twitter">
-                                                            <span class="fab fa-twitter"></span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="https://www.linkedin.com/sharing/share-offsite?mini=true&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}&title=Share+title&summary=Extra+linkedin+summary+can+be+passed+here"
-                                                            class="text-blue-700 hover:text-blue-900 text-2xl"
-                                                            target="_blank" title="Share on LinkedIn">
-                                                            <span class="fab fa-linkedin"></span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="https://wa.me/?text={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
-                                                            class="text-green-500 hover:text-green-700 text-2xl"
-                                                            target="_blank" title="Share on WhatsApp">
-                                                            <span class="fab fa-whatsapp"></span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div> --}}
 
                                             <div id="social-links" class="mt-4">
                                                 <ul class="grid grid-cols-2  gap-2 items-start sm:items-center">
@@ -392,7 +360,6 @@
         @endphp
 
         @forelse ($steps->sortBy('id') as $step)
-            {{-- @forelse ($steps->sortBy('position') as $index => $step) --}}
             <div class="w-56 h-52 flex relative">
                 <div @click="editStep = true" wire:click="setStep({{ $step->id }}, {{ $step->position }})"
                     class=" cursor-pointer shadow-xl rounded-l-lg border-3 border-gray-300 w-[75%]   bg-white hover:shadow-sm transition duration-500 ease-in-out overflow-auto">
@@ -446,7 +413,7 @@
                                             </span>
                                             <span
                                                 class="text-gray-500 text-xs font-semibold mb-2 rounded-full bg-indigo-700 text-white py-1 px-2">
-                                                {{ $nextPostion->position }}
+                                                {{ optional($nextPostion)->position }}
                                             </span>
                                         </p>
                                     @endif
@@ -487,13 +454,6 @@
                                 </button>
                             @endif
                         @endif
-                        {{-- <button>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </button> --}}
                     </div>
                 </div>
                 @if ($step->id < $lastPosition)
@@ -515,7 +475,6 @@
         @empty
         @endforelse
     </div>
-
 
 
 
@@ -606,7 +565,6 @@
                                         <span> logic</span>
                                     </button>
                                 </div>
-
                             </div>
                         @endif
                         <section class=" h-[72%] overflow-y-auto">
@@ -615,13 +573,11 @@
                                 @if (optional($activeStep)->id != optional($lastStep)->id)
                                     @switch($activeTab)
                                         @case('video')
-                                            {{-- @if ($activeTab === 'video') --}}
                                             <div class="">
                                                 <livewire:video-setup :activeStep="$activeStep"
                                                     wire:key="video-setup-{{ $activeStep }}" />
                                             </div>
-                                            {{-- @endif
-                                        @if ($activeTab === 'answer') --}}
+                                          
                                         @break
 
                                         @case('answer')
@@ -689,8 +645,6 @@
                                                 </div>
 
                                             </div>
-                                            {{-- @endif
-                                        @if ($activeTab === 'logic') --}}
                                         @break
 
                                         @case('logic')
@@ -701,17 +655,11 @@
                                         @break
 
                                     @endswitch
-                                    {{-- @endif --}}
                                 @else
                                     <x-session-msg />
 
                                     <div>
 
-                                        {{-- <div class="container" style="width:364px;">
-
-                                            <input type="file" class="filepond" name="file" />
-
-                                        </div> --}}
                                         <div class="relative">
                                             <label title="Click to upload" for="button2"
                                                 class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
@@ -733,7 +681,6 @@
                                         </div>
 
                                         <div class=" max-w-sm my-5">
-                                            {{-- <button class="cursor-pointer btn" wire:click="saveCoverImage()">Upload</button> --}}
                                             <button class="btn cursor-pointer" wire:loading.attr="disabled"
                                                 wire:target="saveCoverImage" wire:click="saveCoverImage()">
                                                 <span wire:loading.remove wire:target="saveCoverImage">Upload</span>
@@ -750,7 +697,7 @@
 
                                 @if (optional($activeStep)->id != optional($lastStep)->id)
                                     <livewire:contact-form :activeStep="$activeStep ?? null" :activeTab="$activeTab"
-                                        wire:key="open-ended-{{ $activeStep }}" />
+                                        wire:key="open-ended-{{ now() }}" />
                                 @endif
                             </div>
                         </section>

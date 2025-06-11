@@ -17,8 +17,8 @@
                 <div>
                     {{-- <p class="font-semibold text-sm">Contact form is showing on steps 1, 2</p> --}}
                     <button wire:click="update_active_tab()"
-                        class="cursor-pointer font-bold text-sm underline text-green-500 hover:text-green-600 tracking-wider">Edit
-                        contact form</button>
+                        class="cursor-pointer font-bold text-sm underline text-green-500 hover:text-green-600 tracking-wider">
+                        Edit contact form</button>
                 </div>
             @endif
         </div>
