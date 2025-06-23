@@ -8,14 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @seo([
-        'title' => 'Video',
-        'description' => 'Influencers Management Hub',
+        'title' => 'videngager',
+        'description' => 'videngager',
         'image' => asset('images/login-image.png'),
         'site_name' => config('app.name'),
         'favicon' => asset('favicon.ico'),
     ])
 
-    <title>Video</title>
+    <title>videngager</title>
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>

@@ -376,7 +376,8 @@
                                 <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
                                     class="w-full h-full object-center object-cover">
                             @else
-                                <div style="font-family: 'Dancing Script', cursive !important;"  class="h-full text-2xl font-semibold py-5 ">
+                                <div style="font-family: 'Dancing Script', cursive !important;"
+                                    class="h-full text-2xl font-semibold py-5 ">
                                     End
                                 </div>
                             @endif
@@ -577,7 +578,6 @@
                                                 <livewire:video-setup :activeStep="$activeStep"
                                                     wire:key="video-setup-{{ $activeStep }}" />
                                             </div>
-                                          
                                         @break
 
                                         @case('answer')
@@ -639,7 +639,7 @@
                                                         @break
 
                                                         @case('ai_chat')
-                                                            <livewire:ai-chat wire:key="answer-ai-{{ $activeStep }}" />
+                                                            <livewire:ai-chat  wire:key="answer-ai-{{ now() }}" />
                                                         @break
                                                     @endswitch
                                                 </div>
@@ -903,6 +903,15 @@
                 if (errorMessage && errorMessage.includes('Component not found')) {
                     console.warn('🔄 Livewire component missing. Reloading page...');
                     alert('Error occure: refreshing page')
+                    window.location.reload();
+                }
+            });
+            window.addEventListener('unhandledrejection', function(event) {
+                const errorMessage = event?.reason?.message || event?.reason;
+
+                if (errorMessage && errorMessage.includes('Component not found')) {
+                    console.warn('🔄 Livewire component missing (from promise). Reloading page...');
+                    alert('An error occurred. Reloading the page...');
                     window.location.reload();
                 }
             });

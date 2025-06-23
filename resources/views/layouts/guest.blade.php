@@ -8,14 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @seo([
-        'title' => 'FluenceGrid',
-        'description' => 'Influencers Management Hub',
+        'title' => 'videngager',
+        'description' => 'videngager',
         'image' => asset('images/login-image.png'),
         'site_name' => config('app.name'),
-        'favicon' =>  asset('favicon.ico'),
+        'favicon' => asset('favicon.ico'),
     ])
 
-    <title>Influence</title>
+    <title>videngager</title>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
