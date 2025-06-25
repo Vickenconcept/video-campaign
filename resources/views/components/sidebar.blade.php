@@ -57,6 +57,14 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('email.campaigns.index') }}"
+                            class="flex items-center p-2 text-gray-50 hover:text-indigo-600 rounded-lg  hover:bg-gray-50 group transition duration-500 ease-in-out {{ request()->routeIs('email.campaigns.*') ? 'bg-gray-50 text-indigo-600' : '' }}">
+                            <i
+                                class='bx bx-envelope text-xl mr-2  group-hover:text-gray-50 group-hover:bg-indigo-600 transition duration-500 ease-in-out px-1 py-0.5 rounded-md {{ request()->routeIs('email.campaigns.*') ? 'text-gray-50 bg-indigo-600' : 'text-indigo-600 bg-slate-50' }}'></i>
+                            <span class="">Video Email</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('esp.connect') }}"
                             class="flex items-center p-2 text-gray-50 hover:text-indigo-600 rounded-lg  hover:bg-gray-50 group transition duration-500 ease-in-out {{ request()->routeIs('esp.connect') ? 'bg-gray-50 text-indigo-600' : '' }}">
                             <i

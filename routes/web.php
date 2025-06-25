@@ -6,6 +6,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResellerController;
+use App\Http\Controllers\Email\EmailCampaignController;
+use App\Http\Controllers\Email\TrackingController;
 use App\Livewire\AllResponse;
 use App\Livewire\CampaignComponent;
 use App\Livewire\EspConnector;
@@ -60,6 +62,24 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reseller', ResellerController::class);
     Route::view('tutorial', 'tutorial')->name('tutorial');
 
+    // Email Campaign Routes
+    Route::prefix('email')->name('email.')->group(function () {
+        Route::resource('campaigns', EmailCampaignController::class);
+        Route::get('campaigns/{campaign}/preview', [EmailCampaignController::class, 'preview'])->name('campaigns.preview');
+        Route::get('campaigns/{campaign}/preview/iframe', [EmailCampaignController::class, 'previewIframe'])->name('campaigns.preview.iframe');
+        Route::post('campaigns/{campaign}/send-now', [EmailCampaignController::class, 'sendNow'])->name('campaigns.send-now');
+        
+        // Template Routes
+        Route::get('campaigns/{campaign}/templates', [EmailCampaignController::class, 'templates'])->name('campaigns.templates');
+        Route::get('campaigns/{campaign}/templates/{template}/preview', [EmailCampaignController::class, 'templatePreview'])->name('campaigns.template.preview');
+        Route::get('campaigns/{campaign}/templates/{template}/preview/iframe', [EmailCampaignController::class, 'templatePreviewIframe'])->name('campaigns.template.preview.iframe');
+        Route::post('campaigns/{campaign}/templates/apply', [EmailCampaignController::class, 'applyTemplate'])->name('campaigns.template.apply');
+        
+        // Tracking Routes
+        Route::get('tracking/open', [TrackingController::class, 'open'])->name('tracking.open');
+        
+        Route::get('tracking/click', [TrackingController::class, 'click'])->name('tracking.click');
+    });
 
     Route::get('folder', FolderComponent::class)->name('folder.index');
     Route::get('folder/{uuid}', FolderShowComponent::class)->name('folder.show');
@@ -75,3 +95,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::view('/support', 'support')->name('support.index');
 });
+
+// Tracking Routes (public)
+Route::get('email/tracking/view', [TrackingController::class, 'view'])->name('email.tracking.view');
+Route::post('email/tracking/reply', [\App\Http\Controllers\Email\TrackingController::class, 'reply'])->name('email.tracking.reply');
