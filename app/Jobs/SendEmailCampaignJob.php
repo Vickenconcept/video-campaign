@@ -26,12 +26,24 @@ class SendEmailCampaignJob implements ShouldQueue
 
     public function handle()
     {
+        Log::info('SendEmailCampaignJob started', [
+            'campaign_id' => $this->campaign->id,
+            'campaign_title' => $this->campaign->title,
+            'scheduled_at' => $this->campaign->scheduled_at,
+            'current_time' => now(),
+        ]);
+
         $recipients = $this->campaign->recipients;
 
         foreach ($recipients as $recipient) {
             try {
                 Mail::to($recipient->email)
                     ->send(new VideoEmailCampaignMailable($this->campaign, $recipient));
+                    
+                Log::info('Email sent successfully', [
+                    'campaign_id' => $this->campaign->id,
+                    'recipient_email' => $recipient->email,
+                ]);
             } catch (\Exception $e) {
                 // Log error but continue with other recipients
                 Log::error('Failed to send email campaign', [
@@ -44,5 +56,10 @@ class SendEmailCampaignJob implements ShouldQueue
 
         // Update campaign status to sent
         $this->campaign->update(['status' => 'sent']);
+        
+        Log::info('SendEmailCampaignJob completed', [
+            'campaign_id' => $this->campaign->id,
+            'campaign_title' => $this->campaign->title,
+        ]);
     }
 } 

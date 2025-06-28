@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\EmailRecipient;
+use App\Models\EmailFolder;
 
 class EmailCampaign extends Model
 {
@@ -12,6 +13,7 @@ class EmailCampaign extends Model
 
     protected $fillable = [
         'user_id',
+        'email_folder_id',
         'title',
         'subject',
         'body',
@@ -42,5 +44,10 @@ class EmailCampaign extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function folder()
+    {
+        return $this->belongsTo(EmailFolder::class, 'email_folder_id');
     }
 } 

@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Email\EmailCampaignController;
 use App\Http\Controllers\Email\TrackingController;
+use App\Http\Controllers\Email\EmailFolderController;
 use App\Livewire\AllResponse;
 use App\Livewire\CampaignComponent;
 use App\Livewire\EspConnector;
@@ -64,10 +65,15 @@ Route::middleware(['auth'])->group(function () {
 
     // Email Campaign Routes
     Route::prefix('email')->name('email.')->group(function () {
+        Route::resource('folders', EmailFolderController::class);
         Route::resource('campaigns', EmailCampaignController::class);
         Route::get('campaigns/{campaign}/preview', [EmailCampaignController::class, 'preview'])->name('campaigns.preview');
         Route::get('campaigns/{campaign}/preview/iframe', [EmailCampaignController::class, 'previewIframe'])->name('campaigns.preview.iframe');
         Route::post('campaigns/{campaign}/send-now', [EmailCampaignController::class, 'sendNow'])->name('campaigns.send-now');
+        
+        // Import Routes
+        Route::post('campaigns/import/video-campaigns', [EmailCampaignController::class, 'importFromVideoCampaigns'])->name('campaigns.import.video');
+        Route::post('campaigns/import/excel', [EmailCampaignController::class, 'importFromExcel'])->name('campaigns.import.excel');
         
         // Template Routes
         Route::get('campaigns/{campaign}/templates', [EmailCampaignController::class, 'templates'])->name('campaigns.templates');

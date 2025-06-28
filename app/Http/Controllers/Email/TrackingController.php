@@ -44,7 +44,7 @@ class TrackingController extends Controller
                 $recipient->update(['viewed_at' => now()]);
             }
         }
-        $replies = $recipient ? $recipient->replies()->get() : collect();
+        $replies = $recipient ? $recipient->replies : collect();
         $isOwner = false;
         if (Auth::check() && $recipient && $recipient->campaign && $recipient->campaign->user_id === Auth::id()) {
             $isOwner = true;

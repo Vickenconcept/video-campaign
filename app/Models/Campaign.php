@@ -13,7 +13,7 @@ class Campaign extends Model
     ];
 
     public function folder(){
-        return $this->hasMany(Folder::class);
+        return $this->belongsTo(Folder::class);
     }
     public function steps(){
         return $this->hasMany(Step::class);

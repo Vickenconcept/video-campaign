@@ -18,6 +18,7 @@ class EmailCampaignController extends Controller
     public function index()
     {
         $campaigns = EmailCampaign::where('user_id', Auth::id())
+            ->with(['folder'])
             ->withCount(['recipients as total_recipients'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -44,8 +45,14 @@ class EmailCampaignController extends Controller
             'recipients' => 'required|string',
         ]);
 
+        $scheduledAt = null;
+        if ($request->scheduled_at) {
+            $scheduledAt = \Carbon\Carbon::parse($request->scheduled_at, config('app.timezone'))->setTimezone('UTC');
+        }
+
         $campaign = EmailCampaign::create([
             'user_id' => Auth::id(),
+            'email_folder_id' => $request->email_folder_id ?: null,
             'title' => $request->title,
             'subject' => $request->subject,
             'body' => $request->body,
@@ -53,8 +60,8 @@ class EmailCampaignController extends Controller
             'thumbnail_url' => $request->thumbnail_url,
             'cta_url' => $request->cta_url,
             'cta_text' => $request->cta_text,
-            'scheduled_at' => $request->scheduled_at,
-            'status' => $request->scheduled_at ? 'scheduled' : 'sent',
+            'scheduled_at' => $scheduledAt,
+            'status' => $scheduledAt ? 'scheduled' : 'sent',
             'template_data' => $request->input('template_data', []),
         ]);
 
@@ -72,8 +79,8 @@ class EmailCampaignController extends Controller
         }
 
         // Schedule job if scheduled_at is set
-        if ($request->scheduled_at) {
-            SendEmailCampaignJob::dispatch($campaign)->delay($campaign->scheduled_at);
+        if ($scheduledAt) {
+            SendEmailCampaignJob::dispatch($campaign)->delay($scheduledAt);
         } else {
             SendEmailCampaignJob::dispatch($campaign);
         }
@@ -129,7 +136,13 @@ class EmailCampaignController extends Controller
             'recipients' => 'required|string',
         ]);
 
+        $scheduledAt = null;
+        if ($request->scheduled_at) {
+            $scheduledAt = \Carbon\Carbon::parse($request->scheduled_at, config('app.timezone'))->setTimezone('UTC');
+        }
+
         $campaign->update([
+            'email_folder_id' => $request->email_folder_id ?: null,
             'title' => $request->title,
             'subject' => $request->subject,
             'body' => $request->body,
@@ -137,8 +150,8 @@ class EmailCampaignController extends Controller
             'thumbnail_url' => $request->thumbnail_url,
             'cta_url' => $request->cta_url,
             'cta_text' => $request->cta_text,
-            'scheduled_at' => $request->scheduled_at,
-            'status' => $request->scheduled_at ? 'scheduled' : 'draft',
+            'scheduled_at' => $scheduledAt,
+            'status' => $scheduledAt ? 'scheduled' : 'draft',
             'template_data' => $request->input('template_data', []),
         ]);
 
@@ -161,6 +174,11 @@ class EmailCampaignController extends Controller
             $existingRecipients[$email]->delete();
         }
         // (Optional) Update any other fields for existing recipients if needed
+
+        // Schedule job if scheduled_at is set
+        if ($scheduledAt) {
+            SendEmailCampaignJob::dispatch($campaign)->delay($scheduledAt);
+        }
 
         return redirect()->route('email.campaigns.index')
             ->with('success', 'Campaign updated successfully!');
@@ -284,5 +302,58 @@ class EmailCampaignController extends Controller
         
         return redirect()->route('email.campaigns.show', $campaign)
             ->with('success', 'Template applied successfully!');
+    }
+
+    public function importFromVideoCampaigns(Request $request)
+    {
+        $request->validate([
+            'campaign_ids' => 'required|array',
+            'campaign_ids.*' => 'exists:campaigns,id'
+        ]);
+
+        $emails = \App\Models\Response::whereIn('step_id', function($query) use ($request) {
+                $query->select('id')
+                      ->from('steps')
+                      ->whereIn('campaign_id', $request->campaign_ids);
+            })
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
+            ->distinct()
+            ->pluck('email')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        return response()->json([
+            'success' => true,
+            'emails' => $emails,
+            'count' => count($emails)
+        ]);
+    }
+
+    public function importFromExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:2048'
+        ]);
+
+        try {
+            $import = new \App\Imports\EmailImport();
+            \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('excel_file'));
+            
+            $emails = $import->getEmails();
+            
+            return response()->json([
+                'success' => true,
+                'emails' => $emails,
+                'count' => count($emails)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error importing file: ' . $e->getMessage()
+            ], 422);
+        }
     }
 } 

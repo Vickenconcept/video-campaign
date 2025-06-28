@@ -2,10 +2,16 @@
 <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Video Email Campaigns</h1>
-        <a href="{{ route('email.campaigns.create') }}" 
-           class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Create New Campaign
-        </a>
+        <div class="flex space-x-3">
+            <a href="{{ route('email.folders.index') }}" 
+               class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                Manage Folders
+            </a>
+            <a href="{{ route('email.campaigns.create') }}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Create New Campaign
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -33,6 +39,9 @@
                             Campaign
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Folder
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -54,6 +63,16 @@
                                     <div class="text-sm font-medium text-gray-900">{{ $campaign->title }}</div>
                                     <div class="text-sm text-gray-500">{{ $campaign->subject }}</div>
                                 </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($campaign->folder)
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-3 h-3 rounded-full" style="background-color: {{ $campaign->folder->color }}"></div>
+                                        <span class="text-sm text-gray-900">{{ $campaign->folder->name }}</span>
+                                    </div>
+                                @else
+                                    <span class="text-sm text-gray-400">No Folder</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -108,7 +127,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                 No campaigns found. <a href="{{ route('email.campaigns.create') }}" class="text-blue-600 hover:text-blue-900">Create your first campaign</a>
                             </td>
                         </tr>

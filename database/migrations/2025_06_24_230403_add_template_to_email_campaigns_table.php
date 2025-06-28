@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('email_campaigns', function (Blueprint $table) {
+            $table->foreignId('email_folder_id')->nullable()->constrained('email_folders')->onDelete('set null');
             $table->string('template')->default('classic')->after('status');
             $table->json('template_data')->nullable();
         });

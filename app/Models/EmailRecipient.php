@@ -32,7 +32,8 @@ class EmailRecipient extends Model
 
     public function replies()
     {
-        return $this->hasMany(EmailReply::class);
+        // return $this->hasMany(EmailReply::class);
+        return $this->hasMany(EmailReply::class, 'email_recipient_id', 'uuid');
     }
 
     protected static function boot()
