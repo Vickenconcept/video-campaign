@@ -105,3 +105,5 @@ Route::middleware(['auth'])->group(function () {
 // Tracking Routes (public)
 Route::get('email/tracking/view', [TrackingController::class, 'view'])->name('email.tracking.view');
 Route::post('email/tracking/reply', [\App\Http\Controllers\Email\TrackingController::class, 'reply'])->name('email.tracking.reply');
+
+Route::get('/email/campaigns/{campaign}/embed', [\App\Http\Controllers\Email\EmailCampaignController::class, 'embed'])->name('email.campaigns.embed');

@@ -137,25 +137,101 @@
                     </div>
                 </div>
 
-                <!-- Template 6: Custom -->
+                <!-- Template 6: Gradient -->
                 <div class="bg-white border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center">
+                    <div class="h-48 bg-gradient-to-br from-pink-500 via-orange-400 to-yellow-400 flex items-center justify-center">
                         <div class="text-center text-white">
-                            <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                            <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <defs>
+                                    <linearGradient id="gradientIcon" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stop-color="#ee0979"/>
+                                        <stop offset="100%" stop-color="#ff6a00"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="12" cy="12" r="10" stroke="url(#gradientIcon)" fill="url(#gradientIcon)"/>
+                                <path d="M8 12l2 2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                             </svg>
-                            <h3 class="text-lg font-semibold">Custom</h3>
+                            <h3 class="text-lg font-semibold">Gradient</h3>
                         </div>
                     </div>
                     <div class="p-4">
-                        <h3 class="font-semibold text-gray-800 mb-2">Custom Template</h3>
-                        <p class="text-sm text-gray-600 mb-3">Create your own custom layout with advanced styling options.</p>
+                        <h3 class="font-semibold text-gray-800 mb-2">Gradient Template</h3>
+                        <p class="text-sm text-gray-600 mb-3">Vibrant, modern look with a pink-orange gradient background and bold CTA. Perfect for eye-catching campaigns.</p>
                         <div class="flex space-x-2">
-                            <a href="{{ route('email.campaigns.template.preview', ['campaign' => $campaign, 'template' => 'custom']) }}" 
+                            <a href="{{ route('email.campaigns.template.preview', ['campaign' => $campaign, 'template' => 'gradient']) }}"
                                class="text-blue-600 hover:text-blue-800 text-sm">Preview</a>
                             <form action="{{ route('email.campaigns.template.apply', $campaign) }}" method="POST" class="inline">
                                 @csrf
-                                <input type="hidden" name="template" value="custom">
+                                <input type="hidden" name="template" value="gradient">
+                                <button type="submit" class="text-green-600 hover:text-green-800 text-sm">Apply</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template 7: Aqua -->
+                <div class="bg-white border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                    <div class="h-48 bg-gradient-to-br from-cyan-400 via-blue-400 to-teal-400 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <svg class="w-16 h-16 mx-auto mb-2" fill="none" viewBox="0 0 24 24"><path d="M12 2C7 12 2 17 12 22C22 17 17 12 12 2Z" fill="#06b6d4" stroke="#38bdf8" stroke-width="2"/><circle cx="12" cy="17" r="2" fill="#38bdf8"/></svg>
+                            <h3 class="text-lg font-semibold">Aqua</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Aqua Template</h3>
+                        <p class="text-sm text-gray-600 mb-3">Fresh, clean look with blue/teal gradients and a bold aqua CTA. Great for tech or wellness brands.</p>
+                        <div class="flex space-x-2">
+                            <a href="{{ route('email.campaigns.template.preview', ['campaign' => $campaign, 'template' => 'aqua']) }}"
+                               class="text-blue-600 hover:text-blue-800 text-sm">Preview</a>
+                            <form action="{{ route('email.campaigns.template.apply', $campaign) }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="template" value="aqua">
+                                <button type="submit" class="text-green-600 hover:text-green-800 text-sm">Apply</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template 8: Dark -->
+                <div class="bg-white border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                    <div class="h-48 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <svg class="w-16 h-16 mx-auto mb-2" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#18181b" stroke="#0ea5e9" stroke-width="2"/><path d="M16 12A4 4 0 1 1 8 12c0-2.21 1.79-4 4-4v4z" fill="#22d3ee"/><circle cx="17" cy="7" r="1.5" fill="#22d3ee"/></svg>
+                            <h3 class="text-lg font-semibold">Dark</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Dark Template</h3>
+                        <p class="text-sm text-gray-600 mb-3">Sleek, modern dark mode with neon blue accents and a glowing CTA. Perfect for night owls and techies.</p>
+                        <div class="flex space-x-2">
+                            <a href="{{ route('email.campaigns.template.preview', ['campaign' => $campaign, 'template' => 'dark']) }}"
+                               class="text-blue-600 hover:text-blue-800 text-sm">Preview</a>
+                            <form action="{{ route('email.campaigns.template.apply', $campaign) }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="template" value="dark">
+                                <button type="submit" class="text-green-600 hover:text-green-800 text-sm">Apply</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template 9: Playful -->
+                <div class="bg-white border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                    <div class="h-48 bg-gradient-to-br from-yellow-400 via-pink-400 to-blue-400 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <svg class="w-16 h-16 mx-auto mb-2" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fbbf24" stroke="#f472b6" stroke-width="2"/><path d="M8 15c1.5 1.5 6.5 1.5 8 0" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="10" r="1.5" fill="#fff"/><circle cx="15" cy="10" r="1.5" fill="#fff"/></svg>
+                            <h3 class="text-lg font-semibold">Playful</h3>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 mb-2">Playful Template</h3>
+                        <p class="text-sm text-gray-600 mb-3">Bright, fun colors and playful fonts. Great for creative, kids, or event campaigns.</p>
+                        <div class="flex space-x-2">
+                            <a href="{{ route('email.campaigns.template.preview', ['campaign' => $campaign, 'template' => 'playful']) }}"
+                               class="text-blue-600 hover:text-blue-800 text-sm">Preview</a>
+                            <form action="{{ route('email.campaigns.template.apply', $campaign) }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="template" value="playful">
                                 <button type="submit" class="text-green-600 hover:text-green-800 text-sm">Apply</button>
                             </form>
                         </div>

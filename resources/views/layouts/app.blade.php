@@ -58,6 +58,7 @@
 </head>
 
 <body class="h-screen font-['Poppins'] ">
+    <x-preloader />
     <div id="app" class="h-full  text-gray-700 ">
         <x-notification />
         <x-navbar />
@@ -70,6 +71,8 @@
                     <i class='bx  bx-sidebar ml-2 text-xl'  ></i> 
                 </button>
             </div>
+            {{-- Breadcrumbs --}}
+            <x-breadcrumbs :items="isset($breadcrumbs) ? $breadcrumbs : []" />
             {{ $slot }}
         </div>
     </div>
@@ -99,6 +102,22 @@
         document.getElementById('toggle-btn').onclick = toggleSidebar;
     </script>
 
+    {{-- <script>
+        // Show preloader on internal link navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(e) {
+                let el = e.target;
+                // Traverse up to find the <a> tag
+                while (el && el.tagName !== 'A') el = el.parentElement;
+                if (el && el.tagName === 'A' && el.href && el.origin === window.location.origin &&
+                    !el.hasAttribute('target') && !el.hasAttribute('download') && !el.hasAttribute('data-no-preload')) {
+                    // Ignore anchor links and JS links
+                    if (el.hash && el.pathname === window.location.pathname) return;
+                    window.showPreloader();
+                }
+            }, true);
+        });
+    </script> --}}
 
 </body>
 

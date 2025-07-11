@@ -1,23 +1,26 @@
 <x-app-layout>
     <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
         <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Campaign: {{ $campaign->title }}</h1>
-                <div class="flex space-x-3">
-                    <a href="{{ route('email.campaigns.templates', $campaign) }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                        Templates
+            <div class="  ">
+                <h1 class="text-2xl font-bold mb-6">Campaign: {{ $campaign->title }}</h1>
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <a href="{{ route('email.campaigns.templates', $campaign) }}" class="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg shadow hover:bg-purple-700 transition-colors font-semibold">
+                        <i class='bx bx-paint text-lg'></i> Change Template
                     </a>
-                    <a href="{{ route('email.campaigns.edit', $campaign) }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                        Edit
+                    <a href="{{ route('email.campaigns.embed', $campaign) }}" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors font-semibold">
+                        <i class='bx bx-code-alt text-lg'></i> Get Embed HTML
                     </a>
-                    <a href="{{ route('email.campaigns.preview', $campaign) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                        Preview
+                    <a href="{{ route('email.campaigns.edit', $campaign) }}" class="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors font-semibold">
+                        <i class='bx bx-edit text-lg'></i> Edit
+                    </a>
+                    <a href="{{ route('email.campaigns.preview', $campaign) }}" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition-colors font-semibold">
+                        <i class='bx bx-show text-lg'></i> Preview
                     </a>
                     @if($campaign->status !== 'sent')
                         <form action="{{ route('email.campaigns.send-now', $campaign) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                                Send Now
+                            <button type="submit" class="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition-colors font-semibold">
+                                <i class='bx bx-send text-lg'></i> Send Now
                             </button>
                         </form>
                     @endif
@@ -68,7 +71,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($campaign->recipients as $recipient)
+                            @foreach($recipients as $recipient)
                                 <tr>
                                     <td class="px-4 py-2">{{ $recipient->email }}</td>
                                     <td class="px-4 py-2">{{ $recipient->opened_at ? \Illuminate\Support\Carbon::parse($recipient->opened_at)->format('M j, Y g:i A') : '-' }}</td>
@@ -82,6 +85,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $recipients->links() }}
+                    </div>
                 </div>
             </div>
         </div>

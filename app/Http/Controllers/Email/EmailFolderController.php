@@ -9,12 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class EmailFolderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $folders = EmailFolder::where('user_id', Auth::id())
-            ->withCount('campaigns')
-            ->orderBy('name')
-            ->get();
+        $query = EmailFolder::where('user_id', Auth::id())
+            ->withCount('campaigns');
+
+        // Filter by search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $folders = $query->orderBy('name')->paginate(10);
 
         return view('email.folders.index', compact('folders'));
     }
@@ -43,17 +52,31 @@ class EmailFolderController extends Controller
             ->with('success', 'Folder created successfully!');
     }
 
-    public function show(EmailFolder $folder)
+    public function show(Request $request, EmailFolder $folder)
     {
         // Ensure user owns this folder
         if ($folder->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $campaigns = $folder->campaigns()
-            ->withCount(['recipients as total_recipients'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = $folder->campaigns()
+            ->withCount(['recipients as total_recipients']);
+
+        // Filter by search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $campaigns = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('email.folders.show', compact('folder', 'campaigns'));
     }

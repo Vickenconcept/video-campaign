@@ -13,7 +13,7 @@
             </div>
             <a href="{{ route('email.campaigns.create') }}" 
                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Create Campaign
+                + Create Campaign
             </a>
         </div>
 
@@ -25,7 +25,7 @@
 
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-semibold text-gray-800">
-                {{ $campaigns->count() }} {{ Str::plural('Campaign', $campaigns->count()) }}
+                {{ $campaigns->total() }} {{ Str::plural('Campaign', $campaigns->total()) }}
             </h2>
             <div class="flex space-x-2">
                 <a href="{{ route('email.folders.edit', $folder) }}" 
@@ -50,6 +50,35 @@
                 </a>
             </div>
         @else
+            <!-- Filters -->
+            <div class="mb-6">
+                <form method="GET" action="{{ route('email.folders.show', $folder) }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                               placeholder="Search campaigns..." 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>All Statuses</option>
+                            <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="scheduled" {{ request('status') == 'scheduled' ? 'selected' : '' }}>Scheduled</option>
+                            <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button type="submit" id="filter-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class='bx bx-search mr-2' id="filter-icon"></i>
+                            <span id="filter-text">Filter</span>
+                        </button>
+                        <a href="{{ route('email.folders.show', $folder) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-semibold">
+                            <i class='bx bx-x mr-2'></i>Clear
+                        </a>
+                    </div>
+                </form>
+            </div>
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -100,19 +129,44 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
                                             <a href="{{ route('email.campaigns.show', $campaign) }}" 
-                                               class="text-blue-600 hover:text-blue-900">View</a>
+                                               class="text-blue-600 hover:text-blue-900 flex items-center gap-1">
+                                                <i class='bx bx-show'></i>View
+                                            </a>
                                             <a href="{{ route('email.campaigns.edit', $campaign) }}" 
-                                               class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                               class="text-indigo-600 hover:text-indigo-900 flex items-center gap-1">
+                                                <i class='bx bx-edit'></i>Edit
+                                            </a>
                                             <a href="{{ route('email.campaigns.preview', $campaign) }}" 
-                                               class="text-green-600 hover:text-green-900">Preview</a>
+                                               class="text-green-600 hover:text-green-900 flex items-center gap-1">
+                                                <i class='bx bx-play'></i>Preview
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        {{ $campaigns->appends(request()->query())->links() }}
+                    </div>
                 </div>
             </div>
         @endif
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.querySelector('form[method="GET"]');
+            const filterBtn = document.getElementById('filter-btn');
+            const filterIcon = document.getElementById('filter-icon');
+            const filterText = document.getElementById('filter-text');
+            
+            filterForm.addEventListener('submit', function() {
+                // Disable button and show loading state
+                filterBtn.disabled = true;
+                filterIcon.className = 'bx bx-loader-alt animate-spin mr-2';
+                filterText.textContent = 'Filtering...';
+            });
+        });
+    </script>
 </x-app-layout> 

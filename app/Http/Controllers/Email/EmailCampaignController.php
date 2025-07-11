@@ -12,18 +12,41 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VideoEmailCampaignMailable;
 use App\Models\EmailReply;
 use Illuminate\Support\Str;
+use App\Models\EmailFolder;
 
 class EmailCampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $campaigns = EmailCampaign::where('user_id', Auth::id())
+        $query = EmailCampaign::where('user_id', Auth::id())
             ->with(['folder'])
-            ->withCount(['recipients as total_recipients'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->withCount(['recipients as total_recipients']);
 
-        return view('email.campaigns.index', compact('campaigns'));
+        // Filter by status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by folder
+        if ($request->filled('folder') && $request->folder !== 'all') {
+            $query->where('email_folder_id', $request->folder);
+        }
+
+        // Search by title or subject
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }
+
+        $campaigns = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // Get folders for filter dropdown
+        $folders = EmailFolder::where('user_id', Auth::id())->orderBy('name')->get();
+
+        return view('email.campaigns.index', compact('campaigns', 'folders'));
     }
 
     public function create()
@@ -93,21 +116,22 @@ class EmailCampaignController extends Controller
     {
         // $this->authorize('view', $campaign);
 
-        $campaign->load('recipients');
-        
+        $recipients = $campaign->recipients()->orderByDesc('created_at')->paginate(10);
+
         $stats = [
-            'total_recipients' => $campaign->recipients->count(),
-            'opened' => $campaign->recipients->whereNotNull('opened_at')->count(),
-            'viewed' => $campaign->recipients->whereNotNull('viewed_at')->count(),
-            'clicked' => $campaign->recipients->whereNotNull('clicked_at')->count(),
+            'total_recipients' => $campaign->recipients()->count(),
+            'opened' => $campaign->recipients()->whereNotNull('opened_at')->count(),
+            'viewed' => $campaign->recipients()->whereNotNull('viewed_at')->count(),
+            'clicked' => $campaign->recipients()->whereNotNull('clicked_at')->count(),
         ];
         // Count total replies for this campaign
-        $totalReplies = EmailReply::whereIn('email_recipient_id', $campaign->recipients->pluck('id'))->count();
-        // Get reply counts for each recipient
-        $recipientReplyCounts = $campaign->recipients->mapWithKeys(function($recipient) {
-            return [$recipient->id => $recipient->replies()->count()];
-        });
-        return view('email.campaigns.show', compact('campaign', 'stats', 'totalReplies', 'recipientReplyCounts'));
+        $totalReplies = EmailReply::whereIn('email_recipient_id', $campaign->recipients()->pluck('uuid'))->count();
+        // Get reply counts for each recipient (by uuid)
+        $recipientReplyCounts = collect();
+        foreach ($recipients as $recipient) {
+            $recipientReplyCounts[$recipient->uuid] = $recipient->replies()->count();
+        }
+        return view('email.campaigns.show', compact('campaign', 'stats', 'totalReplies', 'recipientReplyCounts', 'recipients'));
     }
 
     public function edit(EmailCampaign $campaign)
@@ -251,7 +275,7 @@ class EmailCampaignController extends Controller
     {
         // $this->authorize('view', $campaign);
         
-        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'custom'];
+        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'gradient', 'aqua', 'dark', 'playful'];
         
         if (!in_array($template, $validTemplates)) {
             return redirect()->route('email.campaigns.templates', $campaign)
@@ -265,7 +289,7 @@ class EmailCampaignController extends Controller
     {
         // $this->authorize('view', $campaign);
         
-        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'custom'];
+        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'gradient', 'aqua', 'dark', 'playful'];
         
         if (!in_array($template, $validTemplates)) {
             abort(404);
@@ -295,7 +319,7 @@ class EmailCampaignController extends Controller
         // $this->authorize('update', $campaign);
         
         $request->validate([
-            'template' => 'required|string|in:classic,modern,minimalist,bold,newsletter,custom',
+            'template' => 'required|string|in:classic,modern,minimalist,bold,newsletter,gradient,aqua,dark,playful',
         ]);
 
         $campaign->update(['template' => $request->template]);
@@ -355,5 +379,27 @@ class EmailCampaignController extends Controller
                 'message' => 'Error importing file: ' . $e->getMessage()
             ], 422);
         }
+    }
+
+    public function embed(EmailCampaign $campaign)
+    {
+        // Create a dummy recipient for embed purposes
+        $dummyRecipient = new \App\Models\EmailRecipient([
+            'email_campaign_id' => $campaign->id,
+            'email' => 'embed@example.com',
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        ]);
+        $templateView = 'email.campaigns.templates.' . $campaign->template;
+        $html = view($templateView, [
+            'campaign' => $campaign,
+            'recipient' => $dummyRecipient,
+            'trackingPixel' => '#',
+            'viewUrl' => $campaign->video_url,
+            'clickUrl' => $campaign->cta_url,
+        ])->render();
+        return view('email.campaigns.embed', [
+            'campaign' => $campaign,
+            'html' => $html,
+        ]);
     }
 } 

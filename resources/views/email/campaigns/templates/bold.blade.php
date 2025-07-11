@@ -10,9 +10,24 @@
         .header { text-align: center; padding: 54px 24px 30px 24px; background-color: #ffffff; border-bottom: 2px solid #dc2626; }
         .title { font-size: 48px; font-weight: 900; color: #dc2626; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
         .content { padding: 54px 24px; text-align: center; }
-        .video-container { margin: 44px 0; position: relative; display: flex; justify-content: center; border-radius: 16px; overflow: hidden; border: 2px solid #dc2626; box-shadow: 0 8px 32px rgba(220,38,38,0.10); }
-        .video-thumbnail-wrapper { position: relative; display: inline-block; }
-        .video-thumbnail { width: 100%; max-width: 100%; height: auto; object-fit: cover; border-radius: 16px; display: block; }
+        .video-container { margin: 44px 0; position: relative; display: flex; justify-content: center; border-radius: 16px; overflow: hidden; border: 2px solid #dc2626; box-shadow: 0 8px 32px rgba(220,38,38,0.10); width: 100%; }
+        .video-thumbnail-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+            aspect-ratio: 16/9;
+            height: auto;
+            min-height: 120px;
+            max-height: 320px;
+        }
+        .video-thumbnail {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            display: block;
+        }
         .cta-button { display: inline-block; background-color: #dc2626; color: #ffffff; padding: 22px 48px; text-decoration: none; border-radius: 14px; font-weight: 900; font-size: 26px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 16px rgba(220, 38, 38, 0.18); margin: 36px 0; transition: background 0.2s; }
         .cta-button:hover { background: #b91c1c; }
         .footer { text-align: center; padding: 36px 24px; background-color: #f3f4f6; color: #6b7280; font-size: 15px; border-top: 2px solid #dc2626; }
