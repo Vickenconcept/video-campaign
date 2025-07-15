@@ -46,16 +46,9 @@
             <div style="line-height: 1.7; color: #374151; font-size: 17px; margin-bottom: 32px; text-align: left;">
                 {!! nl2br(e($campaign->body)) !!}
             </div>
-            @if($campaign->cta_text && $campaign->cta_url)
-                <a href="{{ $clickUrl }}" class="cta-button">
-                    {{ $campaign->cta_text }}
-                </a>
-            @endif
+          
         </div>
-        <div class="footer">
-            <p>{{ $campaign->template_data['footer_line1'] ?? 'This email was sent as part of a personalized video campaign.' }}</p>
-            <p>{{ $campaign->template_data['footer_line2'] ?? 'If you have any questions, please contact us.' }}</p>
-        </div>
+      
     </div>
     <!-- Tracking Pixel -->
     <img src="{{ $trackingPixel }}" class="tracking-pixel" alt="">

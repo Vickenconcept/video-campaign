@@ -9,6 +9,7 @@ use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\Email\EmailCampaignController;
 use App\Http\Controllers\Email\TrackingController;
 use App\Http\Controllers\Email\EmailFolderController;
+use App\Http\Controllers\VideoPage\VideoPageController;
 use App\Livewire\AllResponse;
 use App\Livewire\CampaignComponent;
 use App\Livewire\EspConnector;
@@ -100,6 +101,24 @@ Route::middleware(['auth'])->group(function () {
     Route::post('convert-kit/connect', [ESPController::class, 'connectCOnvertKit'])->name('convert-kit.connect');
 
     Route::view('/support', 'support')->name('support.index');
+
+
+
+
+    Route::prefix('video-page')->name('video-page.')->group(function () {
+        Route::resource('campaigns', VideoPageController::class);
+        Route::get('campaigns/{campaign}/preview', [VideoPageController::class, 'preview'])->name('campaigns.preview');
+        Route::get('campaigns/{campaign}/preview/iframe', [VideoPageController::class, 'previewIframe'])->name('campaigns.preview.iframe');
+        Route::post('campaigns/{campaign}/send-now', [VideoPageController::class, 'sendNow'])->name('campaigns.send-now');
+        
+        // Import Routes
+        Route::post('campaigns/import/video-campaigns', [VideoPageController::class, 'importFromVideoCampaigns'])->name('campaigns.import.video');
+        Route::post('campaigns/import/excel', [VideoPageController::class, 'importFromExcel'])->name('campaigns.import.excel');
+        
+        // Template Routes
+        Route::get('campaigns/{campaign}/templates', [VideoPageController::class, 'templates'])->name('campaigns.templates');
+
+    });
 });
 
 // Tracking Routes (public)
@@ -107,3 +126,4 @@ Route::get('email/tracking/view', [TrackingController::class, 'view'])->name('em
 Route::post('email/tracking/reply', [\App\Http\Controllers\Email\TrackingController::class, 'reply'])->name('email.tracking.reply');
 
 Route::get('/email/campaigns/{campaign}/embed', [\App\Http\Controllers\Email\EmailCampaignController::class, 'embed'])->name('email.campaigns.embed');
+

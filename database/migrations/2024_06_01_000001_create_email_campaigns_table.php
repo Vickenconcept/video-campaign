@@ -12,14 +12,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('subject');
-            $table->text('body');
+            $table->string('subject')->nullable();
+            $table->text('body')->nullable();
             $table->string('video_url');
             $table->string('thumbnail_url');
             $table->string('cta_url')->nullable();
             $table->string('cta_text')->nullable();
             $table->timestamp('scheduled_at')->nullable();
             $table->enum('status', ['draft', 'scheduled', 'sent', 'failed'])->default('draft');
+            $table->enum('type', ['video_email', 'video_page'])->default('video_email');
             $table->timestamps();
         });
     }

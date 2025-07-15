@@ -2,17 +2,17 @@
     <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Edit Video Email Campaign</h1>
+                <h1 class="text-3xl font-bold text-gray-900">Edit Video Page</h1>
                 <a href="{{ route('email.campaigns.index') }}" class="text-gray-600 hover:text-gray-900">← Back to Campaigns</a>
             </div>
             <form action="{{ route('email.campaigns.update', $campaign) }}" method="POST" class="space-y-8">
                 @csrf
                 @method('PUT')
                 <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Campaign Details</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Page Details</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Campaign Title</label>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
                             <input type="text" name="title" id="title" value="{{ old('title', $campaign->title) }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @error('title')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
@@ -23,25 +23,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-6">
-                        <label for="email_folder_id" class="block text-sm font-medium text-gray-700 mb-2">Folder (Optional)</label>
-                        <select name="email_folder_id" id="email_folder_id" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">No Folder</option>
-                            @php
-                                $folders = \App\Models\EmailFolder::where('user_id', auth()->id())->orderBy('name')->get();
-                            @endphp
-                            @foreach($folders as $folder)
-                                <option value="{{ $folder->id }}" {{ old('email_folder_id', $campaign->email_folder_id) == $folder->id ? 'selected' : '' }}>
-                                    {{ $folder->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <p class="text-sm text-gray-500 mt-1">Organize your campaigns by grouping them in folders</p>
-                        @error('email_folder_id')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                 
                 </div>
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Video Selection</h2>
@@ -52,15 +34,15 @@
                     @error('thumbnail_url')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
                 </div>
                 <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Email Content</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Short Message (optional)</h2>
                     <div class="space-y-4">
                         <div>
                             <label for="body" class="block text-sm font-medium text-gray-700 mb-2">Message Body</label>
-                            <textarea name="body" id="body" rows="6" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('body', $campaign->body) }}</textarea>
+                            <textarea name="body" id="body" rows="6"  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('body', $campaign->body) }}</textarea>
                             <p class="text-sm text-gray-500 mt-1">Your personalized message to recipients</p>
                             @error('body')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
-                        {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="cta_text" class="block text-sm font-medium text-gray-700 mb-2">CTA Button Text</label>
                                 <input type="text" name="cta_text" id="cta_text" value="{{ old('cta_text', $campaign->cta_text) }}" placeholder="Watch Video" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -69,7 +51,7 @@
                                 <label for="cta_url" class="block text-sm font-medium text-gray-700 mb-2">CTA Button URL</label>
                                 <input type="url" name="cta_url" id="cta_url" value="{{ old('cta_url', $campaign->cta_url) }}" placeholder="https://your-landing-page.com" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
                 <div class="bg-white shadow-md rounded-lg p-6" x-data="{
@@ -265,8 +247,8 @@
                                 <p class="text-sm text-gray-500 mt-1">Supported formats: .xlsx, .xls, .csv (Max 2MB)</p>
                             </div>
                             <div class="bg-indigo-50 border border-indigo-200 rounded-md p-4">
-                                <h4 class="text-sm font-medium text-indigo-800 mb-2">Excel Format Requirements:</h4>
-                                <ul class="text-sm text-indigo-700 space-y-1">
+                                <h4 class="text-sm font-medium text-blue-800 mb-2">Excel Format Requirements:</h4>
+                                <ul class="text-sm text-blue-700 space-y-1">
                                     <li>• File should have headers in the first row</li>
                                     <li>• Email column should be named: "email", "Email", "EMAIL", "e-mail", "E-mail", or "E-Mail"</li>
                                     <li>• Alternatively, any column containing valid email addresses will be detected</li>
@@ -284,20 +266,6 @@
                         <p class="text-sm text-gray-500 mt-1">Leave empty to save as draft</p>
                         <p class="text-sm text-amber-600 mt-1">⚠️ Note: All times are in UTC timezone</p>
                         @error('scheduled_at')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
-                    </div>
-                </div>
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Template Customization</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="footer_line1" class="block text-sm font-medium text-gray-700 mb-2">Footer Line 1</label>
-                            <input type="text" name="template_data[footer_line1]" id="footer_line1" value="{{ old('template_data.footer_line1', $campaign->template_data['footer_line1'] ?? '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="footer_line2" class="block text-sm font-medium text-gray-700 mb-2">Footer Line 2</label>
-                            <input type="text" name="template_data[footer_line2]" id="footer_line2" value="{{ old('template_data.footer_line2', $campaign->template_data['footer_line2'] ?? '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <!-- Add more fields for other templates as needed -->
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4">

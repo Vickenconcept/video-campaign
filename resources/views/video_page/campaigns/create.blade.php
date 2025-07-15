@@ -2,76 +2,91 @@
     <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Edit Video Email Campaign</h1>
-                <a href="{{ route('email.campaigns.index') }}" class="text-gray-600 hover:text-gray-900">← Back to Campaigns</a>
+                <h1 class="text-3xl font-bold text-gray-900">Create Video Page</h1>
+                <a href="{{ route('video-page.campaigns.index') }}" 
+                   class="text-gray-600 hover:text-gray-900">
+                    ← Back to Video Page
+                </a>
             </div>
-            <form action="{{ route('email.campaigns.update', $campaign) }}" method="POST" class="space-y-8">
+
+            <form action="{{ route('video-page.campaigns.store') }}" method="POST" class="space-y-8">
                 @csrf
-                @method('PUT')
+                
+                <!-- Basic Information -->
                 <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Campaign Details</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Page Details</h2>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Campaign Title</label>
-                            <input type="text" name="title" id="title" value="{{ old('title', $campaign->title) }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            @error('title')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+                            <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('title')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
+                        
                         <div>
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Email Subject</label>
-                            <input type="text" name="subject" id="subject" value="{{ old('subject', $campaign->subject) }}" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            @error('subject')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                            <input type="text" name="subject" id="subject" value="{{ old('subject') }}" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('subject')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="mt-6">
-                        <label for="email_folder_id" class="block text-sm font-medium text-gray-700 mb-2">Folder (Optional)</label>
-                        <select name="email_folder_id" id="email_folder_id" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">No Folder</option>
-                            @php
-                                $folders = \App\Models\EmailFolder::where('user_id', auth()->id())->orderBy('name')->get();
-                            @endphp
-                            @foreach($folders as $folder)
-                                <option value="{{ $folder->id }}" {{ old('email_folder_id', $campaign->email_folder_id) == $folder->id ? 'selected' : '' }}>
-                                    {{ $folder->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <p class="text-sm text-gray-500 mt-1">Organize your campaigns by grouping them in folders</p>
-                        @error('email_folder_id')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    
                 </div>
+
+                <!-- Video Selection -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Video Selection</h2>
                     
-                    <livewire:email-video-selector-edit :video-url="$campaign->video_url" :thumbnail-url="$campaign->thumbnail_url" />
+                    <livewire:email-video-selector />
                     
-                    @error('video_url')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
-                    @error('thumbnail_url')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
+                    @error('video_url')
+                        <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                    @enderror
+                    @error('thumbnail_url')
+                        <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
+
+                <!-- Email Content -->
                 <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Email Content</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Short Messgae(optional)</h2>
+                    
                     <div class="space-y-4">
                         <div>
                             <label for="body" class="block text-sm font-medium text-gray-700 mb-2">Message Body</label>
-                            <textarea name="body" id="body" rows="6" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('body', $campaign->body) }}</textarea>
+                            <textarea name="body" id="body" rows="6" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('body') }}</textarea>
                             <p class="text-sm text-gray-500 mt-1">Your personalized message to recipients</p>
-                            @error('body')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                            @error('body')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-                        {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="cta_text" class="block text-sm font-medium text-gray-700 mb-2">CTA Button Text</label>
-                                <input type="text" name="cta_text" id="cta_text" value="{{ old('cta_text', $campaign->cta_text) }}" placeholder="Watch Video" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="text" name="cta_text" id="cta_text" value="{{ old('cta_text') }}"
+                                       placeholder="Watch Video" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
+                            
                             <div>
                                 <label for="cta_url" class="block text-sm font-medium text-gray-700 mb-2">CTA Button URL</label>
-                                <input type="url" name="cta_url" id="cta_url" value="{{ old('cta_url', $campaign->cta_url) }}" placeholder="https://your-landing-page.com" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="url" name="cta_url" id="cta_url" value="{{ old('cta_url') }}"
+                                       placeholder="https://your-landing-page.com" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
+
+                <!-- Recipients -->
                 <div class="bg-white shadow-md rounded-lg p-6" x-data="{
                     activeTab: 'direct',
                     videoEmails: [],
@@ -79,7 +94,7 @@
                     selectedCampaigns: [],
                     isLoadingVideo: false,
                     isLoadingExcel: false,
-                    recipientsValue: '{{ old('recipients', $recipients) }}',
+                    recipientsValue: '{{ old('recipients') }}',
                     toggleCampaign(campaignId) {
                         const index = this.selectedCampaigns.indexOf(campaignId);
                         if (index > -1) {
@@ -95,7 +110,7 @@
                         }
                         this.isLoadingVideo = true;
                         try {
-                            const response = await fetch('{{ route('email.campaigns.import.video') }}', {
+                            const response = await fetch('{{ route('video-page.campaigns.import.video') }}', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -138,7 +153,7 @@
                         const formData = new FormData();
                         formData.append('excel_file', file);
                         try {
-                            const response = await fetch('{{ route('email.campaigns.import.excel') }}', {
+                            const response = await fetch('{{ route('video-page.campaigns.import.excel') }}', {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
@@ -265,8 +280,8 @@
                                 <p class="text-sm text-gray-500 mt-1">Supported formats: .xlsx, .xls, .csv (Max 2MB)</p>
                             </div>
                             <div class="bg-indigo-50 border border-indigo-200 rounded-md p-4">
-                                <h4 class="text-sm font-medium text-indigo-800 mb-2">Excel Format Requirements:</h4>
-                                <ul class="text-sm text-indigo-700 space-y-1">
+                                <h4 class="text-sm font-medium text-blue-800 mb-2">Excel Format Requirements:</h4>
+                                <ul class="text-sm text-blue-700 space-y-1">
                                     <li>• File should have headers in the first row</li>
                                     <li>• Email column should be named: "email", "Email", "EMAIL", "e-mail", "E-mail", or "E-Mail"</li>
                                     <li>• Alternatively, any column containing valid email addresses will be detected</li>
@@ -276,33 +291,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Scheduling -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Scheduling</h2>
+                    
                     <div>
                         <label for="scheduled_at" class="block text-sm font-medium text-gray-700 mb-2">Schedule Send (Optional)</label>
-                        <input type="datetime-local" name="scheduled_at" id="scheduled_at" value="{{ old('scheduled_at', $campaign->scheduled_at ? $campaign->scheduled_at->format('Y-m-d\TH:i') : '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="datetime-local" name="scheduled_at" id="scheduled_at" value="{{ old('scheduled_at') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">Leave empty to save as draft</p>
                         <p class="text-sm text-amber-600 mt-1">⚠️ Note: All times are in UTC timezone</p>
-                        @error('scheduled_at')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('scheduled_at')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Template Customization</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="footer_line1" class="block text-sm font-medium text-gray-700 mb-2">Footer Line 1</label>
-                            <input type="text" name="template_data[footer_line1]" id="footer_line1" value="{{ old('template_data.footer_line1', $campaign->template_data['footer_line1'] ?? '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="footer_line2" class="block text-sm font-medium text-gray-700 mb-2">Footer Line 2</label>
-                            <input type="text" name="template_data[footer_line2]" id="footer_line2" value="{{ old('template_data.footer_line2', $campaign->template_data['footer_line2'] ?? '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <!-- Add more fields for other templates as needed -->
-                    </div>
-                </div>
+
+                <!-- Submit Buttons -->
                 <div class="flex justify-end space-x-4">
-                    <a href="{{ route('email.campaigns.index') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</a>
-                    <button type="submit" class="px-6 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800">Update Campaign</button>
+                    <a href="{{ route('video-page.campaigns.index') }}" 
+                       class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </a>
+                    <button type="submit" id="submit-btn"
+                            class="px-6 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Create Campaign
+                    </button>
                 </div>
             </form>
         </div>
@@ -310,4 +325,25 @@
 
     <!-- Cloudinary Script -->
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[action="{{ route("video-page.campaigns.store") }}"]');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Disable the submit button to prevent double submission
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Creating Campaign...';
+                    }
+                    
+                    // Clear the cached video data when form is submitted
+                    const clearCacheEvent = new CustomEvent('clear-video-cache');
+                    window.dispatchEvent(clearCacheEvent);
+                });
+            }
+        });
+    </script>
 </x-app-layout> 

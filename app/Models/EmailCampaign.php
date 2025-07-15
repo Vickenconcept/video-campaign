@@ -25,6 +25,7 @@ class EmailCampaign extends Model
         'status',
         'template',
         'template_data',
+        'type',
     ];
 
     protected $casts = [

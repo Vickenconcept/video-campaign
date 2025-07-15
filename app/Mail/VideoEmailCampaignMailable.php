@@ -33,7 +33,13 @@ class VideoEmailCampaignMailable extends Mailable
 
     public function content(): Content
     {
-        $templateView = 'email.campaigns.templates.' . $this->campaign->template;
+        $templateView = "";
+        if ($this->campaign->type == 'video_email') {
+            $templateView = 'email.campaigns.templates.' . $this->campaign->template;
+        }
+        else{
+            $templateView = 'video_page.campaigns.templates.' . $this->campaign->template;
+        }
         
         return new Content(
             view: $templateView,

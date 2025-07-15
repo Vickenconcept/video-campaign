@@ -23,14 +23,14 @@
                 <li>
                     <a href="{{ route('tutorial') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('tutorial') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class='bx bx-video text-xl {{ request()->routeIs('tutorial') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <i class='bx bx-play-circle text-xl {{ request()->routeIs('tutorial') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
                         <span class="text-sm">Tutorial</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('home') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('home') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class="bx bx-home-smile text-xl {{ request()->routeIs('home') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}"></i>
+                        <i class="bx bx-grid-alt text-xl {{ request()->routeIs('home') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
@@ -38,34 +38,41 @@
                     <a href="{{ route('folder.index') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('folder.index') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
                         <i class='bx bx-folder text-xl {{ request()->routeIs('folder.index') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
-                        <span>Folder</span>
+                        <span> Video Funnel </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('response.index') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('response.index') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class='bx bx-message text-xl {{ request()->routeIs('response.index') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <i class='bx bx-message-square-detail text-xl {{ request()->routeIs('response.index') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
                         <span>Responses</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('email.campaigns.index') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('email.campaigns.*') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class='bx bx-envelope text-xl {{ request()->routeIs('email.campaigns.*') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <i class='bx bx-mail-send text-xl {{ request()->routeIs('email.campaigns.*') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
                         <span>Video Email</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('video-page.campaigns.index') }}"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('video-page.campaigns.*') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
+                        <i class='bx bx-layout text-xl {{ request()->routeIs('video-page.campaigns.*') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <span>Video Page</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('esp.connect') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('esp.connect') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class='bx bx-rectangle text-xl {{ request()->routeIs('esp.connect') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <i class='bx bx-plug text-xl {{ request()->routeIs('esp.connect') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
                         <span>Connect ESP</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('reseller.index') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group {{ request()->routeIs('reseller.index') ? 'bg-white text-indigo-700 shadow font-semibold' : 'text-white hover:bg-indigo-600 hover:text-white' }}">
-                        <i class='bx bx-refresh text-xl {{ request()->routeIs('reseller.index') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
+                        <i class='bx bx-store text-xl {{ request()->routeIs('reseller.index') ? 'text-indigo-700' : 'text-indigo-200 group-hover:text-white' }}'></i>
                         <span>Reseller</span>
                     </a>
                 </li>
@@ -82,7 +89,7 @@
                 <li>
                     <a href="{{ route('auth.logout') }}"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors group text-red-200 hover:bg-red-50 hover:text-red-700">
-                        <i class='bx bx-exit text-xl'></i>
+                        <i class='bx bx-log-out text-xl'></i>
                         <span class="text-sm capitalize">Log out</span>
                     </a>
                 </li>

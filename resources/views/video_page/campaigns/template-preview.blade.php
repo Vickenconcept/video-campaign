@@ -79,6 +79,7 @@
                     @endif
                     <div>
                         <p class="text-gray-700"><span class="font-semibold">Video Support:</span> ✅ Included</p>
+                        <p class="text-gray-700"><span class="font-semibold">CTA Button:</span> ✅ Styled</p>
                         <p class="text-gray-700"><span class="font-semibold">Tracking:</span> ✅ Enabled</p>
                     </div>
                 </div>

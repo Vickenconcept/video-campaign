@@ -129,10 +129,10 @@
                 <p>Your browser does not support the video tag.</p>
             </video>
 
-            <div class="mt-2 text-sm text-gray-600">
+            {{-- <div class="mt-2 text-sm text-gray-600">
                 <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
                 <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -294,10 +294,10 @@
                     </template>
                     <p>Your browser does not support the video tag.</p>
                 </video>
-                <div class="mt-2 text-sm text-gray-600">
+                {{-- <div class="mt-2 text-sm text-gray-600">
                     <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
                     <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-                </div>
+                </div> --}}
                 <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
                     <p class="text-sm text-blue-800">
                         <i class='bx bx-info-circle mr-1'></i>
@@ -316,81 +316,7 @@
 
 
 <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
-{{-- <script>
-    // // Wait for both DOM and Cloudinary to be ready
-    function initializeCloudinaryWidget() {
-        if (typeof cloudinary !== 'undefined' && document.getElementById('upload_widget')) {
-            try {
-                const uploadWidget = cloudinary.createUploadWidget({
-                    // cloudName: '{{ config('cloudinary.cloud_name') }}',
-                    // uploadPreset: '{{ config('cloudinary.upload_preset') }}',
-                    uploadPreset: "video-campaign",
-                    cloudName: '{{ env('CLOUDINARY_CLOUD_NAME') }}',
-                    resourceType: 'video',
-                    maxFiles: 1,
-                    multiple: false,
-                    resourceType: "video",
-                    clientAllowedFormats: ["mp4", "avi", "mov", "webm", "MKV", 'wmv', 'flv'],
-                    maxFileSize: 500000000
-                }, function(error, result) {
-                    if (!error && result && result.event === "success") {
-                        const videoUrl = result.info.secure_url;
-                        const thumbnailUrl = result.info.thumbnail_url || videoUrl;
 
-                        window.dispatchEvent(new CustomEvent('cloudinary-upload-success', {
-                            detail: {
-                                videoUrl,
-                                thumbnailUrl
-                            }
-                        }));
-
-                        Toastify({
-                            text: `Uploaded! Successfully`,
-                            position: "center",
-                            duration: 3000,
-                            backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
-                        }).showToast();
-
-                        myWidget.close();
-                        const uploadButton = document.getElementById("upload_widget");
-                        if (uploadButton) {
-                            console.log('here');
-                            
-                            uploadButton.removeEventListener("click", openWidget);
-                        }
-
-                    }
-                });
-
-                const uploadButton = document.getElementById('upload_widget');
-                if (uploadButton) {
-                    uploadButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        uploadWidget.open();
-                    });
-                }
-
-
-
-            } catch (error) {
-                console.error('Error initializing Cloudinary widget:', error);
-            }
-        }
-    }
-
-    // Try to initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeCloudinaryWidget();
-    });
-
-    // Also try when Livewire updates the DOM
-    document.addEventListener('livewire:navigated', function() {
-        setTimeout(initializeCloudinaryWidget, 100);
-    });
-
-    // Fallback: try again after a short delay
-    setTimeout(initializeCloudinaryWidget, 1000);
-</script> --}}
 
 
 <script>

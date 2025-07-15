@@ -1,15 +1,12 @@
 <x-app-layout>
 <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Video Email Campaigns</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Video Page </h1>
         <div class="flex space-x-3">
-            <a href="{{ route('email.folders.index') }}" 
-               class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                Manage Folders
-            </a>
-            <a href="{{ route('email.campaigns.create') }}" 
+           
+            <a href="{{ route('video-page.campaigns.create') }}" 
                class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">
-                Create New Campaign
+                Create New Video Page
             </a>
         </div>
     </div>
@@ -28,16 +25,16 @@
 
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Your Campaigns</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Your Video Pages</h2>
         </div>
         
         <!-- Filters -->
         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <form method="GET" action="{{ route('email.campaigns.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form method="GET" action="{{ route('video-page.campaigns.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}" 
-                           placeholder="Search campaigns..." 
+                           placeholder="Search video page..." 
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
@@ -49,23 +46,13 @@
                         <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
                     </select>
                 </div>
-                <div>
-                    <label for="folder" class="block text-sm font-medium text-gray-700 mb-1">Folder</label>
-                    <select name="folder" id="folder" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="all" {{ request('folder') == 'all' || !request('folder') ? 'selected' : '' }}>All Folders</option>
-                        @foreach($folders as $folder)
-                            <option value="{{ $folder->id }}" {{ request('folder') == $folder->id ? 'selected' : '' }}>
-                                {{ $folder->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+               
                 <div class="flex items-end gap-2">
                     <button type="submit" id="filter-btn" class="flex-1 bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
                         <i class='bx bx-search mr-2' id="filter-icon"></i>
                         <span id="filter-text">Filter</span>
                     </button>
-                    <a href="{{ route('email.campaigns.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-semibold">
+                    <a href="{{ route('video-page.campaigns.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-semibold">
                         <i class='bx bx-x mr-2'></i>Clear
                     </a>
                 </div>
@@ -77,11 +64,9 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Campaign
+                            Video Page
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Folder
-                        </th>
+                       
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Status
                         </th>
@@ -105,16 +90,7 @@
                                     <div class="text-sm text-gray-500">{{ $campaign->subject }}</div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @if($campaign->folder)
-                                    <div class="flex items-center space-x-2">
-                                        <div class="w-3 h-3 rounded-full" style="background-color: {{ $campaign->folder->color }}"></div>
-                                        <span class="text-sm text-gray-900">{{ $campaign->folder->name }}</span>
-                                    </div>
-                                @else
-                                    <span class="text-sm text-gray-400">No Folder</span>
-                                @endif
-                            </td>
+                           
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     @if($campaign->status === 'sent') bg-green-100 text-green-800
@@ -136,20 +112,20 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('email.campaigns.show', $campaign) }}" 
+                                    <a href="{{ route('video-page.campaigns.show', $campaign) }}" 
                                        class="text-blue-600 hover:text-blue-900 flex items-center gap-1">
                                         <i class='bx bx-show'></i>View
                                     </a>
-                                    <a href="{{ route('email.campaigns.edit', $campaign) }}" 
+                                    <a href="{{ route('video-page.campaigns.edit', $campaign) }}" 
                                        class="text-indigo-600 hover:text-indigo-900 flex items-center gap-1">
                                         <i class='bx bx-edit'></i>Edit
                                     </a>
-                                    <a href="{{ route('email.campaigns.preview', $campaign) }}" 
+                                    <a href="{{ route('video-page.campaigns.preview', $campaign) }}" 
                                        class="text-green-600 hover:text-green-900 flex items-center gap-1">
                                         <i class='bx bx-play'></i>Preview
                                     </a>
                                     @if($campaign->status === 'draft')
-                                        <form action="{{ route('email.campaigns.send-now', $campaign) }}" 
+                                        <form action="{{ route('video-page.campaigns.send-now', $campaign) }}" 
                                               method="POST" class="inline">
                                             @csrf
                                             <button type="submit" 
@@ -159,7 +135,7 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <form action="{{ route('email.campaigns.destroy', $campaign) }}" 
+                                    <form action="{{ route('video-page.campaigns.destroy', $campaign) }}" 
                                           method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -175,7 +151,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                No campaigns found. <a href="{{ route('email.campaigns.create') }}" class="text-blue-600 hover:text-blue-900">Create your first campaign</a>
+                                No campaigns found. <a href="{{ route('video-page.campaigns.create') }}" class="text-blue-600 hover:text-blue-900">Create your first campaign</a>
                             </td>
                         </tr>
                     @endforelse

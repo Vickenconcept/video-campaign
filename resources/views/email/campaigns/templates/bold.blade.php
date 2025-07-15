@@ -44,7 +44,7 @@
             @if($campaign->video_url)
                 <div class="video-container">
                     <a href="{{ $viewUrl }}" class="video-thumbnail-wrapper" style="text-decoration: none;">
-                        <img src="{{ $campaign->thumbnail_url ?: 'https://placehold.co/600x400' }}" alt="Personalized Video" class="video-thumbnail">
+                        <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="Personalized Video" class="video-thumbnail">
                     </a>
                 </div>
             @endif

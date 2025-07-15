@@ -53,10 +53,10 @@
                 <source src="{{ $videoUrl }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <div class="mt-2 text-sm text-blue-700">
+            {{-- <div class="mt-2 text-sm text-blue-700">
                 <p><strong>Video URL:</strong> {{ $videoUrl }}</p>
                 <p><strong>Thumbnail URL:</strong> {{ $thumbnailUrl }}</p>
-            </div>
+            </div> --}}
         </div>
     @endif
 
@@ -107,10 +107,10 @@
                 </template>
                 <p>Your browser does not support the video tag.</p>
             </video>
-            <div class="mt-2 text-sm text-gray-600">
+            {{-- <div class="mt-2 text-sm text-gray-600">
                 <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
                 <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -275,10 +275,10 @@
                     </template>
                     <p>Your browser does not support the video tag.</p>
                 </video>
-                <div class="mt-2 text-sm text-gray-600">
+                {{-- <div class="mt-2 text-sm text-gray-600">
                     <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
                     <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-                </div>
+                </div> --}}
                 <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
                     <p class="text-sm text-blue-800">
                         <i class='bx bx-info-circle mr-1'></i>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Email;
+namespace App\Http\Controllers\VideoPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmailCampaign;
@@ -14,12 +14,12 @@ use App\Models\EmailReply;
 use Illuminate\Support\Str;
 use App\Models\EmailFolder;
 
-class EmailCampaignController extends Controller
+class VideoPageController extends Controller
 {
     public function index(Request $request)
     {
         $query = EmailCampaign::where('user_id', Auth::id())
-            ->where('type', 'video_email')
+            ->where('type', 'video_page')
             ->with(['folder'])
             ->withCount(['recipients as total_recipients']);
 
@@ -47,24 +47,24 @@ class EmailCampaignController extends Controller
         // Get folders for filter dropdown
         $folders = EmailFolder::where('user_id', Auth::id())->orderBy('name')->get();
 
-        return view('email.campaigns.index', compact('campaigns', 'folders'));
+        return view('video_page.campaigns.index', compact('campaigns', 'folders'));
     }
 
     public function create()
     {
-        return view('email.campaigns.create');
+        return view('video_page.campaigns.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'body' => 'nullable|string',
             'video_url' => 'required|url',
             'thumbnail_url' => 'required|url',
-            'cta_url' => 'nullable|url',
-            'cta_text' => 'nullable|string|max:255',
+            'cta_url' => 'required|url',
+            'cta_text' => 'required|string|max:255',
             'scheduled_at' => 'nullable|date|after:now',
             'recipients' => 'required|string',
         ]);
@@ -87,6 +87,7 @@ class EmailCampaignController extends Controller
             'scheduled_at' => $scheduledAt,
             'status' => $scheduledAt ? 'scheduled' : 'sent',
             'template_data' => $request->input('template_data', []),
+            'type' => 'video_page',
         ]);
 
         // Parse recipients (comma-separated emails)
@@ -109,7 +110,7 @@ class EmailCampaignController extends Controller
             SendEmailCampaignJob::dispatch($campaign);
         }
 
-        return redirect()->route('email.campaigns.index')
+        return redirect()->route('video-page.campaigns.index')
             ->with('success', 'Campaign created successfully!');
     }
 
@@ -132,7 +133,7 @@ class EmailCampaignController extends Controller
         foreach ($recipients as $recipient) {
             $recipientReplyCounts[$recipient->uuid] = $recipient->replies()->count();
         }
-        return view('email.campaigns.show', compact('campaign', 'stats', 'totalReplies', 'recipientReplyCounts', 'recipients'));
+        return view('video_page.campaigns.show', compact('campaign', 'stats', 'totalReplies', 'recipientReplyCounts', 'recipients'));
     }
 
     public function edit(EmailCampaign $campaign)
@@ -142,7 +143,7 @@ class EmailCampaignController extends Controller
         $campaign->load('recipients');
         $recipients = $campaign->recipients->pluck('email')->implode(', ');
 
-        return view('email.campaigns.edit', compact('campaign', 'recipients'));
+        return view('video_page.campaigns.edit', compact('campaign', 'recipients'));
     }
 
     public function update(Request $request, EmailCampaign $campaign)
@@ -151,12 +152,12 @@ class EmailCampaignController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'body' => 'nullable|string',
             'video_url' => 'required|url',
             'thumbnail_url' => 'required|url',
-            'cta_url' => 'nullable|url',
-            'cta_text' => 'nullable|string|max:255',
+            'cta_url' => 'required|url',
+            'cta_text' => 'required|string|max:255',
             'scheduled_at' => 'nullable|date|after:now',
             'recipients' => 'required|string',
         ]);
@@ -205,7 +206,7 @@ class EmailCampaignController extends Controller
             SendEmailCampaignJob::dispatch($campaign)->delay($scheduledAt);
         }
 
-        return redirect()->route('email.campaigns.index')
+        return redirect()->route('video-page.campaigns.index')
             ->with('success', 'Campaign updated successfully!');
     }
 
@@ -215,7 +216,7 @@ class EmailCampaignController extends Controller
 
         $campaign->delete();
 
-        return redirect()->route('email.campaigns.index')
+        return redirect()->route('video_page.campaigns.index')
             ->with('success', 'Campaign deleted successfully!');
     }
 
@@ -223,7 +224,7 @@ class EmailCampaignController extends Controller
     {
         // $this->authorize('view', $campaign);
 
-        return view('email.campaigns.preview', compact('campaign'));
+        return view('video_page.campaigns.preview', compact('campaign'));
     }
 
     public function previewIframe(EmailCampaign $campaign)
@@ -238,7 +239,7 @@ class EmailCampaignController extends Controller
         ]);
 
         // Use the same template view that will be used for sending
-        $templateView = 'email.campaigns.templates.' . $campaign->template;
+        $templateView = 'video_page.campaigns.templates.' . $campaign->template;
 
         return view($templateView, [
             'campaign' => $campaign,
@@ -269,65 +270,11 @@ class EmailCampaignController extends Controller
     {
         // $this->authorize('view', $campaign);
 
-        return view('email.campaigns.templates', compact('campaign'));
+        return view('video_page.campaigns.templates', compact('campaign'));
     }
 
-    public function templatePreview(EmailCampaign $campaign, $template)
-    {
-        // $this->authorize('view', $campaign);
+   
 
-        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'gradient', 'aqua', 'dark', 'playful'];
-
-        if (!in_array($template, $validTemplates)) {
-            return redirect()->route('email.campaigns.templates', $campaign)
-                ->with('error', 'Invalid template selected!');
-        }
-
-        return view('email.campaigns.template-preview', compact('campaign', 'template'));
-    }
-
-    public function templatePreviewIframe(EmailCampaign $campaign, $template)
-    {
-        // $this->authorize('view', $campaign);
-
-        $validTemplates = ['classic', 'modern', 'minimalist', 'bold', 'newsletter', 'gradient', 'aqua', 'dark', 'playful'];
-
-        if (!in_array($template, $validTemplates)) {
-            abort(404);
-        }
-
-        // Create a dummy recipient for preview purposes
-        $dummyRecipient = new EmailRecipient([
-            'email_campaign_id' => $campaign->id,
-            'email' => 'preview@example.com',
-            'uuid' => (string) Str::uuid(),
-        ]);
-
-        // Use the specific template view
-        $templateView = 'email.campaigns.templates.' . $template;
-
-        return view($templateView, [
-            'campaign' => $campaign,
-            'recipient' => $dummyRecipient,
-            'trackingPixel' => '#',
-            'viewUrl' => $campaign->video_url,
-            'clickUrl' => $campaign->cta_url,
-        ]);
-    }
-
-    public function applyTemplate(Request $request, EmailCampaign $campaign)
-    {
-        // $this->authorize('update', $campaign);
-
-        $request->validate([
-            'template' => 'required|string|in:classic,modern,minimalist,bold,newsletter,gradient,aqua,dark,playful',
-        ]);
-
-        $campaign->update(['template' => $request->template]);
-
-        return redirect()->route('email.campaigns.show', $campaign)
-            ->with('success', 'Template applied successfully!');
-    }
 
     public function importFromVideoCampaigns(Request $request)
     {
@@ -390,7 +337,7 @@ class EmailCampaignController extends Controller
             'email' => 'embed@example.com',
             'uuid' => (string) \Illuminate\Support\Str::uuid(),
         ]);
-        $templateView = 'email.campaigns.templates.' . $campaign->template;
+        $templateView = 'video_page.campaigns.templates.' . $campaign->template;
         $html = view($templateView, [
             'campaign' => $campaign,
             'recipient' => $dummyRecipient,
@@ -398,7 +345,7 @@ class EmailCampaignController extends Controller
             'viewUrl' => $campaign->video_url,
             'clickUrl' => $campaign->cta_url,
         ])->render();
-        return view('email.campaigns.embed', [
+        return view('video_page.campaigns.embed', [
             'campaign' => $campaign,
             'html' => $html,
         ]);
