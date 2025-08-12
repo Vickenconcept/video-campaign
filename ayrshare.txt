@@ -1,0 +1,2607 @@
+Get Started
+Ayrshare Social Media API
+Ayrshare Social Media API Introduction
+ Ayrshare is a unified API that lets you manage your users’ social media presence across all major platforms with a single integration. Instead of dealing with 13 different social media APIs, you use just one to schedule posts, get analytics, manage comments, send direct messages, create ads, and more.
+
+
+What is Ayrshare?
+Managing multiple social media platforms is complex. Each network has its own API, approval process, error handling, and data formats. Keeping up with constant API changes across platforms is a full-time job.Ayrshare solves this by providing a single, unified API that handles all the complexity for you. We maintain direct integrations with each social network, so you can focus on building your product instead of managing infrastructure.With Ayrshare, you can:
+•	Schedule and publish posts across multiple platforms
+•	Retrieve analytics and engagement metrics
+•	Manage comments and conversations
+•	Send and receive direct messages
+•	Create and manage advertising campaigns
+And with our Business Plan, you can manage social media for all your users.
+
+
+See It In Action
+Here’s how simple it is to post to multiple platforms on behalf of your user:
+Copy
+Ask AI
+// One API call posts to multiple platforms
+POST /post
+{
+  "post": "Check out our new product launch! 🚀",
+  "platforms": ["x", "facebook", "instagram", "linkedin", "tiktok"],
+  "mediaUrls": ["https://example.com/video.mp4"],
+  "scheduleDate": "2025-12-01T10:00:00Z"
+}
+That’s it! And you can then make a single call to get the analytics or add a comment on all of these posts.See below for how to get started.
+
+
+Which Social Networks Are Supported?
+Ayrshare seamlessly integrates with 13 major social networks:
+Bluesky
+Facebook
+Google Business
+Instagram
+LinkedIn
+Pinterest
+Reddit
+Snapchat
+Telegram
+Threads
+TikTok
+X (Twitter)
+YouTube
+Ayrshare integrates directly with each social network’s official APIs and partnership programs. This ensures our platform delivers the most reliable, secure, and current social media management features available, all while maintaining compliance with each network’s policies and best practices.
+The messaging API supports Instagram, Facebook, and X. The Ads API supports Facebook.
+
+
+API-First Platform
+At Ayrshare, everything is designed with developers in mind, allowing you to quickly integrate social media features into your platform or application.Our API-first approach means every feature is accessible programmatically, with comprehensive documentation, SDKs in multiple languages, and predictable behavior.
+
+
+How It Works
+The API follows REST principles, making it intuitive for developers:
+•	GET requests retrieve information (analytics, post history, user data)
+•	POST requests create new resources (posts, comments, messages)
+•	PUT requests update existing resources
+•	DELETE requests remove resources
+All data is exchanged in JSON format, ensuring easy parsing and manipulation in any programming language.
+
+
+How to Get Started with Ayrshare
+Getting up and running takes just a few minutes:
+1
+Create Your Account
+Sign up for Ayrshare and find your API key in the dashboard.
+2
+Connect Social Accounts
+Link the social media accounts you want to manage.
+Connect Social Media Accounts
+
+3
+Make Your First API Call
+Test the API with our interactive documentation.
+API Overview
+
+4
+Follow the Quick Start
+Get posting in minutes with our step-by-step guide.
+Quick Start Guide
+
+5
+Scale to Multiple Users
+Learn how to manage social media for all your users.
+Business Plan for Multiple Users
+
+6
+Get Support
+Have questions? Our team is here to help via chat or email.
+Quick Start Guide
+githubxblueskyfacebooklinkedinyoutube
+
+
+Get Started
+Quick Start Guide
+Link your social accounts and send your first post in a few minutes.
+The guide is for setting up a single company. For Business and Enterprise Plan subscriptions with multiple users, a personalized integration guide is provided.
+
+
+Connect Your Social Media Accounts
+Log in or sign up for an Ayrshare account. On the Social Account page, click the social networks you want to connect. Please be sure to grant all permissions.
+ 
+
+
+Get Your API Key
+An API Key is required to authorize access to the API endpoints. This key is used in the header of your requests, and should be preceded by the Bearer keyword.Your API Key is located within the Ayrshare Dashboard, on the API Key page. If necessary, switch to your ‘Primary Profile’ via the User Profiles page. From there, you can find the API Key page in the left-hand side panel. Every API call must include the API Key in the Header using a Bearer Token. Also include the Content-Type of application/json.
+Header
+Copy
+Ask AI
+"Authorization": "Bearer API_KEY",
+"Content-Type": "application/json"
+See the Authorization for more information.
+
+
+Send Your First API Post
+
+
+Publishing the Post
+Below are code examples showing how to make a post using our API in different programming languages. For an even easier integration, you can use one of our pre-built SDK packages.To make a post, you’ll need:
+•	Your API Key for authentication.
+•	The text content of your post.
+•	The social media platforms you want to post to (only include platforms you’ve linked).
+•	Optional: URLs of any images or videos you want to include.
+All examples use the /post endpoint. Let’s look at some sample code:
+cURL
+JavaScript
+Python
+PHP
+Go
+C#
+Ruby
+Copy
+Ask AI
+curl \
+-H "Authorization: Bearer API_KEY" \
+-H 'Content-Type: application/json' \
+-d '{
+  "post": "Today is a great day!",
+  "platforms": ["twitter", "facebook", "instagram", "linkedin"],
+  "mediaUrls": ["https://img.ayrshare.com/012/gb.jpg"]
+}' \
+-X POST https://api.ayrshare.com/api/post
+Congratulations! You just sent your first post.
+
+
+Post Response
+You will receive a response with a status of “success” when our API successfully processes your post. The response includes:
+•	status: Overall status of the API call (“success” or “error”)
+•	errors: Array of any errors encountered (empty if successful)
+•	postIds: Array of objects containing platform-specific details:
+o	Platform name
+o	Post ID on that platform
+o	URL to view the post
+o	Additional platform-specific information
+Each platform in the postIds array will have its own status, allowing you to verify which platforms successfully received your post.Check your social media pages to ensure that the post was successfully processed and is live. Note that some platforms may have a slight delay before posts appear publicly.Here is a sample response:
+Post Response
+Copy
+Ask AI
+{
+  "status": "success",
+  "errors": [],
+  "postIds": [
+    {
+      "status": "success",
+      "id": "738681876342836_1530521371228093",
+      "postUrl": "https://www.facebook.com/738681876342836/posts/1530521371228093",
+      "platform": "facebook"
+    },
+    {
+      "status": "success",
+      "id": "18008340650526653",
+      "postUrl": "https://www.instagram.com/p/DGf4hgZObR0/",
+      "usedQuota": 1,
+      "platform": "instagram"
+    },
+    {
+      "status": "success",
+      "id": "urn:li:share:7300150903578275840",
+      "postUrl": "https://www.linkedin.com/feed/update/urn:li:share:7300150903578275840",
+      "owner": "urn:li:organization:66755239",
+      "platform": "linkedin"
+    },
+    {
+      "status": "success",
+      "id": "1894385215839080559",
+      "postUrl": "https://twitter.com/Ayrshare/status/1894385215839080559",
+      "platform": "twitter"
+    }
+  ],
+  "id": "K0DmYRgugS5P694it",
+  "refId": "d93ca2784c9bf7bf83e0bf081d16c91598",
+  "post": "Today is a great day!"
+}
+See more code examples of calling the social media API in Node.js, Python, PHP, Golang, C#, and Ruby, plus other great capabilities:
+Post
+
+
+
+Diving a Little Deeper
+Let’s break down the process of what just happened when we made this API call.
+1
+Set the Header
+We set the Header Authorization bearer token (API Key) and content type of json.
+2
+Create a Body Object
+Next, we created a body object:
+•	Post containing the text “Today is a great day!”.
+•	Social network platforms of Twitter, Facebook, Instagram, and LinkedIn. You should only include the platforms you linked in the Social Linkage Page.
+•	Added an image in the mediaUrls.
+3
+Call the /post Endpoint
+Sent everything as an HTTP POST to the /post endpoint.
+
+
+Before You Go, Some Best Practices
+
+
+Read the Docs
+We maintain extensive and up-to-date documentation. Since you are already here, take some time to check out the sections of the docs in the left navigation.
+
+
+Error Codes Are Important
+You need to handle them so your users have a great experience.
+Errors
+
+
+
+Keep Your API Key Secure
+We take security very seriously, and so should you. You have full control over the connection between Ayrshare and your social media accounts. Once the accounts are connected, the Ayrshare API key becomes the way you authenticate. Please keep this key secret and secure.
+
+
+Publish Test Posts
+You can publish test posts with a random quote, image, or video using the randomPost, randomMediaUrl, and isLandscapeVideo or isPortraitVideo parameters in the /post endpoint. If you use the randomPost, the post parameter is not required.
+These posts are live on your social media pages, so if appropriate, delete them after testing.
+
+
+Random Quote
+Send a random quote for testing publishing a post by adding randomPost: true.Used with the /post endpoint.
+Copy
+Ask AI
+"randomPost": true
+
+
+Random Image
+Send a random image by adding randomMediaUrl: true.Used with the /post endpoint.
+Copy
+Ask AI
+"randomMediaUrl": true
+
+
+Random Video
+Send a random landscape video by adding isVideo: true and isLandscapeVideo: true. The video will be standard landscape size.Used with the /post endpoint.
+Copy
+Ask AI
+"randomMediaUrl": true,
+"isLandscapeVideo": true
+Send a random portrait video, required for TikTok or Facebook/Instagram Reels, by adding isVideo: true and isPortraitVideo: true.Used with the /post endpoint.
+Copy
+Ask AI
+"randomMediaUrl": true,
+"isPortraitVideo": true
+
+
+Random Comment
+Send a random comment for testing publishing a comment by adding randomComment: true.Used with the /comment endpoint.
+Copy
+Ask AI
+"randomComment": true
+
+
+Example cURL Call
+Send a random quote and portrait video.
+Copy
+Ask AI
+curl \
+-H "Authorization: Bearer API_KEY" \
+-H "Content-Type: application/json" \
+-X POST \
+-d '{
+    "randomPost": true,
+    "platforms": ["facebook", "instagram", "linkedin", "twitter"],
+    "randomMediaUrl": true,
+    "isPortraitVideo": true
+}' \
+https://api.ayrshare.com/api/post
+
+
+Use Postman to Test Your API Calls
+Postman is an amazing tool for testing API calls. You can even generate code in over a dozen languages.
+
+
+Demo Code
+If you are looking for sample demo project in React and NodeJS, please see this GitHub repository:
+Github Social Posting Demo App
+
+
+
+Common Troubleshooting
+Sometimes things don’t go right, so here is a little help in our help center.
+Troubleshooting
+
+
+
+Reach Out To Us for Help
+We are here to help, so please use the chat in the bottom right corner or email us.
+Ayrshare Social Media APIAyrshare API Overview
+githubxblueskyfacebook
+
+
+API Endpoints
+Ayrshare API Overview
+Powerful Social APIs that enable you to send social media posts and get analytics effortlessly. For developers and businesses of all sizes.
+The Social Media REST API provides developers with programmatic access to multiple social networks through a single unified interface. Through Ayrshare’s social API, you can manage social media activities including creating and deleting posts, retrieving analytics, engaging with comments and reviews, managing direct messages, creating Facebook ads, and performing other social media actions across platforms.The API currently supports 13 major social networks: Bluesky, Facebook, Google Business Profile, Instagram, LinkedIn, Pinterest, Reddit, Snapchat, Telegram, Threads, TikTok, X (formerly Twitter), and YouTube. By integrating with this API, developers can automate social media management tasks across all these platforms simultaneously.API calls request and response data are in JSON format, which allow for easy parsing and processing in most programming languages.If you are on the Business or Enterprise Plan, see the Business Plan Overview and /profiles API endpoint.
+
+
+Key Functionality
+•	13 social networks supported.
+•	Secure API access using your unique API Key.
+•	Scheduled posting to connected social media platforms.
+•	Automated posting based on predefined schedules.
+•	Support for image and video content, including Reels, Stories, and Spotlight.
+•	Delete posts on linked social networks.
+•	Comprehensive post engagement analytics (likes, shares, etc.).
+•	Social account metrics, including follower count and demographic data.
+•	Comment management: view, add, and delete post comments.
+•	Optional link shortening for all or specific URLs in posts.
+•	Unsplash integration: add specific images or randomly select based on keywords.
+•	Automatic hashtag generation option using relevant keywords.
+•	Post history tracking, including non-Ayrshare posts.
+•	Review management: retrieve, reply to, and delete review responses.
+•	RSS feed integration for automated content posting.
+•	Media library: upload and store photos and videos for use in posts.
+•	Social Post Verification System to keep your social accounts safe.
+
+
+Business Plan
+Business Plan features for managing multiple users and clients:
+•	Enable users to link their own social media accounts to your platform.
+•	Secure single sign-on using OAuth for quick account linking.
+•	Create and remove user profiles programmatically through the API.
+•	Access advanced user analytics.
+•	Webhook support for real-time updates.
+•	Direct message management across supported platforms.
+•	Create Facebook ads from existing posts.
+Contact us to learn more about the Business Plan.
+
+
+Ads API
+The Ads API allows you to create Facebook ads from existing posts.
+•	Boost posts to reach more people.
+•	Manage ads and track performance.
+•	Analyze ad spend and optimize campaigns.
+
+Ads API
+Explore the Ads API
+
+
+
+Messages API
+A unified Messaging API to engage users in conversations across the major social media channels: Facebook, Instagram, and X.
+•	Sending text, image, and video messages.
+•	Retrieving complete conversation histories.
+•	Setting up automated message responses.
+•	Receiving real-time updates via webhooks for messages received, message reactions, read receipts.
+This API simplifies user engagement by centralizing messaging operations for multiple social media channels. Learn more…
+Messages API
+Explore the unified messaging API
+
+
+
+Max Pack
+Get even more capabilities with the Max Pack add-on:
+Max Pack
+Unlock advanced features like AI-powered content generation, enhanced analytics, and expanded platform support with our Max Pack add-on.
+
+
+
+Watch How to Use the Social API
+If you’re building in Node.js, check out this video on how to connect and publish posts to X and Facebook.
+
+
+Social API Demo
+If you use Node.js see the social API demo code to get started building your own social API integration.
+Social API Demo
+Explore our Node.js demo code to jumpstart your social API integration
+
+
+
+Base URL
+The base URL for the Ayrshare API is the same for all endpoints.https://api.ayrshare.com/api
+
+
+Authorization
+Ayrshare authenticates API requests via an Authorization token passed in the HTTP header. Please be sure to send Bearer with the API Key. The API Key can be found in the Ayrshare Dashboard by switching to your Primary Profile.If you are a Business or Enterprise user, you can create User Profiles with Profile Keys to manage multiple clients. The Profile Key is used in the header of your requests. The API Key must also be used in the header of your requests for User Profiles.
+Premium plans should only use the API Key in the header of their requests. Business and Enterprise plans should use the Profile Key in the header of their requests when interacting on behalf of a User Profile.
+
+
+API Key Format
+Authorization: Bearer API_KEY replacing API_KEY with your Primary Profile API Key, which can be found in the Ayrshare Dashboard.
+cURL
+JavaScript
+Python
+PHP
+Go
+Ruby
+Java
+C#
+Rust
+Copy
+Ask AI
+curl -H "Authorization: Bearer API_KEY" \
+     -X GET https://api.ayrshare.com/api
+Obtain your secret API Key in the Ayrshare dashboard under the API Key page found in the left navigation panel.For example, if your API Key is 2MPXPKQ-S03M5LS-GR5RX5G-AZCK8EAYour header should include:Authorization: Bearer 2MPXPKQ-S03M5LS-GR5RX5G-AZCK8EA
+
+
+Profile Key Format
+A Profile Key is used to interact on behalf of a User Profile. This is only available for Business or Enterprise plans.Profile-Key: PROFILE_KEY replacing PROFILE_KEY with a user’s Profile Key.Including a Profile Key in the header is required to interact on behalf of a User Profile.A missing Primary Profile API Key or using the Profile Key in place of the API Key in the header will result in an error.Here’s how to structure the headers for API requests:
+cURL
+JavaScript
+Python
+PHP
+Go
+Ruby
+Java
+C#
+Rust
+Copy
+Ask AI
+curl -H "Authorization: Bearer API_KEY" \ 
+     -H "Profile-Key: PROFILE_KEY" \
+     -X GET https://api.ayrshare.com/api
+Find the Profile Key in the Ayrshare Dashboard under the Profile Key page found in the left navigation panel. Switch to the Profile you want to use in the User Profile page. Additionally, the Profile Key is returned in the response of the Create a User Profile endpoint.You can then use the Profile Key in the header of your requests:For example, if your Profile Key is AX1XGG-9jK3M5LS-GR5RX5G-LLCK8EAYour header should include both the API and Profile Key:Authorization: Bearer 2MPXPKQ-S03M5LS-GR5RX5G-AZCK8EAProfile-Key: AX1XGG-9jK3M5LS-GR5RX5G-LLCK8EA
+
+
+Content Type
+The Content Type should always be set as Content-Type: "application/json" unless the endpoint specifically specifies otherwise.
+cURL
+JavaScript
+Python
+PHP
+Go
+Ruby
+Java
+C#
+Rust
+Copy
+Ask AI
+curl -H "Authorization: Bearer API_KEY" \ 
+     -H "Profile-Key: PROFILE_KEY" \ # Optional
+     -H "Content-Type: application/json" \
+     -X GET https://api.ayrshare.com/api
+
+
+Compression
+Ayrshare supports compression for all API requests. To enable compression, set the Accept-Encoding header to deflate, gzip, br.
+Copy
+Ask AI
+  Accept-Encoding: "deflate, gzip, br"
+This is recommended for calling larger responses such as the /history endpoint.
+•	Only responses over 1024 bytes (1KB) are compressed.
+•	The order of compress used: Brotli (br) first, then gzip, then deflate. Brotli is the most efficient compression algorithm.
+•	The response header contains the content encoding used. For example: content-encoding: br if Brotli was used.
+•	Learn more about compression and the benefits of using compression in the Ayrshare Blog.
+Don’t forget to properly uncompress the response using the content encoding.
+cURL
+JavaScript
+Python
+PHP
+Go
+Ruby
+Java
+C#
+Rust
+Copy
+Ask AI
+curl -H "Authorization: Bearer API_KEY" \ 
+     -H "Profile-Key: PROFILE_KEY" \ # Optional
+     -H "Content-Type: application/json" \
+     -H "Accept-Encoding: deflate, gzip, br" \ 
+     -X GET https://api.ayrshare.com/api
+
+
+ID Types
+There are several types of IDs returned, which can be used in various endpoints:
+
+
+Ayrshare Post ID
+This ID is generated by Ayrshare and returned from the /post endpoint in the id field. This ID makes it easy to get analytics on the post across social networks, add comments to the post, delete the post, etc. This is the ID you will use most often.
+
+
+Social Post ID
+Each social network assigns their own unique ID to posts and comments. These IDs are returned in the postIds field of the /post or /comments endpoints. You can use these IDs, or ones you get directly from the social networks, to retrieve data, such as with the analytics social post ID.
+
+
+Ayrshare Comment ID
+This ID is generated by Ayrshare and returned from the /comments endpoint in the id field. This ID makes it easy to get analytics on the comment across social networks, add replies to the comment, delete the comment, etc. This is the ID you will use most often.This is often used if you want to get details on a particular comment published via Ayrshare.
+
+
+Social Comment ID
+Each social network assigns their own unique ID to comments. These IDs are returned in the commentId field of the GET /comments endpoint.This is often used if you want to get details on a particular comment published outside of Ayrshare.
+
+
+Error Codes
+Errors will return with standard HTTP status codes.For more information:
+HTTP Status Codes
+Learn more about HTTP status codes
+Detailed Errors are in the REST API response specific for each type of call.For more information:
+Ayrshare Error Codes
+Learn more about Ayrshare-specific error codes
+
+
+
+Timestamp Format
+Ayrshare uses Zulu Time, also known as UTC (Coordinated Universal Time) or an ISO 8601 formatted date string, for a precise and unambiguous time references across different time zones.For example, use format YYYY-MM-DDThh:mm:ssZ and send as 2026-07-08T12:30:00Z. Please see utctime for more examples.You can convert the UTC format to your local time in the programming language of your choice. For example in JavaScript:
+Copy
+Ask AI
+const convertToLocalTime = (isoString) => {
+  // Create a new Date object from the ISO string
+  const date = new Date(isoString);
+
+  // Extract local time components
+  const localDate = date.toLocaleDateString();
+  const localTime = date.toLocaleTimeString();
+
+  // Combine the local date and time
+  const localDateTime = `${localDate} ${localTime}`;
+
+  return localDateTime;
+};
+
+
+Postman
+You can use Postman to test your REST API calls.
+Postman
+Learn how to use Postman with our API
+
+
+
+Random Posts, Images, and Videos
+Check out the quick start guide on how to send random posts, images, or videos when testing.
+
+
+Packages
+We have both Node.js & Python packages, Bubble.io, Airtable, and Make guides available to make the RESTful calls easier.
+
+Node NPM Package
+Integrate using our NodeJS package
+
+Python PyPI Package
+Integrate using our Python package
+
+Airtable Guide
+Learn how to use Ayrshare with Airtable
+
+Bubble Plugin & Guide
+Learn how to use Ayrshare with Bubble.io
+
+Make Guide
+Learn how to use Ayrshare with Make
+
+Notion Guide
+Learn how to use Ayrshare with Notion
+
+FlutterFlow Guide
+Learn how to use Ayrshare with FlutterFlow
+
+Retool Guide
+Learn how to use Ayrshare with Retool
+
+Quick Start GuideAds API Overview
+githubxblueskyfacebook
+Auto Schedule
+Auto Schedule Overview
+Create a schedule for future posts to automatically be published
+Available on Premium, Business, Enterprise plans.
+Auto scheduling allows you to create pre-defined posting schedules. You can set up multiple schedules, each with specific posting times on chosen days. Auto schedule is distinct from the scheduleDate field in the Publish Post endpoint.
+
+
+Key Features of Auto Schedule
+•	Create custom schedules, e.g., post at 9 AM, 2 PM, and 5 PM on Mondays and Wednesdays.
+•	Posts are automatically queued in the next available time slot.
+•	No limit on the number of schedules you can create.
+•	Auto schedule is distinct from the scheduleDate field in the Publish Post endpoint and it is meant to automate scheduling. You should use either auto schedule or scheduleDate, but not both.
+
+
+Example Auto Schedule Scenario
+1.	Current time: Monday, 10 AM (GMT).
+2.	You create an auto schedule for posting at 9 AM and 5 PM.
+3.	You add three posts to this schedule.
+4.	The system automatically schedules these posts for: Monday at 5 PM, Tuesday at 9 AM, and Tuesday at 5 PM.
+Deleting a scheduled post doesn’t free up its time slot. For example, if you delete the Monday 5 PM post and add a new post to the same schedule, it will be placed in the next available slot (in this case, Wednesday at 9 AM).
+
+
+Publish Using Auto Schedule
+The schedule may be applied with the Publish Post endpoint using the following fields:
+Auto Schedule
+Copy
+Ask AI
+"autoSchedule": {
+   "schedule": true, // required
+   "title": "Schedule Title" // optional - case-sensitive
+}
+•	schedule: (required) A Boolean value that must be set to true to enable auto scheduling.
+•	title: (optional) A String value that specifies the name of the schedule. This title should match the name of a schedule created using the Set Auto Schedule endpoint. If not provided, the default title is default. Note that the title is case-sensitive and must be an exact match.
+See your list of auto schedules by calling the List Auto Schedules endpoint.Please see this article on using the auto scheduling API for more information.
+
+
+User Profile Auto Schedule
+Auto schedule for a particular user profile by adding the PROFILE_KEY in the header.
+Count of Instagram Followers OnlineSet Auto Schedule
+githubxblueskyfacebooklinkedin
+
+Auto Schedule
+Set Auto Schedule
+Set up an auto-post schedule by providing times to send
+POST
+/
+auto-schedule
+/
+set
+Available on Premium, Business, Enterprise plans.
+Set up an auto-post schedule by providing times to send. Post will automatically be sent at the next available time. If no more times are available today, the first available time tomorrow will be used, and so on.
+If you’re looking to just schedule a post for a future date, please see the scheduleDate parameter of /post
+Use the auto-schedule by setting the /post autoSchedule parameter to true and the title if you want to use a particular schedule. Example, set the times to UTC time 13:05Z and 20:14Z and autoSchedule: true in the post. The post will be scheduled at the next available time of 13:05Z or 20:14Z.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+schedule
+array
+required
+Array of strings of scheduled times to auto-post. The array will be treated as a set, so duplicates removed.Format: ISO-8601 UTC. Example: ["13:05Z", "22:14Z"]. Not required if setStartDate provided.
+
+
+title
+string
+default:"default"
+You can create multiple different posting schedules by assigning a unique title to each one. The title must contain only alphanumeric characters - special characters like *, ~, /, [, or ] are not allowed.If you specify the title in /post with autoScheduleTitle, that schedule will be used.
+
+
+setStartDate
+string
+Set a specific beginning date to start the auto schedule, provide a ISO-8601 UTC date time. E.g. 2021-07-08T12:30:00Z. The start time will be applied to the provided “title” or will use the default title if one isn’t provided.New posts will go out from the start date onwards. Previously scheduled posts are not affected.
+
+
+daysOfWeek
+array
+default:[0,6]
+Specify which days of the week the post should be sent. Values 0-6 (Sunday - Saturday). For example [1, 3] will only publish posts on Mondays and Wednesdays.
+
+
+excludeDates
+array
+Exclude certain dates from auto scheduling occurring. For example ["2026-01-01"] to exclude New Years.Note, only posts auto scheduled after the excludeDates has been set will be excluded.
+Auto Schedule OverviewDelete Auto Schedule
+githubxblueskyfacebooklinkedin
+
+Auto Schedule
+Delete Auto Schedule
+Delete a specified auto schedule
+DELETE
+/
+auto-schedule
+/
+delete
+Available on Premium, Business, Enterprise plans.
+Delete a particular auto schedule. Provide the title of the schedule or “default” is used.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+title
+string
+default:"default"
+The title of the schedule to delete.This should match a schedule title that was previously created using the Set Auto Schedule endpoint. If no title is provided, the system will attempt to delete the “default” schedule.
+
+
+deleteLastScheduleDate
+boolean
+default:false
+Reset the schedule’s starting point to the current time.When set to true, this will clear the last used schedule date, causing any new posts to be scheduled starting from the current time. Any posts that were already scheduled will remain unchanged and publish at their original times.
+Set Auto ScheduleList Auto Schedule
+githubxblueskyfacebook
+
+Auto Schedule
+List Auto Schedule
+List the active auto schedules
+GET
+/
+auto-schedule
+/
+list
+Available on Premium, Business, Enterprise plans.
+List the active auto schedules. Returns an array of schedules with titles, times, and last scheduled date. The lastScheduleDate timestamp is the next schedule date or the previously scheduled date if no pending posts.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+Delete Auto ScheduleGet Pending Auto Schedule Posts
+githubxblueskyfacebook
+
+Auto Schedule
+Get Pending Auto Schedule Posts
+Get pending auto schedule posts
+GET
+/
+auto-schedule
+/
+pending
+Available on Premium, Business, Enterprise plans.
+Retrieve all the pending (not yet published) auto schedule posts.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+List Auto ScheduleBrand API Overview
+githubxbluesky
+
+Post
+Post API Overview
+Schedule posts, auto hashtag, auto-post schedule, and more
+Available on Basic, Premium, Business, Enterprise plans.
+The post endpoint allows you to publish posts to the social networks: Bluesky, Facebook, Google Business Profile, Instagram, LinkedIn, Pinterest, Reddit, Snapchat, Telegram, TikTok, X/Twitter, and YouTube. There are many options to customize your post, such as scheduling posts, adding auto hashtag, auto-post schedule, and more. Often this is used by agencies when multiple stakeholders need to approve a post before it is published.Start publishing posts with the /post POST endpoint.
+
+
+Approval Workflow
+If your publishing workflow requires approval before sending a post, set the requiresApproval field to true. This is equivalent to pausing the post until the approved parameter is set to true.
+
+
+Approval Workflow Example
+The post will have a status of “awaiting approval” until the approved parameter is set to true via the /post PATCH endpoint.
+1
+Publish with parameters
+Publish your post using the /post endpoint with the requiresApproval field as true. You may also including standard parameters such as scheduleDate.
+2
+Status is awaiting approval
+The post will be in a status of “awaiting approval” and will be held until approval is granted.
+3
+Approve the post
+Update the post with the /post PATCH operation setting the approved field as true. The post will now be sent at the scheduled time.
+4
+Use notes
+Optional: Set notes on the post for reference, such as who needs to approve the post.
+Publish the Post with Approval
+Copy
+Ask AI
+{
+  "requiresApproval": true,
+  "notes": "need approval by John Smith" // optional
+}
+If the scheduleDate is included and the date is in the past, the post will be published immediately upon approval.
+
+
+Approval Workflow Video
+Please see the video below for an example of the approval workflow.
+
+
+Auto Hashtags
+Add the most relevant hashtags to your post.autoHashtag is an object, or Boolean - see below, with the following parameters:
+•	max: (optional) Integer of hashtags to add, range 1-10. Default 2.
+•	position: (optional) String “auto” or “end”. Auto adds the hashtags within the post or to the end. “end” adds hashtags just to the end.
+A paid plan is required.
+Copy
+Ask AI
+{
+  "hashtags": {
+    "max": 3, // optional: Integer range 1-10
+    "position": "auto" // optional: String "auto" or "end"
+  }
+}
+If you do not want to send any of the above options, pass the Boolean value true instead of an object.
+Copy
+Ask AI
+{
+  "autoHashtag": true
+}
+
+
+Auto Repost
+Automatically reposts your content multiple times at regular intervals, creating evergreen content that stays fresh and visible to your audience. A paid plan is required.Parameters:
+•	repeat: (required) The number of times to repost the content. Must be between 1 and 10.
+•	days: (required) The number of days between each repost. Must be at least 2 days.
+•	startDate: (optional) When to start the repost schedule, in ISO-8601 UTC format. If not specified, the first post will be published immediately. You should use the startDate parameter in lieu of the top-level scheduleDate parameter.
+Auto Repost
+Copy
+Ask AI
+{
+  "repeat": 2, // min 2, max 10
+  "days": 5, // min 2
+  "startDate": "2021-07-08T12:30:00Z"
+}
+The response will included all the future scheduled reposts and an autoRepostId for each repost.
+Auto Repost Response
+Copy
+Ask AI
+{
+  "status": "scheduled",
+  "scheduleDate": "2025-06-13T12:30:00.000Z",
+  "id": "eIT96IYEodNuzU4oMmwG",
+  "refId": "9abf1426d6ce9122ef11c72bd",
+  "autoRepostId": "F5wdoaOAAGtDQVciExSxL",
+  "post": "The most important things are the hardest to say - Stephen King"
+}
+When creating an auto repost an ID autoRepostId is assigned to track that series of posts.You may get all of the auto reposts for a post with the History call with the autoRepostId.If you need to delete a repost, you can use the DELETE call with the post ID.
+Important: When using auto-repost, ensure you follow each social network’s posting frequency guidelines to avoid account restrictions.Note: The autoRepost feature cannot be used together with scheduleDate. If you include both parameters, the scheduleDate will take precedence and autoRepost will be ignored. Please use the startDate parameter instead.
+
+
+First Comment
+Automatically add in a first comment, with media, immediately after publishing the post. Posting the first comment on your own social media post can help kickstart engagement and set the tone for the discussion that follows.
+Copy
+Ask AI
+{
+  "firstComment": {
+    "comment": "My first comment", // required
+    "mediaUrls": ["https://..."] // Facebook, LinkedIn, and X/Twitter only
+  }
+}
+
+
+First Comment Processing Time
+When you include a first comment with your post, the API response will be delayed because our system must:
+1.	Wait for the original post to be fully published on the social network.
+2.	Then add the comment to that published post.
+This sequential process results in the following delays:
+•	Most social networks: Approximately 20 second delay.
+•	TikTok: Up to 90 second delay (due to TikTok’s longer content processing time).
+Important TikTok Note: For first comments to work properly on TikTok, the post’s visibility parameter must be set to public.
+
+
+Idempotent Posts
+Idempotency is an optional feature that ensures a request is only executed once, even if it is accidentally sent multiple times. When posting content using the API, you can include an optional idempotencyKey parameter in the request body to uniquely identify the operation. This allows you to safely retry the post request without the risk of creating duplicate posts.To use idempotency, add the idempotencyKey parameter to the JSON body of the /post POST request:
+Idempotency Key
+Copy
+Ask AI
+{
+  "idempotencyKey": "Unique Key"
+}
+The value of idempotencyKey should be a unique string per User Profile. If a request is made with the same idempotencyKey for a given User Profile, regardless of the post’s state (success, error, pending, or deleted), an error will be returned, indicating that a duplicate key was found.
+The API must first accept and process the POST request to store the idempotency key and check for duplicates. However, if multiple POST requests with the same idempotencyKey are sent simultaneously or scheduled for the same posting time, the API may not detect the duplicate keys. This is because the API processes these concurrent or simultaneously scheduled requests in parallel, before it has a chance to register the idempotency key from any single request. As a result, there’s no guarantee that duplicate idempotent keys will be caught in these scenarios of simultaneous submission or execution of scheduled posts.
+Using idempotency helps prevent the accidental creation of duplicate posts when retrying failed requests or handling network issues. However, it’s still recommended to implement appropriate error handling and retry mechanisms in your application to handle potential failures gracefully.
+
+
+Image & Video Requirements
+Posting images and videos have different requirements for each network, but don’t worry. Our system verifies your post before sending, so you’ll get an error response if something is wrong. See the below link of details on image and video guidelines.
+Image & Video Guidelines
+
+
+
+Valid URL
+Be sure your media URL(s) are valid and directly access the media. A first test is trying the URL in a browser. If the image will not load or cannot be downloaded in a browser it will likely fail. For example, a DropBox URL that opens the DropBox web app will not work.
+If you have a Google Drive Share URL or a Dropbox Share URL, you can just use the URL in the mediaUrls parameter when publishing a post or comment. Ayrshare will automatically convert the share URL to a download link.
+We verify the media URL by making a HEAD request. Please be sure the hosting provider is not blocking the HEAD request or the post will fail with a 403 error.For example, here is a HEAD request to the media URL:
+Fetch HEAD Request
+Copy
+Ask AI
+const run = async () => {
+  const url = "https://img.ayrshare.com/012/gb.jpg";
+  return await fetch(url, {
+    method: "HEAD"
+  })
+    .then((res) => {
+      if (res.ok) {
+        return console.log("Success:", res.status, res.statusText);
+      } else {
+        return console.error("Error:", res.status, res.statusText, res);
+      }
+    })
+    .catch((error) => {
+      return console.error("Error Catch:", error);
+    });
+};
+
+run();
+
+
+Spaces & Special Characters
+We recommend to avoid the following in your media URLs:
+•	Spaces in the URL.
+•	URL encoded spaces in the URL.
+•	Special characters in the URL even if they are url encoded, such as accent marks é.
+For example:
+Copy
+Ask AI
+https://img.ayrshare.com/012/test .webp
+This URL fails because of the space test .webp. We also don’t recommend using URL encoded spaces, such as %20 in the URL - this can also cause issues with some social networks.And this Unsplash image:
+Copy
+Ask AI
+https://unsplash.com/photos/a-house-in-the-middle-of-a-field-with-trees-in-the-background-znbmh2-cIj0
+This Unsplash image fails because it isn’t directly accessing the image, but showing a web app.
+
+
+Sanitize File Names & URLs
+You can sanitize your file names with a regular express such as /[^a-z0-9\/\.]/gi.
+Copy
+Ask AI
+const sanitizeFileName = (url) => url.replace(/[^a-z0-9\/\.]/gi, "_");
+sanitizeFileName("tést .webp"); // t_st_.webp
+or sanatize a URL
+Copy
+Ask AI
+const sanitizeUrl = (url) => {
+  const [protocol, rest] = url.split("://");
+  const [domain, ...path] = rest.split("/");
+  const sanitizedPath = path.join("/").replace(/[^a-z0-9\/\.]/gi, "_");
+  return `${protocol}://${domain}/${sanitizedPath}`;
+};
+
+// Output: https://img.ayrshare.com/012/t_st_.webp
+sanitizeUrl("https://img.ayrshare.com/012/tést .webp");
+
+
+Additional Information
+•	If you’re self hosting, make sure the URL can be externally accessed and doesn’t require special permissions.
+•	See below the how to handle videos with unknown extensions, often signed URLs such as AWS S3.
+•	If you are using a signed URL, such as S3, we recommend to set the URL expiration to at least 7 days. This allows our team to assist with any questions you have on publishing the post.
+•	Test if the media URL exists with our verify media tools.
+
+
+Download Speed
+Be sure the your media hosting has a fast connection, especially download speed. You can test your media hosting performance at pingdom. We recommend at least a B rating.
+
+
+Video Extension
+If your URL does not end in a known video extension such as mp4, you can use the isVideo: true field in the post to specify the mediaUrl is a video . Ayrshare will try to determine the file type, such as MOV. However, we recommend explicitly ending your video file with a known extension, such as mp4, since this has a higher success rate with the social networks.
+
+
+Image or Video Only
+A few social networks support sending media without post text. If you do not want post text included send and empty String post: ""The following social networks support no post/blank text: Facebook, Instagram, LinkedIn, Threads, TikTok, and X/Twitter.
+
+
+Testing Images and Videos
+Consider using the generate random text and random image or video to speed up your testing. Stop trying to think up something different for each of your test posts!
+
+
+Line Breaks
+If you want to line breaks (new lines) in a post, use the invisible line break \u2063\n.For example, This is a new\u2063\nline.We also recommend trying in Postman to see how the new line break is translated in your language of choice. For example, PHP often only uses a \nSome social networks do not currently support line breaks in the post text.
+
+
+Multi-Platform Posts and Media
+This feature allows you to customize your post content and media for different social networks within a single API call. You can specify unique text and/or images for each platform by using objects for the post and mediaUrls fields.
+1.	Use an object structure for post and/or mediaUrls fields.
+2.	Specify platform-specific content using platform names as keys.
+3.	Include a default key for content to be used on platforms not explicitly specified.
+Copy
+Ask AI
+{
+  "post": {
+    "instagram": "Great IG pic!",
+    "facebook": "Great FB pic!",
+    "default": "Great default pic!"
+  },
+  "platforms": ["instagram", "facebook", "linkedin"],
+  "mediaUrls": {
+    "instagram": "https://img.ayrshare.com/012/gb.jpg",
+    "linkedin": "https://img.ayrshare.com/012/gb.jpg",
+    "default": "https://img.ayrshare.com/012/gb.jpg"
+  }
+}
+In the example above:
+•	Instagram will use its specific text and image URL.
+•	Facebook will use its specific text and the default image URL.
+•	LinkedIn will use the default text and its specific image URL.
+If you need to post multiple images to different platforms, create separate posts for each platform instead of using this multi-platform structure.
+
+
+Profile Keys
+Post to on behalf of user by providing users’ Profile Keys a a body parameter and the additional data in the response. Business or Enterprise Plan required.
+Profiles
+
+
+
+Rich Text Posts
+You can add rich text such as ”𝓗𝓮𝓵𝓵𝓸, how about a little 𝗯𝗼𝗹𝗱 𝘁𝗲𝘅𝘁 and 𝘪𝘵𝘢𝘭𝘪𝘤𝘴 𝘵𝘦𝘹𝘵 and an x₂?”. You can use rich text on networks such as Twitter, Facebook, LinkedIn, Telegram, and Instagram. If posting to Reddit, please use Reddit-flavored Markdown formatting.HTML elements are used to specify the type of rich text, which is translated into unicode. For example:
+Copy
+Ask AI
+{
+    "post": "<var>Hello</var>, how about a little <b>bold text</b> and <i>italics text</i> and an x<sub>2</sub>?"
+    "platforms": ["twitter"]
+}
+
+
+HTML Elements
+HTML	Example
+<b>Nice One!</b>	Nice One!
+<strong>Hello, world!</strong>	Hello, world!
+<em>World</em>	World
+normal <i>italics <b>bold italics</b></i>	normal italics bold italics
+`<b>Hello</b>, world!`	Hello, world!
+`<b>Hello</b>, world!`	Hello, world!
+<samp>123</samp>	𝟷𝟸𝟹
+<var>Hello</var>	𝓗𝓮𝓵𝓵𝓸
+x<sub>2</sub>	x₂
+x<sup>2</sup>	x²
+
+
+CSS Codes
+Code	Example	Result
+\u00B0	It’s 25\u00B0C today!	It’s 25°C today!
+\u2063\n	This is a new\u2063\nline.	This is a new
+line.
+
+
+Schedule Posts
+
+
+Create Scheduled Posts
+You can schedule future posts by specifying the scheduleDate parameter with the datetime in Zulu/UTC. Zulu Time, also known as Coordinated Universal Time (UTC), is the world standard for time.For example, use format YYYY-MM-DDThh:mm:ssZ and send as 2026-07-08T12:30:00Z. Please see utctime for more examples.
+Copy
+Ask AI
+{
+  "post": "Hello, world!",
+  "mediaUrls": ["https://img.ayrshare.com/012/gb.jpg"],
+  "platforms": ["facebook", "instagram"],
+  "scheduleDate": "2023-07-08T12:30:00Z"
+}
+Please see https://www.utctime.net/ on how to convert your local time to Zulu/UTC time.If the scheduled datetime is in the past, the post will immediately be sent.
+If a mediaUrl is included with a scheduled post, the media must be available at the scheduled publication time. For example, if the post is scheduled to be published on March 5, 2026, the media must be available on March 5, 2026.
+Error Handling for Scheduled vs Immediate PostsThere is an important difference in how validation errors are handled between immediate and scheduled posts:
+•	Immediate Posts
+o	When publishing immediately (without scheduleDate), if one platform fails validation checks, the other platforms will continue to be processed. For example, if a post exceeds Twitter’s character limit but is valid for Facebook and Instagram, the post will fail on Twitter but still be published to Facebook and Instagram.
+•	Scheduled Posts
+o	When scheduling posts for future publication (with scheduleDate), all platforms must pass initial validation checks before the post is scheduled. If any platform fails these pre-validation checks, the entire scheduling operation will be rejected and an error will be returned immediately.
+o	However, some platform-specific errors may not be detected until the actual posting time. In these cases, the scheduled post will attempt to publish to all platforms, and individual platform failures will be reported in the final results without affecting the other platforms.
+
+
+Check a Scheduled Post Status
+You can check the status of a scheduled post several ways:
+•	Set up the Webhook Scheduled Action to automatically receive the status of the scheduled post. This is available for the Business plan and is the recommended method.
+•	Get the status of a scheduled post with the GET call with the post ID.
+•	Check the status in the Ayrshare Dashboard. First switch to the User Profile the post as published under, then go to “Posts” page and search using the Ayrhare Post ID.
+
+
+Pause Scheduled Posts
+You may paused scheduled posts that have not yet been published. Pausing a scheduled post will prevent it from being published until the post has been unpaused.Use the PATCH call to pause or unpause the scheduled post. Please note if a post is unpaused and the scheduleDate is in the past the post will immediately be published. Consider updating the scheduleDate before unpausing.
+
+
+Shorten Links
+Links in a post can be shortened using the Ayrshare link shortner. You can turn on the automatic link shortening with the shortenLinks parameter when sending a post. Max Pack required.
+Copy
+Ask AI
+{
+  "post": "Hello, world with a link https://www.ayrshare.com",
+  "platforms": ["linkedin"],
+  "shortenLinks": true
+}
+
+
+Unsplash Images
+The following fields are available for the unsplash body parameter:
+•	Random Image: random returns a random Unsplash image.
+•	Search Based Image: value String search term ; e.g. money will select a random image based on money.
+•	Image IDs: value Array of Ids; e.g. [“HubtZZb2fCM”] of image https://unsplash.com/photos/HubtZZb2fCM
+Copy
+Ask AI
+{
+  "post": "Hello, world!",
+  "platforms": ["instagram"],
+  "unsplash": "random",
+  "unsplash": "search term", // unsplash: "money"
+  "unsplash": ["unsplash image ID"] // unsplash: ["HubtZZb2fCM"]
+}
+If copying an Unsplash URL to post in mediaUrls, please be sure to copy the image address and not just the URL. Please see this example for more information.
+Get Auto ResponsePublish a Post
+githubxblueskyfacebook
+
+Post
+Publish a Post
+Publish a post to social media platforms
+POST
+/
+post
+Available on Basic, Premium, Business, Enterprise plans.
+Publish posts to the social networks you or your users have linked. If you want to publish posts to User Profiles, please see the /profiles endpoint for more details.Please be sure to add your API_KEY, and the PROFILE_KEY if publishing to a User Profile, in the Authorization header. The API Key can be found in the Ayrshare Developer Dashboard under the API Key page.See the Post API Overview for more details on posting options.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+post
+string
+required
+The post text sent to the social networks specified in the platforms parameter. See here for advanced options, including how to include URLs and rich text.You may send an empty string ""to publish with no text.
+
+
+platforms
+array
+required
+Social media platforms to post. Accepts an array of Strings with values: bluesky, facebook, gmb, instagram, linkedin, pinterest, reddit, snapchat, telegram, threads, tiktok, twitter, or youtube.Please note: use facebook for Facebook Pages, and gmb for Google Business Profile.Use all to post to all linked social networks. Also include the required fields for all social network. E.g. title must be included in youTubeOptions if youtube is linked.
+
+
+mediaUrls
+array
+An array of image or video URLs to include in the post. Please see /media endpoint to learn more.URLs must be secure and begin with https://. If the URL has special characters, e.g. ñ, please encode the special characters before sending.Videos require a paid plan.Please see here for Image and Video Requirements and other advanced options.
+
+
+isVideo
+boolean
+default:false
+Ayrshare will try to determine the media type based on the file extension in the URL (.mp4). You can explicitly set the media a video if the URL does not end in a known video extension, such as animated GIFs.Please see video extension for details.
+
+
+scheduleDate
+string
+The datetime to schedule a future post. Accepts a UTC date time.For example, use format YYYY-MM-DDThh:mm:ssZ and send as 2026-07-08T12:30:00Z. Please see utctime for more examples.Also see schedule posts for details.
+
+
+validateScheduled
+boolean
+default:true
+By default, scheduled posts are checked (pre-validated) for issues such as media requirements before they are accepted. If any problems are found, you will receive an immediate error response and the post will not be scheduled.To skip this pre-validation step, set validateScheduled to false.We recommend keeping validation enabled for scheduled posts to catch errors early. Otherwise, the post will be scheduled and you will only receive an error when it is published.Please see scheduled webhook actions for more details.
+
+
+firstComment
+object
+Add in a first comment automatically after posting. See first comment for details.
+
+
+disableComments
+boolean
+default:false
+Disable comments for the post. Only available for Instagram, LinkedIn, and TikTok.
+
+
+shortenLinks
+boolean
+default:false
+Shorten links in the post for all platforms using Ayrshare’s link shortener.Only URLs starting with https will be shortened.Max Pack required for link shortening.Please see here for using 3rd party link shorteners.
+
+
+autoSchedule
+object
+Please see auto-schedule for details.
+
+
+autoRepost
+object
+Automatically reposts your content multiple times at regular intervals, creating evergreen content that stays fresh and visible to your audience.See auto repost for details.
+
+
+autoHashtag
+object
+See auto hashtags for details.
+
+
+unsplash
+string
+See unsplash for details.
+
+
+blueskyOptions
+object
+See Bluesky details.
+
+
+faceBookOptions
+object
+See Facebook details.
+
+
+gmbOptions
+object
+See Google Business Profile details.
+
+
+instagramOptions
+object
+See Instagram details.
+
+
+linkedInOptions
+object
+See LinkedIn details.
+
+
+pinterestOptions
+object
+See Pinterest details.
+
+
+redditOptions
+object
+See Reddit details.
+
+
+snapChatOptions
+object
+See Snapchat details.
+
+
+telegramOptions
+object
+See Telegram details.
+
+
+threadsOptions
+object
+See Threads details.
+
+
+tikTokOptions
+object
+See TikTok details.
+
+
+twitterOptions
+object
+See X/Twitter details.
+
+
+youTubeOptions
+object
+See YouTube details.
+
+
+requiresApproval
+boolean
+default:false
+See approval workflow for details.
+
+
+randomPost
+boolean
+default:false
+Generate random post text for testing. randomPost: true will ignore the post field.
+
+
+randomMediaUrl
+boolean
+default:false
+Generate a random media image for testing. randomMediaUrl: true will ignore the mediaUrls field.
+
+
+idempotencyKey
+string
+An optional unique ID associated with the post. Duplicate IDs will be rejected. Please see idempotency for details.
+
+
+notes
+string
+Set notes on a post that can be retrieved via the /history endpoint. Notes are for reference only and do not affect the post.
+Post API OverviewGet a Post
+githubxbluesky
+
+Post
+Get a Post
+Retrieve a post by Ayrshare Post ID
+GET
+/
+post
+/
+:id
+Available on Basic, Premium, Business, Enterprise plans.
+Get the history for a specific posts sent via Ayrshare. Returns the status, post parameters, and other details. Replace :id with the Ayrshare Post ID.
+Call the /history by id endpoint for the same data.
+
+
+Post Statuses
+The following statuses are returned for a post.
+Status	Description
+awaiting approval	Posts are waiting to be approved via the approval workflow.
+
+deleted	Post has been deleted. Note: deleted posts are only returned with the status query filter. Please see below.
+error	An error occurred with one or more social networks.
+pending	The post has not yet been processed. Typically a scheduled post.
+success	The post was successfully sent to all social networks.
+See the /history endpoint for retrieving all posts, including posts not sent via Ayrshare.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Path Parameters
+
+
+id
+string
+required
+Ayrshare Post ID from /post
+Publish a PostDelete a Post
+githubxblueskyfacebooklinkedin
+
+Post
+Delete a Post
+Delete a post using the post ID
+DELETE
+/
+post
+Available on Basic, Premium, Business, Enterprise plans.
+Delete a post using the post ID returned from the /post endpoint. You can delete both published and scheduled posts, but there are some differences based on the social network platform:
+•	Scheduled posts may be deleted for all social networks platforms.
+•	Published posts may be deleted for all social networks platforms except for Instagram and TikTok. Instagram and TikTok do not provide API support for deleting published posts. If you need to delete a published post on these platforms, you must do so manually using their respective mobile apps.
+•	Facebook does not permit deleting image stories via their API (video stories can be deleted). If you need to delete an image story, please go to the Facebook mobile app and perform the deletion manually.
+Instagram and TikTok do not support delete via their APIs. Please go to the Instagram or TikTok mobile apps to delete the posts.Facebook does not support image story deletion via its API. Please go to the Facebook mobile app to delete stories.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+id
+string
+required
+Ayrshare Post ID of the post to delete.Not required if bulk or deleteAllScheduled parameter sent.If the post is scheduled and still pending, the scheduled posts will be deleted and not sent to the networks.If the post has already been sent to the networks, the post will be deleted from the networks.
+
+
+bulk
+array
+Array of Strings post Ids to bulk delete.Required if id or deleteAllScheduled parameter not sent.
+
+
+deleteAllScheduled
+boolean
+default:false
+If true will delete all scheduled posts still in a pending state, i.e. posts that have not yet been published to the networks, for the User Profile.The id or bulk parameters are ignored if set to true.
+This will delete all scheduled posts, so be sure to use this with caution.
+
+
+markManualDeleted
+boolean
+default:false
+If true, the post will mark as deleted in Ayrshare and Ayrshare will not try to delete the post at the networks.A common use case for this is when the post was manually deleted at the networks and you want to mark it as deleted in Ayrshare.Prior to marking the post as deleted, please ensure that the post was already manually deleted on the social networks.
+Get a PostUpdate a Post
+githubxbluesky
+
+Post
+Update a Post
+Update a scheduled post’s metadata
+PATCH
+/
+post
+Available on Premium, Business, Enterprise plans.
+Update the scheduleDate of a post, approval status of a post, notes, or visibility of a posted YouTube video.
+•	The post must originally have a scheduleDate and be in a “pending” status. The status can be checked with the /history or GET /post endpoints.
+•	The YouTube video must have been successfully posted to change visibility.
+•	The approval workflow requires the current status of the post be in “awaiting approval”.
+Other parameters cannot be updated. You will need to delete the post and repost.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+id
+string
+required
+Ayrshare Post ID of the post to update. Ayrshare Post ID returned from /post.
+
+
+approved
+boolean
+default:false
+The original post requires approval and has a status of “awaiting approval”, set to true to approve and publish the post.
+
+
+disableComments
+boolean
+default:false
+Enable or disable comments on a post. Setting to true will disable comments. Setting to false will enable comments.Supported platforms: Instagram and LinkedIn.
+•	Enabling or disabling can be done on either a scheduled post or a published post.
+•	Disabling comments on a published post will not delete existing comments.
+•	Disabling LinkedIn comments will delete all existing comments on the thread.
+•	Instagram comments will not be deleted.
+•	TikTok comments cannot be changed after publishing.
+
+
+notes
+string
+Set notes on a post that can be retrieved via the /history endpoint. Notes are for reference only and do not affect the post.
+
+
+scheduleDate
+string
+The datetime to schedule a future post. Accepts a UTC date time.For example, use format YYYY-MM-DDThh:mm:ssZ and send as 2026-07-08T12:30:00Z. Please see utctime for more examples.
+If the datetime is in the past, the post will immediately be sent.
+
+
+scheduledPause
+boolean
+default:false
+Pause or unpause a scheduled post. If a post is unpaused and the scheduleDate is in the past, the post will immediately be publish. Consider updating the scheduleDate before unpausing.
+
+
+youTubeOptions
+object
+Update the visibility of the YouTube video with the visibility field and values unlisted, private, or public.Update the description, title, or categoryId. If no description or categoryId originally set, the default values are "" and 24 (Entertainment), respectively.
+Delete a PostRetry a Post
+githubxbluesky
+
+
+THIS IS WHAT AN EXAMPLE OF THE ENDPOINT TO BE HIT
+<?php
+  $curl = curl_init();
+  $data = [
+    "post" => "Today is a great day!",
+    "platforms" => ["twitter", "facebook", "instagram", "linkedin", "pinterest"],
+    "mediaUrls" => ["https://img.ayrshare.com/012/gb.jpg"]
+  ];
+  curl_setopt_array($curl, [
+    CURLOPT_URL => 'https://api.ayrshare.com/api/post',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => json_encode($data),
+    CURLOPT_HTTPHEADER => [
+      'Authorization: Bearer 39CC5C53-5EAF46FE-95B3E7CB-7B101A61',
+      'Content-Type: application/json'
+    ],
+  ]);
+  $response = curl_exec($curl);
+  curl_close($curl);
+  echo $response;
+
+Profiles
+Profiles API Overview
+Create and manage multiple user profiles.
+Available on Business, Enterprise plans.
+Specify a User Profile in an API call by adding the Profile Key in the header.
+User Profiles are one of the core concepts of Ayrshare that allows you to create and manage multiple users. Each one of the users of your platform will have one or more Ayrshare User Profiles. Each User Profile can have one connection to every supported social network.
+
+
+Profile Key
+Many endpoints, such as /user, /analytics, or /delete, can be called on behalf of a Profile account by adding the “Profile-Key” parameter in the Header.For example, the /delete endpoint can be called to delete a Profile account’s post for the given post id for the provided Profile Key.
+Copy
+Ask AI
+const API_KEY = "API_KEY";
+const PROFILE_KEY = "PROFILE_KEY";
+const id = "Post ID";
+
+fetch("https://api.ayrshare.com/api/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
+        "Profile-Key": PROFILE_KEY
+      },
+      body: JSON.stringify({
+        id: id
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch(console.error);
+
+
+Enable or Disable Social Networks
+You can disable and enable social networks at either the global level or at the User Profile level.
+•	Globally manage social account access in the dashboard.
+•	Manage social account access for a User Profile when creating or updating.
+It is important to note that disabled social networks in the global setting, set via the dashboard, override User Profile settings.For example, if you disable TikTok access in the dashboard, then no User Profile can access TikTok. On the other hand, if you turn on TikTok access in the dashboard but disable it for a specific User Profile, all User Profiles will have access to TikTok except that particular one.
+
+
+Get the Linked Social Accounts
+Retrieve the social accounts a User Profile has linked with either the /profiles endpoint or the /user endpoint.
+
+
+Post to a User Profile
+With the /post endpoint, you can post to a User Profile by adding the Profile Key in the header. The return will be an array of posts or error results, with an overall status. If all posts successful, “success”, or if any post failed, “error”.You may obtain a user’s Profile Key when the profile is created with the /create-profile endpoint or in Ayrshare’s Web Dashboard GUI by switching to the profile and going to Profile Key page.
+YouTube APICreate a User Profile
+githubxblueskyfacebooklinkedinyoutube
+
+
+Profiles
+Create a User Profile
+Create a new User Profile under your Primary Profile.
+POST
+/
+profiles
+Available on Business, Enterprise plans.
+Create a new profile under your Primary Profile. Upon successful creation of the User Profile, the API response will include the Profile Key associated with the newly created profile. Securely store the Profile Key in your system, as it will be required to make API calls on behalf of your user.Please note that for security reasons, the Profile Keys are only returned in two specific cases:
+1.	User Profile Creation: When a new User Profile is created.
+2.	In the Ayrshare Dashboard: You can find the Profile Key for each profile within the Ayrshare Dashboard. Switch to the User Profile and then navigate to the Profile Key page.
+We recommend you securely store the Profile Key in your system.
+
+
+Manage Social Networks
+Use the disableSocial field to manage (add/remove) social networks from display. Please see Manage Social Accounts for more information.
+
+
+Manage Active User Profiles
+Please see here for some recommendations on managing active User Profiles.
+
+
+Important Security Considerations
+•	Avoid sharing Profile Keys publicly or exposing them in client-side code or public repositories.
+•	Profile Keys are sensitive credentials used to authenticate and authorize access to User Profiles.
+•	It is crucial to store Profile Keys securely in your system with appropriate access controls to maintain the integrity and confidentiality of your users’ data.
+•	For security reasons, the Profile Key can’t be retrieved again using the API. However, you can retrieve the Profile Key from the dashboard.
+•	The refId should also be stored to associate a profile to an endpoint return.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Body Parameters
+
+
+title
+string
+required
+Title of the new profile. Must be unique. This title will be displayed on the social account linking page.
+
+
+messagingActive
+boolean
+default:false
+Set to true to activate messaging for this user profile. Messaging must first be enabled for your Ayrshare account.
+
+
+hideTopHeader
+boolean
+default:false
+Hide the top header on the social accounts linkage page.
+
+
+topHeader
+string
+Change the header on the social accounts linkage page. If not set, then displays: “Social Accounts for “title” where “title” is the profile title.
+
+
+disableSocial
+array
+Array of social networks that are disabled for this user’s profile. The primary profile’s list of disabled social networks takes precedence.Available networks: bluesky, facebook, gmb, instagram, linkedin, pinterest, reddit, snapchat, telegram, threads, tiktok, twitter, and youtube.See enable or disable social networks for more information.
+
+
+team
+boolean
+default:false
+Create a new user profile as a team member by setting team: true. The email field will be used to send an invite email. See inviting a team member for details on the requirements.
+
+
+email
+string
+A valid email address where the team member invite will be sent. Required if team: true
+
+
+subHeader
+string
+Change the sub header on the social accounts linkage page. Currently displays “Click an icon to link a social network”. Set to an empty string to remove.See how to change the help link.
+
+
+tags
+array
+Tag user profiles using an array of strings. These tags serve as an internal organizational tool to categorize and manage your user profiles effectively.
+Profiles API OverviewDelete a User Profile
+githubxbluesky
+
+Profiles
+Delete a User Profile
+Delete a user profile you are the owner of.
+DELETE
+/
+profiles
+Available on Business, Enterprise plans.
+Delete a user profile you are the owner of. The Profile Key in the header parameter is the User Profile to be deleted.
+Deleting a user profile permanently removes the profile and all associated posts—this action is irreversible and cannot be undone. You can delete up to 8 user profiles per second, so please stagger your API calls when performing bulk deletions to stay within rate limits.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+title
+string
+default:"0"
+required
+Title of the User Profile to delete. Must be present if profileKey is not passed. title is case-sensitive and must match the User Profile title.
+Create a User ProfileUpdate a User Profile
+githubx
+
+Profiles
+Update a User Profile
+Update an existing profile.
+PATCH
+/
+profiles
+Available on Business, Enterprise plans.
+Update an existing profile’s title, hide title, list of disabled social platforms, or display the title. The Profile Key in the header parameter is the User Profile to be updated.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+disableSocial
+array
+Array of social networks that are disabled for this user’s profile. The primary profile’s list of disabled social networks takes precedence.Available networks: bluesky, facebook, gmb, instagram, linkedin, pinterest, reddit, snapchat, telegram, threads, tiktok, twitter, and youtube.See here for more information.
+
+
+title
+string
+required
+Title of the profile. Must be unique. This title will be displayed on the social account linking page.
+
+
+messagingActive
+boolean
+default:false
+Set to true to activate messaging for this user profile. Messaging must first be enabled for your Ayrshare account.
+
+
+hideTopHeader
+boolean
+default:false
+Hide the top header on the social accounts linkage page.
+
+
+topHeader
+string
+Change the header on the social accounts linkage page. If not set, then displays: “Social Accounts for “title” where “title” is the profile title.
+
+
+tags
+array
+Tag user profiles using an array of strings. These tags serve as an internal organizational tool to categorize and manage your user profiles effectively.
+
+
+xAccountActivityActive
+boolean
+default:false
+The X Account Activity allows you to receive webhook updates for all events on this user’s X account. For example, when a new tweet is posted, a like or mention occurs, a new DM is received, or a new reply is received.You must first register an Account Activity webhook with the accountActivity action before enabling this feature.Please contact your account representative to enable this feature.
+Delete a User ProfileGet User Profiles
+githubxblueskyfacebooklinkedin
+
+Profiles
+Get User Profiles
+Get all the profiles associated with the primary profile.
+GET
+/
+profiles
+Available on Business, Enterprise plans.
+Get all the profiles associated with the primary profile. The Primary Profile is not returned in the results.For security, the Profile Keys are not returned via this GET call. Please see here for more information.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Query Parameters
+
+
+title
+string
+Return only the profile associated with the URL encoded title.
+
+
+refId
+string
+Return only the profile associated with the given refId. The refId was returned during the profile creation or from the /user endpoint.
+
+
+hasActiveSocialAccounts
+boolean
+default:false
+If true return only profiles that have at least one connected social account (activeSocialAccounts length greater than zero). If false return only profiles with zero connected social accounts (activeSocialAccounts length is zero).
+
+
+includesActiveSocialAccounts
+array
+Filter profiles to include those whose activeSocialAccounts contain all of the social media platforms specified in the includesActiveSocialAccounts list. Profiles can have additional platforms in their activeSocialAccounts beyond those listed in includesActiveSocialAccounts and still be included in the filtered results.Values: bluesky, facebook, gmb, instagram, linkedin, pinterest, reddit, snapchat, telegram, threads, tiktok, twitter, youtube.
+
+
+actionLog
+boolean
+default:false
+Return the User Profile create and delete action log history for the past 60 days and the active user count used for billing for the past 60 days. Note:
+•	Action Log: Title and tags will not be returned for action log history prior to March 2025.
+•	User Profile Report: The time period might not correspond to your billing period. For example, your billing period might start and end on the 10th of the month. Please see your invoices for the billing period and other details.
+You may specify a different time period by setting the actionLog to a number of days. For example, actionLog=10 query parameter will return the action log for the past 10 days and the reported active user count for the past 10 days. The time period allowed is 1 day to 365 days.
+
+
+limit
+number
+default:5000
+Limit the number of profiles returned. The default and maximum is 5000.
+
+
+cursor
+string
+If there are additional profiles to return and the hasMore flag is true, the nextCursor will be returned in the response. Pass this cursor to the cursor query parameter to return the next set of profiles.
+Update a User ProfileUnlink a Social Network
+githubxbluesky
+
+Profiles
+Unlink a Social Network
+Unlink a social network for a given user profile.
+DELETE
+/
+profiles
+/
+social
+Available on Business, Enterprise plans.
+Unlink a social network for a given user profile. For example, if a user profile is linked to TikTok, unlink TikTok by making this endpoint request. A successful 200 response will be returned even if the platform is not linked. If the Profile-Key is not provided the Primary Profile’s social account will be unlinked.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Profile-Key
+string
+Profile Key of a User Profile.
+
+Format: Profile-Key: PROFILE_KEY
+
+
+Body Parameters
+
+
+platform
+string
+required
+Allow platforms to unlink: bluesky, facebook, gmb, instagram, linkedin, reddit, telegram, threads, tiktok, twitter, youtube.
+Get User ProfilesGenerate JWT Overview
+githubxbluesky
+Profiles
+Generate JWT Overview
+Generate a social network linking URL for a user profile.
+Available on Business, Enterprise plans.
+The generateJWT endpoint generates a social network linking URL for a single User Profile. See the Business Plan API integration for more details.
+
+
+Switching Profiles
+To switch between different profile sessions (for example, when testing with multiple profiles), you’ll need to log out the current profile first. See Automatic Logout of a Profile Session for instructions on how to properly handle profile switching.
+
+
+Private Key and Profile Key
+
+
+Where to Get the Private Key
+The Private Key file (private.key) and a sample Postman JSON file is included with your Integration Package received during onboarding. The Integration Package may also be retrieved in the Ayrshare developer dashboard in the API Page -> Integration Package.
+
+
+Using the Private Key
+We recommend reading the Private Key private.key from a file and sending it as a string in the privateKey field, which allows you to preserve all characters including newlines. The Private Key must be precise, meaning preserving all characters including newlines. If you paste the key into your code, you might need to manually replace newlines with a \n character or URL encode the string.Pasting the key directly into code often causes issues.
+
+
+Generate a JSON Web Token
+1 minute video explaining how to generate a JSON Web Token (JWT):
+The JWT URL is valid for 5 minutes. After 5 minutes you must generate a new JWT URL. See the Max Pack expiresIn for additional options.
+
+
+Opening the JWT URL
+Open the JWT URL in a new browser tab, browser window, or View Controller on iOS.You may control the closing or redirecting of the new window or tab.
+The social networks do not allow opening the URL in an iFrame or obfuscating the approved partner origin domain profile.ayrshare.com.
+
+
+Verify the JWT URL
+The generateJWT endpoint does not validate the returned JWT URL by default. For example, if a corrupt Private Key is passed into generateJWT a URL will still be returned and the URL result in a 401 error.You can verify the returned JWT URL by including verify: true in the generateJWT body parameters. If the JWT URL cannot be validated an error will be returned. For example, if the Private Key had a character removed the following would be returned:
+JWT Error
+Copy
+Ask AI
+{
+  "action": "JWT",
+  "status": "error",
+  "code": 189,
+  "message": "Error generating JWT. Check the sent parameters, such as the privateKey has no extra tabs, spaces, or newlines. Also the entire private.key file including -----BEGIN RSA PRIVATE KEY----- and -----END RSA PRIVATE KEY-----. Error: secretOrPrivateKey must be an asymmetric key when using RS256"
+}
+We recommend using verify: true only in a non-production environment since the validation takes additional processing time.
+
+
+Testing in Postman
+It is recommended to first test the JWT URL creation in Postman. Included in the Integration Package, found in the Primary Profile API Key page of the dashboard, is a sample Postman config JSON file that included everything you need to verify your the JWT URL creation. Just import the config file into Postman, fill in your Profile Key (found in the Ayrshare developer dashboard by switching to the profile you want to test) in the profileKey body field, and click the blue Send button. All other required fields are already filled in.You can also generate the code from Postman, or read the key file from a directory or database.
+
+
+JWT Expires In
+Available on Business, Enterprise plans.Max Pack required
+If you want a longer JWT timeout than the default 5 minutes, include the expiresIn field.For example, send the following JSON to set the JWT URL valid for 30 minutes:
+JWT Expires In
+Copy
+Ask AI
+{
+  "expiresIn": 30
+}
+This allows you to email the link to your users instead of them having to go to your app or platform. A common use case is when your user needs to reconnect a social account, you can email them the JWT link to directly re-link the social account instead of having to navigate to your platform.
+Be sure to review with your security team how long your business wants to keep the JWT alive. Longer expire times create additional risk of an unauthorized party accessing the link.
+
+
+Integrations
+
+
+Bubble.io JWT
+If you are a Bubble user, please see Generate JWT Token in the Bubble.io section for instructions:
+Bubble Generate JWT
+
+
+
+Mobile JWT
+The following Swift, Flutter, and React Native mobile code examples show how to launch the social linking page on an iOS device. Replace the jwtURL String variable with the return from the /generateJWT endpoint.
+
+
+Swift (iOS)
+In Swift, use a UIViewController and SFSafariViewControllerDelegate. We don’t recommend using a WebView since some social networks such as Facebook and Google block authentication.
+
+
+Flutter (Dart)
+In Flutter (Dart), there is no direct equivalent to a UIViewController or the SFSafariViewController. However, you can achieve a similar functionality by using the url_launcher package to open web URLs.
+
+
+React Native
+React Native also doesn’t have a direct equivalent to SFSafariViewController, but you can achieve a similar result with the WebBrowser API provided by expo-web-browser, which opens a URL in a modal browser window that shares cookies with the system browser. Otherwise, you can use the built-in React Native Linking function to open Safari: await Linking.canOpenURL(jwtURL);
+
+
+Mobile Code Examples
+Swift
+Flutter
+React Native
+Copy
+Ask AI
+import UIKit
+import SafariServices
+
+class ViewController: UIViewController, SFSafariViewControllerDelegate {
+    
+    var jwtURL = "https://profile.ayrshare.com?domain=acme&jwt=eyJhbGciOiJ"
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupButton()
+    }
+    
+    func setupButton() {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: (view.bounds.width - 200) / 2, y: (view.bounds.height - 50) / 2, width: 200, height: 50)
+        button.setTitle("Open URL", for: .normal)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        view.addSubview(button)
+    }
+
+    @objc func buttonTapped() {
+        openURLInInAppBrowser()
+    }
+
+    func openURLInInAppBrowser() {
+        if let url = URL(string: jwtURL) {
+            let safariVC = SFSafariViewController(url: url)
+            safariVC.delegate = self
+            present(safariVC, animated: true, completion: nil)
+        }
+    }
+
+    // Optional: If you want to handle when the in-app browser is closed
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}
+
+
+Connect Accounts Email
+In conjunction with the longer expire time option, you can also automatically have Ayrshare email your users a link to the social linkage page.
+
+
+Connect Accounts JSON
+For example the following JSON will send an email to john@user.com with the company name ACME, contact email support@mycompany.com, and links to the terms and privacy policy:
+Example Contact Email Request
+Copy
+Ask AI
+/**
+  All fields are in the email object required.
+  Missing fields will cause the email to fail.
+*/
+{
+  "email": {
+    "to": "john@user.com",
+    "contactEmail": "support@mycompany.com",
+    "company": "ACME",
+    "termsUrl": "https://www.ayrshare.com/terms",
+    "privacyUrl": "https://www.ayrshare.com/privacy",
+    "expiresIn": 60
+  }
+}
+The response will include the following if the email and expire time was set:
+Example Contact Email Response
+Copy
+Ask AI
+{
+  "emailSent": true,
+  "expiresIn": "30m"
+}
+
+
+JWT Connect Accounts Email Example
+Here is an example of an email with the Connect Account link that opens social linkage page: The email will come from the address:Social Connect Hub <connect@socialconnecthub.com>
+Unlink a Social NetworkGenerate a JWT
+githubxbluesky
+
+Profiles
+Generate a JWT
+Generate a JSON Web Token (JWT) for use with single sign on.
+POST
+/
+profiles
+/
+generateJWT
+Available on Business, Enterprise plans.
+Generate a JSON Web Token (JWT) for use with single sign on.See the Generate JWT Overview for more details.
+The JWT URL is valid for 5 minutes. After 5 minutes you must generate a new JWT URL. See the Max Pack expiresIn for additional options.
+
+
+Header Parameters
+
+
+Authorization
+string
+required
+API Key of the Primary Profile.
+
+Format: Authorization: Bearer API_KEY
+
+
+Body Parameters
+
+
+domain
+string
+required
+Domain of app. Please use the exact domain given during onboarding.
+
+
+privateKey
+string
+required
+Private Key used for encryption.
+
+
+profileKey
+string
+required
+User Profile Key. The API Key cannot be used in this field.
+
+
+logout
+boolean
+default:false
+Automatically logout the current session. Recommend not to use in production since it affects the performance.See Automatic Logout of a Profile Session for more information.
+
+
+redirect
+string
+Specify a URL to redirect to when the “Done” button or logo image is clicked. The URL will be automatically shortened in the returned JWT url. Redirect the origin opener window by adding the query parameter origin=true to the redirect URL.
+
+
+allowedSocial
+array
+Specify the social networks to display in the linking page. This will override the social networks configured in the Social Networks page.
+Only display Facebook, X, LinkedIn, and TikTok
+Copy
+Ask AI
+{
+  "allowedSocial": ["facebook", "x", "linkedin", "tiktok"]
+}
+
+
+verify
+boolean
+default:false
+Verify that the generated token is valid. Recommend to only use in non-production environment.See Opening and Closing the Social Linking URL for more information.
+
+
+base64
+boolean
+default:false
+If the private key is base64 encoded, set to true.Encode the private.key file in base64 and pass the single line String in the privateKey field.E.g in Linux: cat private.key | base64
+
+
+expiresIn
+number
+default:5
+Set the longevity of the token in minutes. Range: 1 minute to 2880 minutes.See JWT Expires In for more information.
+
+
+email
+object
+default:5
+Send a Connect Accounts email with a link for users to directly access their social linkage page.See Connect Accounts Email for more information.
+Generate JWT Overview
+Multiple Users
+Business Plan Overview
+Ayrshare Business Plan for managing multiple users, clients, or brands
+The Business Plan enables organizations such as companies, agencies, and platforms to manage social media activities including posting, scheduling, analytics, and comment management across multiple users, clients, or brands from a single dashboard.Get more details about the Business Plan by contacting us. 
+
+
+Post, Get Analytics, Manage Comments and DMs, and Create Facebook Ads on Behalf of Your Users
+•	A single API call to post to your users’ social media networks: Bluesky, Facebook, Google Business Profile (Google My Business), Instagram, LinkedIn, Pinterest, Reddit, Snapchat, Telegram, Threads, TikTok, X, and YouTube.
+•	Send scheduled posts of text, images, and videos or create an auto schedule to post at pre-determined times.
+•	Get detailed analytics on your user’s posts, social profile, and links. E.g. number of impressions, follower demographics, average view time of videos, and more.
+•	Add comments to a user’s post or get all comments made by other users.
+•	Manage direct messages across supported platforms.
+•	Create Facebook ads from existing posts.
+•	Automatically add hashtags to posts based on the content, and automatically post your users’ RSS feeds.
+•	Validate posts before sending to the social networks so your users’ social accounts are always protected and don’t get in trouble with the social networks.
+•	Retrieve a user’s post history, analytics, and comments, even on posts that originated outside of Ayrshare.
+
+
+Seamlessly Integrate with Your Product or Platform
+•	Simple and transparent integration for your users, clients, and brand.
+•	Make RESTful API calls, or use the Node.js, Python, Bubble.io, or Airtable packages and integrations.
+•	Enterprise grade security and secure social authentication where you never ask for your users’ credentials.
+•	Staging environment add-on available for your build workflow.
+
+
+Additional Capabilities Available with Max Pack
+The Max Pack provides additional endpoints and other useful utilities for building your app or platform.
+List Registered WebhooksUser Integration
+githubxblueskyfacebooklinkedinyoutube
+Multiple Users
+User Integration
+How to integrate with Ayrshare allowing your users, clients, or brands to link their social media accounts.
+Ayrshare operates as an API-centric platform, designed to work discreetly in the background.The only interaction your users will have with an Ayrshare interface is through the white-labeled social networks linking page. This process is designed to be smooth and effortless for your users, without requiring them to create an account or log in.Ayrshare organizes each of your users into an Ayrshare User Profile. A User Profile can have one connection to each social network.
+
+
+User Experience
+Your users will authorize their social media accounts, such as Instagram or Facebook, to allow you to post, get analytics, etc. on their behalf via Ayrshare’s API. Each User Profile can have one connection to each of the social networks.
+1.	Within your app, create a link or button, e.g. “Link Your Social Accounts”, that your user will click to open the social linking page.
+2.	When the link is clicked, open a new browser tab, window, or webview with the URL returned from the /generateJWT endpoint.
+3.	The social linking page will show all the available networks, which you can control. At the top will be your branded logo. You can customize many aspects of this page such as the title, help link, and profile image.
+4.	Your user will choose the social networks they want to link and close the tab once complete by clicking the All Done button.
+ 
+At the top of the page will be your branded logo.From the user’s perspective they are done and have successfully linked their social media accounts. With just a few clicks they will have their social media accounts linked and you’ll be able to post on their behalf.Behind the scenes, you’ll create new profiles via the API or Dashboard, receive a Profile Key used to post on behalf of the users, and open the above Social Account linkage page by passing a JWT token to perform single sign on.Please see the next page on API Integration for Business on how to do this.
+API Integration for Business
+
+
+
+Social Linking Page Customization
+You can customize many portions of the social linkage page for either all users or specific users. Please see each section for details. There are also specific details for Business Plan vs Business Plan with Max Pack.
+
+
+Business Plan Customizations
+•	Add your own company logo or remove entirely. Please see your onboarding integration guide for details.
+•	Select which social networks your users can access either globally or at the user profile level.
+•	Remove links to help pages and add your own help pages.
+•	Set the page redirect for closing the social network linking page.
+•	Set the top and sub headers on the social account linkage page. You can show your user’s name, their business, another message, or remove entirely.
+
+
+Business Plan Max Pack Customizations
+•	Personalize your social accounts linking page appearance with your own CSS file - modify colors, fonts, and control which features are displayed.
+•	Customize the browser tab by adding your own favicon and title to the social account linking page.
+•	Edit the ‘Close’ button text on the social linkage page.
+•	Add custom footer content to the social linkage page using text or HTML - perfect for your copyright notice or website links.
+•	Set up a staging server environment to test with up to 30 User Profiles using live social accounts.
+Business Plan customers can purchase the Max Pack for more customization options.Enterprise Plan customers get advanced features.
+Business Plan OverviewAPI Integration for Business
+githubxbluesky
+Multiple Users
+API Integration for Business
+Allow Your Users to Connect Their Social Media Accounts
+An important part of the Business Plan integration consists of creating new profile accounts in Ayrshare for your users or clients and allowing your users to link their social networks with the social linking page. Each of your users is set up as an Ayrshare user profile. A user profile gets one connection to each social network.
+
+
+Integration Workflow
+To integrate Ayrshare into your application, you’ll need to make two API calls:
+1.	Call the Create Profiles endpoint to create a new Ayrshare profile for your user.
+2.	Call the Generate JWT endpoint to get a JWT URL.
+The JWT URL allows your user to securely access the social media linking page through single sign-on authentication. You’ll display this page in a new tab, window, or view controller to let users connect their social media accounts. After your user links their social media accounts, you will be able to publish posts, get analytics, and manage their accounts via the API.
+For security reasons, social media platforms require users to authenticate through their browser, which cannot be done through backend server calls. This ensures your users can safely connect their social media accounts by logging in directly with each platform’s official login page. Social networks restrict authentication to happen only through their authorized partner domains, such as Ayrshare. They also block iFrames, which means you cannot embed or display the Ayrshare linking page within an iFrame on your site.
+
+
+Create an Ayrshare User Profile
+
+
+Create a Profile with the API
+When a new user registers with your system or when your client clicks the social network link in your app, create a new Ayrshare profile account by calling the /profiles/create-profile RESTful endpoint, or using the NPM or PyPi packages.
+Profiles
+Returned from this call will be your user’s PROFILE KEY. This key will be used to post on your user’s behalf and to manage their account. You should store it in a secure location.
+
+
+Create a Profile with the Dashboard
+If you want to create client profiles via the Developer Dashboard, see the overview:
+Manage User Profiles in Dashboard
+
+
+
+Integration Package
+During your onboarding as a Business Plan client, you received a personalized integration package with important set up and domain information, example endpoint calls, and more. Please check with your primary account holder for this information.You may also retrieve or reset the integration package in the dashboard in the API page. Be sure to first switch to your Primary Profile. 
+
+
+Single Sign-On with JWT Authentication
+Ayrshare uses a JWT (JSON Web Token) to authenticate your user and perform Single Sign-On to the social linking page. A JWT is a secure mechanism for passing digitally signed information and allows Ayrshare to authenticate you and your user.
+
+
+Generate a JWT
+Your app will construct a JWT comprised of your API Key, user Profile Key, and a few other parameters. This will be signed with your 1024-bit private key.
+The JWT token is valid for 5 minutes. Please see the Max Pack for longer expire time.
+Please use the Generate JWT endpoint to have Ayrshare create the token and social linking URL. Open the social linking URL in a new tab or window, allowing your users to easily link their social networks.
+Alternatively, if you have your client’s social media credentials (username/password), you can link their social network yourself using Ayrshare’s Developer Dashboard.
+
+
+Automatic Logout of a Profile Session
+How to Automatically Logout of the Active Profile SessionIf a profile is already logged in, sending a different profile’s JWT will not switch profiles. This is done to make the experience faster for already logged-in users. When testing, log out of the current profile before making an SSO call with a different profile. Signed-in profiles remain signed in until explicitly logged out.However, if you have a business need, such as your users having multiple profiles they often access, or you want to test, include the URL parameter in the SSO URL:logout=trueFor example:https://profile.ayrshare.com?domain=[domain id]&jwt=[jwt token]&logout=trueThis forces a logout and then logs in the new profile.Please also see the Generate JWT endpoint to automatically add the logout.Warning: Using automatic logout causes a performance delay for your user, so unless you need it, we suggest not forcing a logout and not using it in production.
+
+
+Opening & Closing the Social Linking URL
+The Social Accounts page has a “Close” button that closes the window and returns your user to your site.
+
+
+Opening the Social Linking URL
+When you open the social linking URL, we recommend using JavaScript’s window.open() function instead of an anchor href. The “Close” button uses JavaScript to close the window, and most browsers only allow windows opened via a script to be closed. You can use the following sample code on your website to launch the social linkage window.
+Window Open
+Copy
+Ask AI
+<div onclick="window.open('https://profile.ayrshare.com?domain...', '_blank')">
+  Link Social Networks
+</div>
+or
+Window Open Function
+Copy
+Ask AI
+<button onclick="openNewTabAndRedirect()">Open New Tab and Redirect</button>
+<script>
+  function openNewTabAndRedirect() {
+    // Open a new tab
+    var newTab = window.open("https://profile.ayrshare.com?domain...");
+
+    // Optional: Focus on the new tab
+    newTab.focus();
+  }
+</script>
+You may control the “Close’ button to either redirect the social linking tab to a page of your choosing or redirect the origin opener tab/window and close the social linking tab. This can be done using the redirect parameter and adding origin=true to the query parameters of the redirect URL. Please see Generate JWT endpoint for more details.
+
+
+Redirecting When Closing
+Additionally, if you want to have the Close button redirect back to your page (often useful on mobile), pass in the redirect GET parameter as a URL encoded string starting with https. Please see the Generate JWT endpoint parameters for more details.
+JWT URL
+Copy
+Ask AI
+https://profile.ayrshare.com?domain=[domain id]&jwt=[jwt token]&redirect=https%3A%2F%2Fmywebsite.com
+The redirect will be saved for that profile and used in subsequent SSO calls even if the redirect parameter is not passed. To reset the Close button back to close, pass the parameter redirect=null.
+
+
+More Information
+
+
+User Linking or Unlinking Notifications
+When a user links or unlinks a social network, you can receive a notification via webhook. Please see the Social Action Webhooks page for more information.You may also use the user endpoint to get the connected social networks for a user profile.
+
+
+Multiple Sets of Social Accounts
+
+
+Overview
+Each User Profile has a set of social media accounts and can make one connection to each social network. If your users or clients have multiple sets of social media accounts, such as two Facebook Pages, two Instagram accounts, and two YouTube channels, you can manage these multiple sets of social media accounts by following these steps:
+1.	Create multiple User Profiles - Create separate User Profiles within the Ayrshare system for each set of social accounts your user or client needs to manage.
+2.	Store unique Profile Keys - Each User Profile will have its own unique Profile Key, returned from the create User Profile endpoint.
+3.	Label your profiles - Title or tag each User Profile to clearly identify which social media accounts they’re associated with (e.g., “Facebook Page A” and “Facebook Page B”).
+4.	Map in your database - In your own system, associate all relevant Profile Keys with the respective user or client.
+5.	Use appropriate Profile Key - When posting content or retrieving analytics for a specific social account, use the Profile Key associated with that account. For example, to post to Facebook Page A, use the Profile Key of the User Profile connected to Facebook Page A.
+
+
+Example
+Let’s consider a practical scenario for multiple client accounts:
+•	Client: Joe’s Restaurant Chain with two locations
+Joe needs separate social media accounts for each restaurant location:Restaurant Location 1:
+•	Facebook Page: “Joe’s Downtown Bistro”
+•	Instagram: @joesdowntownbistro
+•	LinkedIn: Joe’s Downtown Bistro business page
+Restaurant Location 2:
+•	Facebook Page: “Joe’s Seaside Grill”
+•	Instagram: @joesseasidegrill
+•	LinkedIn: Joe’s Seaside Grill business page
+Implementation solution:
+1.	Create two separate User Profiles in Ayrshare:
+•	User Profile 1: Titled “Joe’s Downtown Bistro Accounts”
+•	User Profile 2: Titled “Joe’s Seaside Grill Accounts”
+2.	Connect the appropriate social accounts to each profile:
+•	Profile 1: Links the Downtown Bistro Facebook, Instagram, and LinkedIn
+•	Profile 2: Links the Seaside Grill Facebook, Instagram, and LinkedIn
+3.	Store both Profile Keys in your database, associating them with Joe’s account:
+Copy
+Ask AI
+Client: Joe's Restaurant Chain
+- Profile Key 1: abc123... (Downtown location)
+- Profile Key 2: xyz789... (Seaside location)
+4.	When posting a special menu update for the Downtown location, use Profile Key 1 in the API calls. When posting about a seafood promotion at the Seaside location, use Profile Key 2.
+By creating multiple User Profiles, titling or tagging them appropriately, and associating them to a single user or client in your system, you can manage their multiple social media accounts across the same platforms using Ayrshare. This approach allows for targeted posting and analytics retrieval for each specific account.
+
+
+Next Steps
+Please see here for more details of the user experience:
+User Integration
+Once your user sets up their social media links, you will be able to begin posting on their behalf using the /post and /profile endpoints.
+Post API
+
+Profiles API
+
+User IntegrationManage Multiple User Profiles
+githubxblueskyfacebook
+
+Multiple Users
+Manage Multiple User Profiles
+There are two ways to create and manage multiple account profiles for your organization, users, clients, or brands - via the Dashboard or API.
+
+
+Using the Dashboard
+If your Ayrshare account is entitled to manage multiple profiles, then you will see the option for User Profiles in the left-hand navigation.
+If your account does not have the option to manage profiles, then contact your Ayrshare representative or contact us to upgrade.
+
+
+Create a New Profile
+Click the Add Profile button and enter your User Profile Title. 
+
+
+Switch to the New Profile
+You will see the new Profile show up in the Active Profiles section. You can now click on the switch to this profile  icon to switch to that User Profile. When you switch to a different User Profile, you will see that profile name shown in the top left of the screen under the profile icon.You can always switch back to your primary account profile by clicking the switch profile link next to the Primary Profile or by clicking the Switch to Primary button at the top of the User Profiles page.From here you are acting as your client/user and can post on their behalf by going the the Post page.
+
+
+Get the Profile Key
+The Profile Key is used to post on behalf of the profile with the API. Switch to a User Profile and go to the Profile Key page in the left-hand navigation of the Dashboard to get that profile’s Key. When making an API call, be sure to include your API_KEY and PROFILE_KEY in the header.You also receive the Profile Key when you create a new User Profile using the /profiles/profile endpoint. This is the preferred method to get the Profile Key.
+
+
+Invite a Team Member
+You can create Users Profiles for members of your team. By default, Team Members have an Ayrshare account with full access/admin rights to the dashboard and count as a new User Profile. Please note, you may restrict access by locking the Primary Profile.
+You can only invite team members who have not yet been registered with Ayrshare. If you want to use an already registered email, please have the user login to the dashboard, go to the Account page, and click the Delete button.
+In the User Profiles page, switch to your Primary Profile and click the + Add Profile button at the top of the page.In the pop-up modal, click the checkbox “Create a team member profiles with admin rights” box and enter your team member’s email address. Click Add Team Profile and an email is sent to the team member’s email address with a link to activate their account.
+
+
+Team Member Status
+Once the team member has accepted the invite you will see a green check mark next to the Team Member tag. If the team member has not yet accepted the invite you may resend it by clicking the mail icon. 
+
+
+Team Members Contacting Support
+For security, only registered team members may contact support on behalf of a business. We will not be able to assist if they are not registered and verified as a team member of your business.
+
+
+Reactivate a Suspended User Profile
+
+
+Suspension Reason
+When a User Profile gets suspended due to a social network violation (such as a Facebook community standards violation), you will receive a detailed notification email. This email contains important information about the suspension, including the specific reason and the affected User Profile.To locate this notification email:
+1.	Search your inbox using the RefId of the suspended User Profile
+2.	The email subject will clearly indicate a suspension has occurred
+Alternatively, you can view suspension details directly in the dashboard by clicking on the “Suspended” tag that appears next to the affected User Profile.All API calls for that User Profile will return a 403 HTTP status code.
+
+
+Reactivate a Suspended User Profile
+You may reactivate, i.e. unsuspend, the User Profile by:
+1.	Logging into the Dashboard and going to the User Profiles page.
+2.	Find the suspended User Profiles by clicking the “Suspended” tab or searching by the RefId of the User Profile, which is included in the email.
+3.	Unsuspend the User Profile by clicking the “Unsuspended” button.
+4.	Review and accept the compliance certification.
+ For a User Profile’s first suspension, the User Profile can be immediately unsuspended once you accept the compliance certification. However, for subsequent suspensions the User Profile will be reinstated 48 hours after accepting the compliance certification.
+We recommend you do not use your Primary Profile as a regular User Profile. If the Primary Profile is suspended, all user profiles will also be suspended.
+
+
+Managing Active User Profiles
+Effective management of User Profiles is essential for maintaining an efficient system in Ayrshare. We recommend implementing a policy to remove inactive User Profiles based on your business requirements. For example, if a user hasn’t engaged with your platform by posting content, requesting analytics for some time period, or has not connected any social networks, consider deleting their Ayrshare User Profile, thus keeping your user base current and reducing future costs.You can check if a User Profile has been active in the current month by reviewing their posting history and API usage and connections. If you determined it to be inactive, delete the User Profile.
+
+
+Settings
+In the User Profiles page select “⚙️ Settings” button to access global settings for your profiles. Be sure to first switch to your Primary Profile to access the settings. 
+
+
+Video Demo of Linking Page Customization Options
+
+
+Restrict User Profile Access
+
+
+Restrict Primary Profile Access
+Restrict access to the Primary Profile from user and team member profiles by locking the Primary Profile. Activate the Primary Profile lock if you want to prevent team members or user profiles from accessing Profile Settings or the Account/Billing page. When activated team member and user profiles will not be able to switch to the Primary Profile, but may switch to other team member or user profiles.
+
+
+Restrict Team Member Access
+Restrict access to team member profiles by locking their account. This prevents the team member from switching to any other User Profile.Enable the lock by clicking the  or  icon in the top right of a team member profile. You may also lock the team member when you create the profile.
+
+
+Update Logo on Social Linking Page
+Add your own logo and set the logo height for the social linking page. 
+
+
+Set Social Networks Access
+Remove or grant your users/profiles access to the available social networks. By default all social networks are active and available.
+Permissions are global across all your user profiles. Disabling only removes the network from your user’s Social Accounts view and does not remove established links.
+ See the create a profile endpoint for more information on disabling social networks at the User Profile level.
+
+
+Set Language for Social Linking
+Set the language for the social linking page. The default is English. Available languages are:
+•	English
+•	Chinese (Simplified)
+•	French
+•	German
+•	Spanish
+If you require a language that is not listed, please contact us.See here for additonal translation options:
+•	Translate API Error Message Responses
+•	Translate a Post
+
+
+Display Page Location
+On the social linking page, if a Meta (Facebook or Instagram) or Google Business Profile Page has a location associated with it, display that location information along with the Page name. This additional location context is helpful in scenarios where there are multiple Pages with identical names, as it allows users to differentiate between them more easily. The Page location, if available, will be displayed below the Page name in the social linking page: 
+
+
+Help Links Visible
+Enable or disable visibility of the links to the Ayrshare help docs on your users’ social linkage page. You can also use your own by entering a URL to your publicly available docs. 
+
+
+Alternative Emails for Alerts
+Choose different email addresses to deliver alerts, such as unlinked accounts. Further customization, such as the title can be done via the /profiles endpoint.
+
+
+Instagram Login
+Enable or disable Instagram login on the social linking page. Choose whether to enable direct Instagram Login linking that does not require a connected Facebook Page for authentication. If disabled, Instagram linking will require a connected Facebook Page for authentication.
+Instagram Login is enabled by default. If you require the advanced features listed below (hashtag search, collaborations, location tagging, or brand data), you must manually disable this option to use Facebook Page authentication instead.
+
+
+Direct Instagram Login vs Facebook Page Authentication
+Direct Instagram Login Instagram API with Instagram Login allows Instagram professionals (businesses and creators) to link their accounts directly without needing an associated Facebook Page. This provides a simplified authentication flow.Facebook Page Authentication (traditional method) requires users to first connect a Facebook Page that is linked to their Instagram professional account.
+
+
+Feature Limitations with Direct Instagram Login
+While direct Instagram Login offers convenience, certain features are not available when using this method:
+•	Brand/User Data - Cannot retrieve Instagram account information through the brand endpoints.
+•	Hashtag Search - Cannot search for hashtags on Instagram.
+•	Collaborations - Cannot invite collaborators to Instagram posts.
+•	Location Tagging - Cannot add location tags to Instagram posts.
+
+
+Which Method Should You Choose?
+•	Enable Direct Instagram Login if you only need basic posting functionality and don’t require the advanced features listed above.
+•	Disable Direct Instagram Login (use Facebook Page authentication) if you need access to all Instagram features, including hashtag search, collaborations, location tagging, or brand data retrieval.
+For most clients, the preferred method is to use the direct Instagram Login authentication. If you’re unsure which method to use, we recommend disabling Direct Instagram Login to ensure access to all features. You can always enable it later if you determine the advanced features are not needed.
+
+
+Custom Modals
+You can customize the content shown in the modals that appear on the social linking page. Specifically, you can replace the body content of both the Instagram and Telegram modals with your own custom HTML content, such as displaying the content in different languages. Your custom content can include formatted text, images, or a combination of both to better suit your needs. For example, add you custom text with and anchor link:
+Custom HTML Modal
+Copy
+Ask AI
+<div>
+  <style>
+    span.underline {
+      color: blue;
+      text-decoration: underline;
+    }
+    span.underline a {
+      color: blue;
+      text-decoration: none;
+    }
+  </style>
+
+  <span class="underline">
+    Everyone agrees that
+    <a target="_blank" href="https://www.ayrshare.com">Ayrshare Rocks!</a>
+  </span>
+</div>
+The HTML must be enclosed in <div> tags. Add custom CSS to add color and/or underlining to anchor links.
+
+
+Using the API
+
+
+Create and Manage Profiles
+You can create, delete, and manage your profiles via the API using the /profiles endpoints. Please see below for details.
+Profile
+
+
+
+Get the Profile Key
+The Profile Key is returned when you create a new profile via the API using the /profile endpoint. If you need to get the profile key again, go to the Dashboard to retrieve. See above.
+
+
+Enable Messaging
+ You can enable messaging for your Ayrshare account in the Account page. Please see here for more details:
+Messages
+
+
+
+Max Pack Customization
+In the Ayrshare Dashboard page User Profile -> Setting, you can customize aspects of the social linking page. Please see the Max Pack for details on the capabilities and features.
+
+
+Customize CSS
+Use your own CSS file to customize the look and feel of the social accounts page: color, fonts, hide features, change buttons, and more. 
+
+
+Change Page Title, Close Button, and Favicon
+Set your own page title, close button, and favicon (.ico file).   
+
+
+Footer Text
+Customize the footer text and add copyright information on the social linking page. This allows you to display the footer text in different languages. 
+
+
+Enterprise Features
+
+
+Max Pack
+All the feature of Max Pack included with Enterprise.
+
+
+Automatically Resync Facebook and Instagram Pages
+When security events occur on Facebook, such as password changes, all Facebook pages associated with that user account (including linked Instagram accounts) need to be reconnected to Ayrshare. For accounts managing numerous pages, this process can be time-consuming.
+•	The “Resync” option is available when connecting Facebook or Instagram pages.
+•	By enabling this feature, all previously connected pages will be automatically relinked to the user profile.
+•	Note: Only previously linked pages will be reconnected; new pages will not be added automatically.
+•	This feature supports Facebook accounts with up to 400 pages.
+•	For accounts exceeding 400 pages, it’s recommended to distribute pages across multiple Facebook accounts.
+•	Best Practice: Only use the “Resync” option when necessary to reconnect all pages. For routine operations, it’s generally not required.
+
+
+White List IP
+Enhance your account security by whitelisting specific IP addresses. This feature restricts API access to only approved IP addresses, adding an extra layer of protection to your Ayrshare integration.
+
+
+Technical and Security Reviews
+Collaborate directly with Ayrshare’s project team for comprehensive technical and security reviews. This service ensures that your integration aligns with best practices and meets your organization’s specific security requirements.
+
+
+Dedicated Account Management with Priority Support
+Receive personalized support from a dedicated account manager who understands your unique needs and can provide tailored solutions. Enjoy priority access to technical support, with faster response times and escalation procedures for critical issues.
+
+
+Custom API Endpoints
+For enterprises with specific requirements, Ayrshare can develop custom API endpoints to seamlessly integrate with your existing systems and workflows.
+API Integration for BusinessOverview
+githubxbluesky
+
+

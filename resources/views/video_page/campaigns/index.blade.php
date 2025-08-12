@@ -151,7 +151,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                                No campaigns found. <a href="{{ route('video-page.campaigns.create') }}" class="text-blue-600 hover:text-blue-900">Create your first campaign</a>
+                                No campaigns found. <a href="{{ route('video-page.campaigns.create') }}" class="text-blue-600 hover:text-blue-900">Create your first video page</a>
                             </td>
                         </tr>
                     @endforelse

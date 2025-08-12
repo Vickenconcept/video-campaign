@@ -11,7 +11,8 @@ class EmailVideoSelector extends Component
 {
     public $videoUrl = '';
     public $thumbnailUrl = '';
-    public $uploadType = 'upload'; // 'upload' or 'avatar_video'
+    public $uploadType = 'upload'; // 'upload', 'avatar_video', or 'url_video'
+    public $urlVideo = ''; // For storing YouTube/Vimeo URLs
 
     // AI Avatar Video Generation
     public $avatars = [];
@@ -25,6 +26,15 @@ class EmailVideoSelector extends Component
 
     protected $pipioService;
     protected $cacheDuration = 120; // 5 minutes in seconds
+
+    protected $rules = [
+        'urlVideo' => 'nullable|url|regex:/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\/.+/'
+    ];
+
+    protected $messages = [
+        'urlVideo.url' => 'Please enter a valid URL.',
+        'urlVideo.regex' => 'Please enter a valid YouTube or Vimeo URL.'
+    ];
 
     public function mount()
     {
@@ -83,6 +93,7 @@ class EmailVideoSelector extends Component
             $this->selectedAvatar = $cachedVideo['selectedAvatar'] ?? null;
             $this->selectedVoice = $cachedVideo['selectedVoice'] ?? null;
             $this->uploadType = $cachedVideo['uploadType'] ?? 'upload';
+            $this->urlVideo = $cachedVideo['urlVideo'] ?? ''; // Load urlVideo from cache
         }
     }
 
@@ -97,6 +108,7 @@ class EmailVideoSelector extends Component
             'selectedAvatar' => $this->selectedAvatar,
             'selectedVoice' => $this->selectedVoice,
             'uploadType' => $this->uploadType,
+            'urlVideo' => $this->urlVideo, // Cache urlVideo
             'generated_at' => now()->timestamp
         ];
 
@@ -114,6 +126,7 @@ class EmailVideoSelector extends Component
         $this->selectedAvatar = null;
         $this->selectedVoice = null;
         $this->uploadType = 'upload';
+        $this->urlVideo = ''; // Clear urlVideo
         $this->isGenerating = false;
 
         $this->dispatch('video-cache-cleared');
@@ -245,6 +258,52 @@ class EmailVideoSelector extends Component
         $this->thumbnailUrl = $url;
         $this->cacheGeneratedVideo();
         $this->dispatch('thumbnail-url-updated', ['url' => $url]);
+    }
+
+    public function setUrlVideo()
+    {
+        $this->validate();
+
+        if ($this->urlVideo) {
+            // Extract video ID and create embed URL
+            $this->videoUrl = $this->urlVideo;
+            
+            // Generate thumbnail URL for YouTube/Vimeo
+            $this->thumbnailUrl = $this->generateThumbnailFromUrl($this->urlVideo);
+            
+            $this->uploadType = 'url_video';
+            $this->cacheGeneratedVideo();
+        }
+    }
+
+    protected function generateThumbnailFromUrl($url)
+    {
+        if (str_contains($url, 'youtube.com') || str_contains($url, 'youtu.be')) {
+            // Extract YouTube video ID
+            $videoId = '';
+            if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/', $url, $matches)) {
+                $videoId = $matches[1];
+            }
+            return "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg";
+        } elseif (str_contains($url, 'vimeo.com')) {
+            // Extract Vimeo video ID
+            if (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
+                $videoId = $matches[1];
+                // Note: Vimeo requires API call for thumbnail, using placeholder for now
+                return "https://placehold.co/600x400/cccccc/666666?text=Vimeo+Video";
+            }
+        }
+        
+        return "https://placehold.co/600x400/cccccc/666666?text=Video+Thumbnail";
+    }
+
+    public function clearUrlVideo()
+    {
+        $this->urlVideo = '';
+        $this->videoUrl = '';
+        $this->thumbnailUrl = '';
+        $this->uploadType = 'upload';
+        $this->clearCachedVideo();
     }
 
     public function render()

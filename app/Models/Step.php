@@ -14,6 +14,8 @@ class Step extends Model
         'form' => 'array',
         'multi_choice_question' => 'array',
         'multi_choice_setting' => 'array',
+        'timer_setting' => 'array',
+        'map_settings' => 'array',
         'previous' => 'array',
         'file_type' => 'array',
     ];

@@ -11,8 +11,7 @@
                 </div>
                 <div class="max-w-xs w-full">
                     <button class="btn cursor-pointer" data-modal-target="create-modal"
-                        data-modal-toggle="create-modal">Create
-                        Campaign</button>
+                        data-modal-toggle="create-modal">Create Video Funnel</button>
                 </div>
             </div>
 
@@ -270,8 +269,7 @@
         <div class="h-[80%] flex justify-center items-center">
             <div class="max-w-sm w-full">
                 <button class="btn cursor-pointer" data-modal-target="create-modal"
-                    data-modal-toggle="create-modal">Create
-                    Campaign</button>
+                    data-modal-toggle="create-modal">Create Video Funnel</button>
             </div>
         </div>
     @endif

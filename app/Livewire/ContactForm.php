@@ -20,9 +20,17 @@ class ContactForm extends Component
             $this->formFields = json_decode($activeStep->form, true);
         }
     }
+
     public function update_contact_detail()
     {
-        !$this->contact_detail ? $this->activeStep->update(['contact_detail' => false]) : $this->activeStep->update(['contact_detail' => true]);
+        if ($this->activeStep) {
+            $this->activeStep->update([
+                'contact_detail' => (bool) $this->contact_detail
+            ]);
+        } else {
+            // Optional: log this or handle it gracefully
+            \Log::error('activeStep is null in update_contact_detail');
+        }
     }
 
     public function update_active_tab()
@@ -63,7 +71,6 @@ class ContactForm extends Component
             $this->activeStep->update([
                 'form' => json_encode($form)
             ]);
-
         }
         $this->formFields = json_decode($this->activeStep->form, true);
     }

@@ -1,6 +1,10 @@
 <div>
     @if ($activeStep !== null && $activeStep->id != optional($lastStep)->id)
-        {{-- @if ($activeStep->answer_type == 'multi_choice') --}}
+        @if (in_array($activeStep->answer_type, ['map', 'timer', 'ai_chat', 'calender', 'payment']))
+            <div class="p-5 text-center text-gray-500 font-semibold">
+                No logic required for this step type.
+            </div>
+        @else
         <div>
             <ul class="space-y-3">
                 @php
@@ -23,10 +27,8 @@
                                     @endif
                                     <span>Always jump to</span>
                                     <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                         </svg>
                                     </span>
                                 </div>
@@ -82,6 +84,7 @@
                 @endforelse
             </ul>
         </div>
+        @endif
     @else
         <div >
             <p class="p-5 ">The Last step</p>

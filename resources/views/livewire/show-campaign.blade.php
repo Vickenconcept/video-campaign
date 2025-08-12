@@ -2,11 +2,11 @@
 
     <x-seo::meta />
     @seo([
-        'title' => 'Campain Video ask',
-        'description' => 'Campain',
+        'title' => 'Videngager',
+        'description' => 'Video funnel',
         'image' => asset('images/video-thumbnail.jpg'),
         'site_name' => config('app.name'),
-        'favicon' => asset('images/fav-image.png'),
+        'favicon' => asset('favicon.ico'),
     ])
 
 
@@ -51,45 +51,59 @@
                             : '';
                     @endphp
 
-                    <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
-                        <div class="relative max-w-full max-h-full w-full group" x-data="{ playing: false }"
-                            x-init="$refs.player.addEventListener('play', () => playing = true);
-                            $refs.player.addEventListener('pause', () => playing = false);">
+                    <div class="bg-red-500 h-full">
+                        @if (!empty($video_setting['overlay_text']))
+                            <div
+                                class="absolute w-full md:w-[50%] z-50 @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto left-0 top-0 p-5">
+                                <p
+                                    class="max-w-md mx-auto text-white text-center font-bold capitalize {{ $video_setting['text_size'] }}">
+                                    {{ $video_setting['overlay_text'] ?? '' }}</p>
+                            </div>
+                        @endif
+                        <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
 
-                            @if ($step->video_url)
-                                <video x-ref="player"
-                                    class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
-                                    :controls="false">
-                                    <source src="{{ $step->video_url }}" type="video/webm">
-                                    Your browser does not support the video tag.
-                                </video>
+                            <div class="relative max-w-full max-h-full w-full group" x-data="{ playing: false }"
+                                x-init="$refs.player.addEventListener('play', () => playing = true);
+                                $refs.player.addEventListener('pause', () => playing = false);">
 
-                                <!-- Custom Play/Pause button shown only on hover -->
-                                <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
-                                    <button @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
-                                        class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
-                                        <svg x-show="!playing" style="display: none" xmlns="http://www.w3.org/2000/svg" class="size-20"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                d="M14.752 11.168l-5.197-3.028A1 1 0 008 9.028v5.944a1 1 0 001.555.832l5.197-3.028a1 1 0 000-1.664z" />
-                                        </svg>
+                                @if ($step->video_url)
+                                    <video x-ref="player"
+                                        class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
+                                        :controls="false">
+                                        <source src="{{ $step->video_url }}" type="video/webm">
+                                        Your browser does not support the video tag.
+                                    </video>
 
-                                        <svg x-show="playing" style="display: none" xmlns="http://www.w3.org/2000/svg" class="size-20"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                d="M10 9v6m4-6v6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endif
-                            @if (!empty($video_setting['overlay_text']))
+                                    <!-- Custom Play/Pause button shown only on hover -->
+                                    <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
+                                        <button
+                                            @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
+                                            class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
+                                            <svg x-show="!playing" style="display: none"
+                                                xmlns="http://www.w3.org/2000/svg" class="size-20" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M14.752 11.168l-5.197-3.028A1 1 0 008 9.028v5.944a1 1 0 001.555.832l5.197-3.028a1 1 0 000-1.664z" />
+                                            </svg>
+
+                                            <svg x-show="playing" style="display: none"
+                                                xmlns="http://www.w3.org/2000/svg" class="size-20" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M10 9v6m4-6v6" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                @endif
+                                {{-- @if (!empty($video_setting['overlay_text']))
                                 <div
                                     class="absolute @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto w-full left-0 top-0 p-5">
                                     <p
                                         class="max-w-md mx-auto text-white text-center font-bold capitalize {{ $video_setting['text_size'] }}">
                                         {{ $video_setting['overlay_text'] ?? '' }}</p>
                                 </div>
-                            @endif
+                            @endif --}}
+                            </div>
                         </div>
                     </div>
 
@@ -111,6 +125,10 @@
                                         @php
                                             $form = json_decode($step->form, true);
                                         @endphp
+
+                                        <div class="mb-10 text-gray-800">
+                                            <h3 class="font-bold text-xl text-center">Fill out the form below </h3>
+                                        </div>
                                         <div class="space-y-4">
                                             @foreach ($activeForm as $field)
                                                 @if ($field['active'])
@@ -216,6 +234,14 @@
 
                                             @case('NPS')
                                                 @include('components.response.NPS')
+                                            @break
+
+                                            @case('timer')
+                                                @include('components.response.timer')
+                                            @break
+
+                                            @case('map')
+                                                @include('components.response.map')
                                             @break
                                         @endswitch
                                     @endif
@@ -468,6 +494,67 @@
                     }, 2000);
                 }
 
+            }
+        }
+    </script>
+
+
+
+    {{-- timer --}}
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('timerCountdown', (params) => {
+                return timerCountdown(params);
+            });
+        });
+
+        function timerCountdown({
+            start,
+            end
+        }) {
+            return {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                ctaDisabled: false,
+                interval: null,
+                startCountdown() {
+                    let now = new Date();
+                    let parsedStart = start ? new Date(start) : null;
+                    let parsedEnd = end ? new Date(end) : null;
+                    let target;
+
+                    if (parsedStart && now < parsedStart) {
+                        // Start is in the future
+                        target = parsedStart;
+                    } else if (parsedEnd && now < parsedEnd) {
+                        // Start is in the past, but end is in the future
+                        target = parsedEnd;
+                    } else {
+                        // Both are in the past or invalid
+                        target = now;
+                    }
+
+                    this.updateCountdown(target);
+                    this.interval = setInterval(() => {
+                        this.updateCountdown(target);
+                    }, 1000);
+                },
+                updateCountdown(target) {
+                    const now = new Date();
+                    let diff = target - now;
+                    if (diff < 0) diff = 0;
+                    this.days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    this.hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    this.minutes = Math.floor((diff / (1000 * 60)) % 60);
+                    this.seconds = Math.floor((diff / 1000) % 60);
+                    // Button is only disabled AFTER countdown ends
+                    this.ctaDisabled = diff === 0;
+                    if (diff === 0 && this.interval) {
+                        clearInterval(this.interval);
+                    }
+                }
             }
         }
     </script>

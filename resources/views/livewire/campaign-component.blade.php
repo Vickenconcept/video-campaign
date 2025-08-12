@@ -2,8 +2,8 @@
 
     <x-seo::meta />
     @seo([
-        'title' => 'Campain Video ask',
-        'description' => 'Campain',
+        'title' => 'Videngager',
+        'description' => 'Video funnel',
         'image' => asset('images/video-thumbnail.jpg'),
         'site_name' => config('app.name'),
         'favicon' => asset('favicon.ico'),
@@ -41,7 +41,7 @@
 
                 <button id="previewButton" data-dropdown-toggle="previewDropdown" data-dropdown-delay="500"
                     data-dropdown-trigger="hover"
-                    class="text-white bg-gray-800 cursor-pointer hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border "
+                    class="text-white bg-indigo-700 cursor-pointer hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border "
                     type="button">
                     <i class='bx bx-play text-xl'></i>
                     <span>Preview</span>
@@ -73,7 +73,7 @@
 
                 <!-- Modal toggle -->
                 <button data-modal-target="default-modal" data-modal-toggle="default-modal"
-                    class="text-gray-800 bg-white cursor-pointer hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border border-slate-300"
+                    class="text-indigo-600 cursor-pointer bg-white hover:bg-indigo-100 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center space-x-2 border border-slate-300"
                     type="button">
                     <i class='bx bx-paper-plane text-xl'></i>
                     <span>Share</span>
@@ -92,7 +92,7 @@
                                     How would you like to share your Campaign?
                                 </h3>
                                 <button type="button"
-                                    class="text-gray-400 cursor-pointer bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                    class="text-indigo-400 cursor-pointer bg-transparent hover:bg-indigo-200 hover:text-indigo-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
                                     data-modal-hide="default-modal">
                                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 14 14">
@@ -108,7 +108,7 @@
                                     <section x-show="showTab == null" style="display: none;">
                                         <div class="grid md:grid-cols-3 gap-5 mb-5">
                                             <div @click="showTab = 'email'"
-                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+                                                class="bg-indigo-50 border-2 border-indigo-300 rounded-md hover:shadow-md hover:border-indigo-900 hover:bg-indigo-100 p-3 transition duration-500 cursor-pointer ease-in-out">
 
                                                 <div class="bg-slate-900 w-full mb-5">
                                                     <img src="{{ asset('images/video-thumbnail.jpg') }}" alt=""
@@ -119,7 +119,7 @@
                                                 </p>
                                             </div>
                                             <div @click="showTab = 'embed'"
-                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+                                                class="bg-indigo-50 border-2 border-indigo-300 rounded-md hover:shadow-md hover:border-indigo-900 hover:bg-indigo-100 p-3 transition duration-500 cursor-pointer ease-in-out">
 
                                                 <div class="bg-slate-900 w-full mb-5">
                                                     <img src="{{ asset('images/video-thumbnail.jpg') }}" alt=""
@@ -130,7 +130,7 @@
                                                 </p>
                                             </div>
                                             <div @click="showTab = 'social_share'"
-                                                class="bg-gray-50 border-2 border-gray-300 rounded-md hover:shadow-md hover:border-slate-900 hover: hover:bg-gray-100 p-3 transition duration-500 cursor-pointer ease-in-out">
+                                                class="bg-indigo-50 border-2 border-indigo-300 rounded-md hover:shadow-md hover:border-indigo-900 hover:bg-indigo-100 p-3 transition duration-500 cursor-pointer ease-in-out">
 
                                                 <div class="bg-slate-900 w-full mb-5">
                                                     <img src="{{ asset('images/video-thumbnail.jpg') }}"
@@ -279,7 +279,7 @@
                                             <div id="social-links" class="mt-4">
                                                 <ul class="grid grid-cols-2  gap-2 items-start sm:items-center">
                                                     <li
-                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-indigo-900 transition duration-500 ease-in-out">
                                                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
                                                             class="flex items-center gap-2 text-blue-600 hover:text-blue-800 text-lg w-full py-2 px-4"
                                                             target="_blank" title="Share on Facebook">
@@ -292,7 +292,7 @@
                                                     </li>
 
                                                     <li
-                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-indigo-900 transition duration-500 ease-in-out">
                                                         <a href="https://twitter.com/intent/tweet?text=Share+title&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
                                                             class="flex items-center gap-2 text-slate-800 hover:text-slate-900 text-lg w-full py-2 px-4"
                                                             target="_blank" title="Share on Twitter">
@@ -306,7 +306,7 @@
                                                     </li>
 
                                                     <li
-                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-indigo-900 transition duration-500 ease-in-out">
                                                         <a href="https://www.linkedin.com/sharing/share-offsite?mini=true&url={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}&title=Share+title&summary=Extra+linkedin+summary+can+be+passed+here"
                                                             class="flex items-center gap-2 text-blue-700 hover:text-blue-900 text-lg w-full py-2 px-4"
                                                             target="_blank" title="Share on LinkedIn">
@@ -319,7 +319,7 @@
                                                     </li>
 
                                                     <li
-                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-slate-900 transition duration-500 ease-in-out">
+                                                        class="flex items-center gap-2 border-2 border-gray-300 rounded-md bg-gray-100 shadow-md hover:bg-gray-200 hover:border-indigo-900 transition duration-500 ease-in-out">
                                                         <a href="https://wa.me/?text={{ route('campaign.view', ['uuid' => $this->campaign->uuid]) }}"
                                                             class="flex items-center gap-2 text-green-500 hover:text-green-700 text-lg w-full py-2 px-4"
                                                             target="_blank" title="Share on WhatsApp">
@@ -366,7 +366,7 @@
                     <div
                         class="bg-white text-sm text-gray-800 font-bold py-1 px-2 truncate capitalize flex justify-between ">
                         <span>{{ $step->name }} </span>
-                        <span class="rounded-full bg-gray-800 text-white px-2.5 py-1 text-center text-xs">
+                        <span class="rounded-full bg-indigo-700 text-white px-2.5 py-1 text-center text-xs">
                             {{ $step->position }}
                         </span>
                     </div>
@@ -378,7 +378,11 @@
                             @else
                                 <div style="font-family: 'Dancing Script', cursive !important;"
                                     class="h-full text-2xl font-semibold py-5 ">
-                                    End
+                                    @if (count($steps->sortBy('id')) > 1)
+                                        <span>End</span>
+                                    @else
+                                        <span>Start</span>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -429,8 +433,8 @@
 
 
 
-                <div class="rounded-r-lg bg-gray-900 w-[15%] flex items-center justify-center ">
-                    <div class="text-white bg-gray-900 text-center">
+                <div class="rounded-r-lg bg-indigo-800 w-[15%] flex items-center justify-center ">
+                    <div class="text-white bg-indigo-800 text-center">
                         @if ($steps->count() === 1 || $step->id != $lastPosition)
                             <button type="button" class="cursor-pointer" title="Add Step"
                                 wire:click="addStep({{ $step->position }})">
@@ -597,6 +601,8 @@
                                                         <option value="NPS">NPS</option>
                                                         <option value="file_upload">File Upload</option>
                                                         <option value="payment">Payment</option>
+                                                        <option value="timer">Timer</option>
+                                                        <option value="map">Map</option>
                                                     </select>
                                                 </div>
 
@@ -639,7 +645,15 @@
                                                         @break
 
                                                         @case('ai_chat')
-                                                            <livewire:ai-chat  wire:key="answer-ai-{{ now() }}" />
+                                                            <livewire:ai-chat wire:key="answer-ai-{{ now() }}" />
+                                                        @break
+
+                                                        @case('timer')
+                                                            <livewire:timer-component :activeStep="$activeStep" wire:key="answer-timer-{{ $activeStep }}" />
+                                                        @break
+
+                                                        @case('map')
+                                                            <livewire:map-component :activeStep="$activeStep" wire:key="answer-map-{{ $activeStep }}" />
                                                         @break
                                                     @endswitch
                                                 </div>
@@ -902,7 +916,7 @@
 
                 if (errorMessage && errorMessage.includes('Component not found')) {
                     console.warn('🔄 Livewire component missing. Reloading page...');
-                    alert('Error occure: refreshing page')
+                    // alert('Error occured: refreshing page')
                     window.location.reload();
                 }
             });

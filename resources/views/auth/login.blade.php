@@ -1,10 +1,10 @@
- @seo([
-     'title' => 'FluenceGrid',
-     'description' => 'Influencers Management Hub',
-     'image' => asset('images/login-image.png'),
-     'site_name' => config('app.name'),
-     'favicon' => asset('images/fav-image.png'),
- ])
+@seo([
+        'title' => 'videngager',
+        'description' => 'videngager',
+        'image' => asset('images/login-image.png'),
+        'site_name' => config('app.name'),
+        'favicon' => asset('favicon.ico'),
+    ])
  <x-guest-layout>
      
 

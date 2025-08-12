@@ -19,8 +19,82 @@ use App\Livewire\ShowCampaign;
 use App\Livewire\SingleResponse;
 use Illuminate\Support\Facades\Route;
 
+// --- AYRSHARE SERVICE TEST ROUTES (for development/testing only) ---
+use App\Services\AyrshareService;
 
+// Route::prefix('ayrshare-test')->group(function () {
+    // Create a profile
+    Route::get('create-profile', function (AyrshareService $ayrshare) {
+        $title = 'TestProfile_' . uniqid();
+        $result = $ayrshare->createProfile($title);
+        return response()->json($result);
+    });
 
+    // Generate JWT linking URL (requires profileKey param)
+    Route::get('generate-jwt', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $result = $ayrshare->generateJwtUrl($profileKey);
+        return response()->json($result);
+    });
+
+    // List all profiles
+    Route::get('list-profiles', function (AyrshareService $ayrshare) {
+        $result = $ayrshare->listProfiles();
+        return response()->json($result);
+    });
+
+    // List connected social accounts for a profile (requires profileKey param)
+    Route::get('profile-socials', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $result = $ayrshare->getProfileSocialAccounts($profileKey);
+        return response()->json($result);
+    });
+
+    // Post to social (requires profileKey param)
+    Route::post('post', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $body = [
+            'post' => 'Test post from AyrshareService',
+            'platforms' => ['twitter'], // Change to your connected platform
+            // 'mediaUrls' => ['https://example.com/video.mp4'],
+        ];
+        $result = $ayrshare->postToSocial($profileKey, $body);
+        return response()->json($result);
+    });
+
+    // Delete a post (requires profileKey and postId param)
+    Route::delete('delete-post', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $postId = request('postId');
+        $result = $ayrshare->deletePost($profileKey, $postId);
+        return response()->json($result);
+    });
+
+    // Get post status (requires profileKey and postId param)
+    Route::get('post-status', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $postId = request('postId');
+        $result = $ayrshare->getPostStatus($profileKey, $postId);
+        return response()->json($result);
+    });
+
+    // Unlink a social account (requires profileKey and platform param)
+    Route::delete('unlink-social', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $platform = request('platform');
+        $result = $ayrshare->unlinkSocialAccount($profileKey, $platform);
+        return response()->json($result);
+    });
+
+    // Delete a profile (requires profileKey and title param)
+    Route::delete('delete-profile', function (AyrshareService $ayrshare) {
+        $profileKey = request('profileKey');
+        $title = request('title');
+        $result = $ayrshare->deleteProfile($profileKey, $title);
+        return response()->json($result);
+    });
+// });
+// --- END AYRSHARE SERVICE TEST ROUTES ---
 
 
 Route::middleware('guest')->group(function () {

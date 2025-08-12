@@ -65,7 +65,7 @@
 
         <a href="{{ $link }}">
             <img height="270" style="border-radius: 16px; max-width: 460px; width: 100%;"
-                src="https://res.cloudinary.com/videoask/image/fetch/t_social-image/https://images.pexels.com/videos/3002769/free-video-3002769.jpg?fit=crop&amp;w=1200&amp;h=630&amp;auto=compress&amp;cs=tinysrgb"
+                src="{{ asset('images/email-banner.png') }}"
                 alt="Continue Here" />
         </a>
 
