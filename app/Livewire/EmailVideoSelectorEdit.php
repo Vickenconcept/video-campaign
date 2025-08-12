@@ -11,7 +11,8 @@ class EmailVideoSelectorEdit extends Component
 {
     public $videoUrl = '';
     public $thumbnailUrl = '';
-    public $uploadType = 'upload'; // 'upload' or 'avatar_video'
+    public $uploadType = 'avatar_video'; // 'upload', 'avatar_video', or 'external_url'
+    public $externalVideoUrl = ''; // For YouTube/Vimeo URLs
 
     // AI Avatar Video Generation
     public $avatars = [];
@@ -25,6 +26,27 @@ class EmailVideoSelectorEdit extends Component
 
     protected $pipioService;
     protected $cacheDuration = 120; // 5 minutes in seconds
+
+    protected $rules = [
+        'externalVideoUrl' => 'required|url'
+    ];
+
+    protected function validateExternalVideoUrl($attribute, $value, $fail)
+    {
+        if (!empty($value)) {
+            if (!str_contains($value, 'youtube.com') && 
+                !str_contains($value, 'youtu.be') && 
+                !str_contains($value, 'vimeo.com')) {
+                $fail('Please enter a valid YouTube or Vimeo URL.');
+            }
+        }
+    }
+
+    protected $messages = [
+        'externalVideoUrl.required' => 'Please enter a YouTube or Vimeo URL.',
+        'externalVideoUrl.url' => 'Please enter a valid URL.',
+        'externalVideoUrl.regex' => 'Please enter a valid YouTube or Vimeo URL.'
+    ];
 
     public function mount($videoUrl = '', $thumbnailUrl = '')
     {
@@ -84,6 +106,7 @@ class EmailVideoSelectorEdit extends Component
             $this->content = $cachedVideo['content'] ?? '';
             $this->selectedAvatar = $cachedVideo['selectedAvatar'] ?? null;
             $this->selectedVoice = $cachedVideo['selectedVoice'] ?? null;
+            $this->uploadType = $cachedVideo['uploadType'] ?? 'upload';
         }
     }
 
@@ -97,6 +120,7 @@ class EmailVideoSelectorEdit extends Component
             'content' => $this->content,
             'selectedAvatar' => $this->selectedAvatar,
             'selectedVoice' => $this->selectedVoice,
+            'uploadType' => $this->uploadType,
             'generated_at' => now()->timestamp
         ];
 
@@ -230,6 +254,63 @@ class EmailVideoSelectorEdit extends Component
         $this->thumbnailUrl = $url;
         $this->cacheGeneratedVideo();
         $this->dispatch('thumbnail-url-updated', ['url' => $url]);
+    }
+
+    public function setExternalVideoUrl()
+    {
+        $this->validate();
+
+        // Extract video ID and generate thumbnail for YouTube
+        if (str_contains($this->externalVideoUrl, 'youtube.com') || str_contains($this->externalVideoUrl, 'youtu.be')) {
+            $videoId = $this->extractYouTubeVideoId($this->externalVideoUrl);
+            if ($videoId) {
+                $this->videoUrl = $this->externalVideoUrl;
+                $this->thumbnailUrl = "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg";
+            }
+        } 
+        // Extract video ID and generate thumbnail for Vimeo
+        elseif (str_contains($this->externalVideoUrl, 'vimeo.com')) {
+            $videoId = $this->extractVimeoVideoId($this->externalVideoUrl);
+            if ($videoId) {
+                $this->videoUrl = $this->externalVideoUrl;
+                // Vimeo doesn't have direct thumbnail URLs, so we'll use a placeholder
+                $this->thumbnailUrl = "https://placehold.co/600x400/3b82f6/ffffff?text=Vimeo+Video";
+            }
+        }
+
+        $this->cacheGeneratedVideo();
+        $this->dispatch('external-video-url-set', [
+            'videoUrl' => $this->videoUrl,
+            'thumbnailUrl' => $this->thumbnailUrl
+        ]);
+    }
+
+    protected function extractYouTubeVideoId($url)
+    {
+        $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/';
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    protected function extractVimeoVideoId($url)
+    {
+        $pattern = '/vimeo\.com\/([0-9]+)/';
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    public function clearExternalVideoUrl()
+    {
+        $this->externalVideoUrl = '';
+        $this->videoUrl = '';
+        $this->thumbnailUrl = '';
+        $this->uploadType = 'upload';
+        $this->cacheGeneratedVideo();
+        $this->dispatch('external-video-cache-cleared');
     }
 
     public function render()

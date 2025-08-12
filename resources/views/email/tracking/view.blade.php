@@ -14,12 +14,86 @@
                         optional($recipient) &&
                         optional($recipient)->campaign &&
                         optional($recipient)->campaign->video_url)
-                    <video controls
-                        poster="{{ optional($recipient)->campaign->thumbnail_url ?: 'https://placehold.co/600x400' }}"
-                        class="rounded-lg shadow-lg max-w-full w-full object-cover mx-auto">
-                        <source src="{{ optional($recipient)->campaign->video_url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    @php
+                        $videoUrl = optional($recipient)->campaign->video_url;
+                        $isExternalVideo = str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be') || str_contains($videoUrl, 'vimeo.com');
+                    @endphp
+                    
+                    @if($isExternalVideo)
+                        <!-- External Video (YouTube/Vimeo) -->
+                        @if(str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be'))
+                            @php
+                                $videoId = null;
+                                if (str_contains($videoUrl, 'youtube.com/watch?v=')) {
+                                    $videoId = substr($videoUrl, strpos($videoUrl, 'v=') + 2);
+                                    $videoId = strtok($videoId, '&');
+                                } elseif (str_contains($videoUrl, 'youtu.be/')) {
+                                    $videoId = substr($videoUrl, strrpos($videoUrl, '/') + 1);
+                                    $videoId = strtok($videoId, '?');
+                                }
+                            @endphp
+                            @if($videoId)
+                                <div class="w-full max-w-2xl mx-auto">
+                                    <iframe 
+                                        width="100%" 
+                                        height="315" 
+                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen
+                                        class="rounded-lg shadow-lg">
+                                    </iframe>
+                                </div>
+                            @else
+                                <div class="bg-gray-100 rounded-lg p-4 mb-4">
+                                    <p class="text-sm text-gray-600 mb-2">External Video:</p>
+                                    <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 hover:text-blue-800 font-mono text-sm break-all">
+                                        {{ $videoUrl }}
+                                    </a>
+                                </div>
+                            @endif
+                        @elseif(str_contains($videoUrl, 'vimeo.com'))
+                            @php
+                                $videoId = substr($videoUrl, strrpos($videoUrl, '/') + 1);
+                                $videoId = strtok($videoId, '?');
+                            @endphp
+                            @if($videoId)
+                                <div class="w-full max-w-2xl mx-auto">
+                                    <iframe 
+                                        width="100%" 
+                                        height="315" 
+                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0" 
+                                        frameborder="0" 
+                                        allow="autoplay; fullscreen; picture-in-picture" 
+                                        allowfullscreen
+                                        class="rounded-lg shadow-lg">
+                                    </iframe>
+                                </div>
+                            @else
+                                <div class="bg-gray-100 rounded-lg p-4 mb-4">
+                                    <p class="text-sm text-gray-600 mb-2">External Video:</p>
+                                    <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 hover:text-blue-800 font-mono text-sm break-all">
+                                        {{ $videoUrl }}
+                                    </a>
+                                </div>
+                            @endif
+                        @endif
+                        
+                        @if(optional($recipient)->campaign->thumbnail_url && !str_contains($videoUrl, 'youtube.com') && !str_contains($videoUrl, 'youtu.be') && !str_contains($videoUrl, 'vimeo.com'))
+                            <img src="{{ optional($recipient)->campaign->thumbnail_url }}" 
+                                 alt="Video Thumbnail" 
+                                 class="rounded-lg shadow-lg max-w-full w-full object-cover mx-auto">
+                        @endif
+                    @else
+                        <!-- Local Video -->
+                        <video controls
+                            poster="{{ optional($recipient)->campaign->thumbnail_url ?: 'https://placehold.co/600x400' }}"
+                            class="rounded-lg shadow-lg max-w-full w-full object-cover mx-auto">
+                            <source src="{{ $videoUrl }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    @endif
+                    
                     <div class="text-gray-700 text-base mt-4">
                         <span>Campaign: <strong>{{ optional($recipient)->campaign->title }}</strong></span>
                     </div>

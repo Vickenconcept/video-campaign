@@ -18,15 +18,28 @@ class VideoSetup extends Component
     public $selectedAvatar = null;
     public $content = '';
     public $videoUrl = null;
+    public $uploadType = 'upload'; // 'upload', 'avatar_video', or 'external_url'
+    public $externalVideoUrl = ''; // For YouTube/Vimeo URLs
 
     protected $pipioService;
     protected $cacheDuration = 86400;
 
+    protected $rules = [
+        'externalVideoUrl' => 'required|url'
+    ];
 
-
+    protected function validateExternalVideoUrl($attribute, $value, $fail)
+    {
+        if (!empty($value)) {
+            if (!str_contains($value, 'youtube.com') && 
+                !str_contains($value, 'youtu.be') && 
+                !str_contains($value, 'vimeo.com')) {
+                $fail('Please enter a valid YouTube or Vimeo URL.');
+            }
+        }
+    }
 
     public $fit_video, $video_setting, $position_video, $overlay_text = '', $text_size, $overlay_bg;
-
 
     public function mount($activeStep)
     {
@@ -38,8 +51,6 @@ class VideoSetup extends Component
         $this->overlay_text = $this->video_setting['overlay_text'] ?? null;
         $this->text_size = $this->video_setting['text_size'] ?? null;
         $this->overlay_bg = $this->video_setting['overlay_bg'] ?? null;
-
-
 
         $this->videoUrl =  $this->activeStep->video_url ?? '';
         $this->content = strip_tags('hello this is the content');
@@ -189,6 +200,95 @@ class VideoSetup extends Component
         }
     }
 
+    public function setExternalVideoUrl()
+    {
+        try {
+            $this->validate();
+
+            // Extract video ID and generate thumbnail for YouTube
+            if (str_contains($this->externalVideoUrl, 'youtube.com') || str_contains($this->externalVideoUrl, 'youtu.be')) {
+                $videoId = $this->extractYouTubeVideoId($this->externalVideoUrl);
+                if ($videoId) {
+                    $this->videoUrl = $this->externalVideoUrl;
+                    // Update the step with the external video URL
+                    $this->activeStep->update([
+                        'video_url' => $this->externalVideoUrl,
+                        'is_pipio_processed' => false
+                    ]);
+                    
+                    $this->dispatch('external-video-url-set', [
+                        'videoUrl' => $this->videoUrl
+                    ]);
+                    
+                    $this->dispatch('notify', status: 'success', msg: 'External video URL saved successfully!');
+                } else {
+                    $this->addError('externalVideoUrl', 'Could not extract video ID from YouTube URL');
+                }
+            } 
+            // Extract video ID and generate thumbnail for Vimeo
+            elseif (str_contains($this->externalVideoUrl, 'vimeo.com')) {
+                $videoId = $this->extractVimeoVideoId($this->externalVideoUrl);
+                if ($videoId) {
+                    $this->videoUrl = $this->externalVideoUrl;
+                    // Update the step with the external video URL
+                    $this->activeStep->update([
+                        'video_url' => $this->externalVideoUrl,
+                        'is_pipio_processed' => false
+                    ]);
+                    
+                    $this->dispatch('external-video-url-set', [
+                        'videoUrl' => $this->videoUrl
+                    ]);
+                    
+                    $this->dispatch('notify', status: 'success', msg: 'External video URL saved successfully!');
+                } else {
+                    $this->addError('externalVideoUrl', 'Could not extract video ID from Vimeo URL');
+                }
+            } else {
+                $this->addError('externalVideoUrl', 'Please enter a valid YouTube or Vimeo URL');
+            }
+        } catch (\Exception $e) {
+            $this->addError('externalVideoUrl', 'Failed to save external video URL: ' . $e->getMessage());
+        }
+    }
+
+    protected function extractYouTubeVideoId($url)
+    {
+        $pattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/';
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    protected function extractVimeoVideoId($url)
+    {
+        $pattern = '/vimeo\.com\/([0-9]+)/';
+        if (preg_match($pattern, $url, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    public function clearExternalVideoUrl()
+    {
+        try {
+            $this->externalVideoUrl = '';
+            $this->videoUrl = '';
+            $this->uploadType = 'upload';
+            
+            // Update the step to remove the external video URL
+            $this->activeStep->update([
+                'video_url' => null,
+                'is_pipio_processed' => false
+            ]);
+            
+            $this->dispatch('external-video-cache-cleared');
+            $this->dispatch('notify', status: 'success', msg: 'External video URL cleared successfully!');
+        } catch (\Exception $e) {
+            $this->addError('externalVideoUrl', 'Failed to clear external video URL: ' . $e->getMessage());
+        }
+    }
 
     public function update_fit_video($key)
     {

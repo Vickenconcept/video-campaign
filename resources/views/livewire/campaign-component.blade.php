@@ -509,10 +509,64 @@
                                 wire:key="display-{{ $activeStep }}">
                                 <div class="h-full bg-slate-600 col-span-2 lg:col-span-1">
                                     @if (!empty($activeStep->video_url))
-                                        <video width="100%" controls class="mx-auto bg-slate-50 ">
-                                            <source src="{{ $activeStep->video_url }}" type="video/webm">
-                                            Your browser does not support the video tag.
-                                        </video>
+                                        @php
+                                            $isExternalVideo = str_contains($activeStep->video_url, 'youtube.com') || str_contains($activeStep->video_url, 'youtu.be') || str_contains($activeStep->video_url, 'vimeo.com');
+                                        @endphp
+                                        
+                                        @if($isExternalVideo)
+                                            <!-- External Video (YouTube/Vimeo) -->
+                                            @if(str_contains($activeStep->video_url, 'youtube.com') || str_contains($activeStep->video_url, 'youtu.be'))
+                                                @php
+                                                    $videoId = null;
+                                                    if (str_contains($activeStep->video_url, 'youtube.com/watch?v=')) {
+                                                        $videoId = substr($activeStep->video_url, strpos($activeStep->video_url, 'v=') + 2);
+                                                        $videoId = strtok($videoId, '&');
+                                                    } elseif (str_contains($activeStep->video_url, 'youtu.be/')) {
+                                                        $videoId = substr($activeStep->video_url, strrpos($activeStep->video_url, '/') + 1);
+                                                        $videoId = strtok($videoId, '?');
+                                                    }
+                                                @endphp
+                                                @if($videoId)
+                                                    <iframe 
+                                                        width="100%" 
+                                                        height="100%" 
+                                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&controls=1" 
+                                                        frameborder="0" 
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                        allowfullscreen
+                                                        class="w-full h-full">
+                                                    </iframe>
+                                                @else
+                                                    <img src="{{ asset('images/video-thumbnail.jpg ') }}" alt=""
+                                                        class="h-full w-full object-cover object-center">
+                                                @endif
+                                            @elseif(str_contains($activeStep->video_url, 'vimeo.com'))
+                                                @php
+                                                    $videoId = substr($activeStep->video_url, strrpos($activeStep->video_url, '/') + 1);
+                                                    $videoId = strtok($videoId, '?');
+                                                @endphp
+                                                @if($videoId)
+                                                    <iframe 
+                                                        width="100%" 
+                                                        height="100%" 
+                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&controls=1" 
+                                                        frameborder="0" 
+                                                        allow="autoplay; fullscreen; picture-in-picture" 
+                                                        allowfullscreen
+                                                        class="w-full h-full">
+                                                    </iframe>
+                                                @else
+                                                    <img src="{{ asset('images/video-thumbnail.jpg ') }}" alt=""
+                                                        class="h-full w-full object-cover object-center">
+                                                @endif
+                                            @endif
+                                        @else
+                                            <!-- Local Video -->
+                                            <video width="100%" controls class="mx-auto bg-slate-50 ">
+                                                <source src="{{ $activeStep->video_url }}" type="video/webm">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @endif
                                     @else
                                         <img src="{{ asset('images/video-thumbnail.jpg ') }}" alt=""
                                             class="h-full w-full object-cover object-center">

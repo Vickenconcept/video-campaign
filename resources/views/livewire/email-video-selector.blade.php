@@ -10,6 +10,12 @@
         // Update Alpine data when Livewire data changes
         this.upload_type = $wire.uploadType;
         this.tab = $wire.uploadType === 'avatar_video' ? 'avatar' : 'video';
+        
+        // Handle external video URL events
+        Livewire.on('external-video-url-set', ({ videoUrl, thumbnailUrl }) => {
+            document.getElementById('video_url').value = videoUrl;
+            document.getElementById('thumbnail_url').value = thumbnailUrl;
+        });
 
         // Set selected values from Livewire if they exist
         if ($wire.selectedAvatar) {
@@ -56,6 +62,11 @@
             }
         });
 
+        // Handle external video cache cleared event
+        Livewire.on('external-video-cache-cleared', () => {
+            this.upload_type = 'upload';
+        });
+
         // Handle form submission to clear cache
         window.addEventListener('clear-video-cache', () => {
             @this.clearCachedVideo();
@@ -84,6 +95,15 @@
                 class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
                 AI Avatar Video
             </button>
+            <button type="button"
+                @click="upload_type = 'external_url'; $wire.uploadType = 'external_url'; $wire.cacheGeneratedVideo()"
+                :class="{
+                    'bg-white shadow-sm': upload_type === 'external_url',
+                    'text-gray-500': upload_type !== 'external_url'
+                }"
+                class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                External URL
+            </button>
         </div>
     </div>
 
@@ -103,7 +123,6 @@
             </button>
             <p class="text-sm text-gray-500 mt-2">Click to upload video (max 100MB)</p>
         </div>
-
 
         <!-- Uploaded Video Preview -->
         <div x-show="$wire.videoUrl" class="bg-white border rounded-lg p-4" wire:poll>
@@ -128,11 +147,52 @@
                 </template>
                 <p>Your browser does not support the video tag.</p>
             </video>
+        </div>
+    </div>
 
-            {{-- <div class="mt-2 text-sm text-gray-600">
-                <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
-                <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-            </div> --}}
+    <!-- External URL Section -->
+    <div x-show="upload_type === 'external_url'" class="space-y-4">
+        <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div class="mb-4">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+            </div>
+            <div class="space-y-4">
+                <input type="url" 
+                       wire:model.live="externalVideoUrl"
+                       placeholder="Paste YouTube or Vimeo URL here..."
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="button" 
+                        wire:click="setExternalVideoUrl"
+                        :disabled="!$wire.externalVideoUrl?.trim()"
+                        :class="{
+                            'bg-blue-600': $wire.externalVideoUrl?.trim(),
+                            'bg-gray-400 cursor-not-allowed': !$wire.externalVideoUrl?.trim()
+                        }"
+                        class="px-6 py-3 rounded-lg text-white font-medium transition-colors">
+                    Set Video URL
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Supported: YouTube and Vimeo URLs</p>
+        </div>
+
+        <!-- External Video Preview -->
+        <div x-show="$wire.videoUrl && upload_type === 'external_url'" class="bg-white border rounded-lg p-4">
+            <div class="flex justify-between items-center">
+                <h4 class="font-medium text-gray-900 mb-2">External Video</h4>
+                <div>
+                    <button type="button" wire:click="clearExternalVideoUrl"
+                        class="bg-red-600 text-white px-4 py-2 rounded-md text-sm hover:bg-red-700 transition-colors">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <div class="text-center">
+                @if($thumbnailUrl)
+                    <img src="{{ $thumbnailUrl }}" alt="Video Thumbnail" class="w-full max-w-md mx-auto rounded-lg">
+                @endif
+            </div>
         </div>
     </div>
 
@@ -294,10 +354,6 @@
                     </template>
                     <p>Your browser does not support the video tag.</p>
                 </video>
-                {{-- <div class="mt-2 text-sm text-gray-600">
-                    <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
-                    <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-                </div> --}}
                 <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
                     <p class="text-sm text-blue-800">
                         <i class='bx bx-info-circle mr-1'></i>

@@ -7,6 +7,12 @@
     checkInterval: null,
 
     init() {
+        // Handle external video URL events
+        Livewire.on('external-video-url-set', ({ videoUrl, thumbnailUrl }) => {
+            document.getElementById('video_url').value = videoUrl;
+            document.getElementById('thumbnail_url').value = thumbnailUrl;
+        });
+
         Livewire.on('videoGenerationStarted', () => {
             this.isGenerating = true;
             this.checkInterval = setInterval(() => {
@@ -42,6 +48,11 @@
                 clearInterval(this.checkInterval);
             }
         });
+
+        // Handle external video cache cleared event
+        Livewire.on('external-video-cache-cleared', () => {
+            this.upload_type = 'upload';
+        });
     }
 }">
 
@@ -49,14 +60,75 @@
     @if($videoUrl)
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 class="font-medium text-blue-900 mb-2">Current Video</h4>
-            <video controls class="w-full max-w-md mx-auto rounded-lg">
-                <source src="{{ $videoUrl }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            {{-- <div class="mt-2 text-sm text-blue-700">
-                <p><strong>Video URL:</strong> {{ $videoUrl }}</p>
-                <p><strong>Thumbnail URL:</strong> {{ $thumbnailUrl }}</p>
-            </div> --}}
+            @php
+                $isExternalVideo = str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be') || str_contains($videoUrl, 'vimeo.com');
+            @endphp
+            
+            @if($isExternalVideo)
+                @if(str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be'))
+                    @php
+                        $videoId = null;
+                        if (str_contains($videoUrl, 'youtube.com/watch?v=')) {
+                            $videoId = substr($videoUrl, strpos($videoUrl, 'v=') + 2);
+                            $videoId = strtok($videoId, '&');
+                        } elseif (str_contains($videoUrl, 'youtu.be/')) {
+                            $videoId = substr($videoUrl, strrpos($videoUrl, '/') + 1);
+                            $videoId = strtok($videoId, '?');
+                        }
+                    @endphp
+                    @if($videoId)
+                        <div class="w-full max-w-2xl mx-auto">
+                            <iframe 
+                                width="100%" 
+                                height="315" 
+                                src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen
+                                class="rounded-lg shadow-lg">
+                            </iframe>
+                        </div>
+                    @else
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600 mb-2">External Video URL:</p>
+                            <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 hover:text-blue-800 font-mono text-sm break-all">
+                                {{ $videoUrl }}
+                            </a>
+                        </div>
+                    @endif
+                @elseif(str_contains($videoUrl, 'vimeo.com'))
+                    @php
+                        $videoId = substr($videoUrl, strrpos($videoUrl, '/') + 1);
+                        $videoId = strtok($videoId, '?');
+                    @endphp
+                    @if($videoId)
+                        <div class="w-full max-w-2xl mx-auto">
+                            <iframe 
+                                width="100%" 
+                                height="315" 
+                                src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0" 
+                                frameborder="0" 
+                                allow="autoplay; fullscreen; picture-in-picture" 
+                                allowfullscreen
+                                class="rounded-lg shadow-lg">
+                            </iframe>
+                        </div>
+                    @else
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600 mb-2">External Video URL:</p>
+                            <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 hover:text-blue-800 font-mono text-sm break-all">
+                                {{ $videoUrl }}
+                            </a>
+                        </div>
+                    @endif
+                @endif
+            @else
+                <!-- Local Video -->
+                <video controls class="w-full max-w-md mx-auto rounded-lg">
+                    <source src="{{ $videoUrl }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            @endif
         </div>
     @endif
 
@@ -74,6 +146,12 @@
                     :class="{ 'bg-white shadow-sm': upload_type === 'avatar_video', 'text-gray-500': upload_type !== 'avatar_video' }"
                     class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
                 Generate AI Avatar Video
+            </button>
+            <button type="button" 
+                    @click="upload_type = 'external_url'; $wire.uploadType = 'external_url'"
+                    :class="{ 'bg-white shadow-sm': upload_type === 'external_url', 'text-gray-500': upload_type !== 'external_url' }"
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                External URL
             </button>
         </div>
     </div>
@@ -107,10 +185,52 @@
                 </template>
                 <p>Your browser does not support the video tag.</p>
             </video>
-            {{-- <div class="mt-2 text-sm text-gray-600">
-                <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
-                <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-            </div> --}}
+        </div>
+    </div>
+
+    <!-- External URL Section -->
+    <div x-show="upload_type === 'external_url'" class="space-y-4">
+        <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <div class="mb-4">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                </svg>
+            </div>
+            <div class="space-y-4">
+                <input type="url" 
+                       wire:model.live="externalVideoUrl"
+                       placeholder="Paste YouTube or Vimeo URL here..."
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="button" 
+                        wire:click="setExternalVideoUrl"
+                        :disabled="!$wire.externalVideoUrl?.trim()"
+                        :class="{
+                            'bg-blue-600': $wire.externalVideoUrl?.trim(),
+                            'bg-gray-400 cursor-not-allowed': !$wire.externalVideoUrl?.trim()
+                        }"
+                        class="px-6 py-3 rounded-lg text-white font-medium transition-colors">
+                    Set Video URL
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Supported: YouTube and Vimeo URLs</p>
+        </div>
+
+        <!-- External Video Preview -->
+        <div x-show="$wire.videoUrl && upload_type === 'external_url'" class="bg-white border rounded-lg p-4">
+            <div class="flex justify-between items-center">
+                <h4 class="font-medium text-gray-900 mb-2">External Video</h4>
+                <div>
+                    <button type="button" wire:click="clearExternalVideoUrl"
+                        class="bg-red-600 text-white px-4 py-2 rounded-md text-sm hover:bg-red-700 transition-colors">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <div class="text-center">
+                @if($thumbnailUrl)
+                    <img src="{{ $thumbnailUrl }}" alt="Video Thumbnail" class="w-full max-w-md mx-auto rounded-lg">
+                @endif
+            </div>
         </div>
     </div>
 
@@ -186,8 +306,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <template x-for="voice in $wire.voices" :key="voice.id">
                     <div class="cursor-pointer p-4 border rounded-lg transition-all duration-200 bg-gray-50 hover:shadow-md"
-                         :class="{ 'ring-2 ring-blue-500 bg-blue-50': selectedVoice === voice.id }"
-                         @click="selectedVoice = voice.id; $wire.selectVoice(voice.id)">
+                         :class="{ 'ring-2 ring-blue-500 bg-blue-50': selectedVoice === avatar.id }"
+                         @click="selectedVoice = voice.id; $wire.selectVoice(avatar.id)">
                         <div class="flex items-center space-x-3">
                             <div class="flex-shrink-0">
                                 <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,11 +378,6 @@
             </div>
             
             <div class="bg-white border rounded-lg p-4">
-                {{-- <video controls class="w-full max-w-md mx-auto rounded-lg">
-                    <source :src="$wire.videoUrl" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> --}}
-
                 <video controls class="w-full max-w-md mx-auto rounded-lg">
                     <template x-if="$wire.videoUrl.endsWith('.mp4')">
                         <source :src="$wire.videoUrl" type="video/mp4">
@@ -275,10 +390,6 @@
                     </template>
                     <p>Your browser does not support the video tag.</p>
                 </video>
-                {{-- <div class="mt-2 text-sm text-gray-600">
-                    <p><strong>Video URL:</strong> <span x-text="$wire.videoUrl"></span></p>
-                    <p><strong>Thumbnail URL:</strong> <span x-text="$wire.thumbnailUrl"></span></p>
-                </div> --}}
                 <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
                     <p class="text-sm text-blue-800">
                         <i class='bx bx-info-circle mr-1'></i>

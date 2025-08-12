@@ -1,7 +1,7 @@
 <div class="h-screen">
 
     <x-seo::meta />
-    @seo([
+  @seo([
         'title' => 'Videngager',
         'description' => 'Video funnel',
         'image' => asset('images/video-thumbnail.jpg'),
@@ -60,40 +60,135 @@
                                     {{ $video_setting['overlay_text'] ?? '' }}</p>
                             </div>
                         @endif
-                        <div class="h-screen md:h-full w-full bg-slate-300 flex {{ $alignment }}">
+                        <div class="h-screen md:h-full w-full bg-slate-300 relative">
 
-                            <div class="relative max-w-full max-h-full w-full group" x-data="{ playing: false }"
+                            <div class="relative max-w-full max-h-full w-full h-full group" x-data="{ playing: false }"
                                 x-init="$refs.player.addEventListener('play', () => playing = true);
                                 $refs.player.addEventListener('pause', () => playing = false);">
 
                                 @if ($step->video_url)
-                                    <video x-ref="player"
-                                        class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
-                                        :controls="false">
-                                        <source src="{{ $step->video_url }}" type="video/webm">
-                                        Your browser does not support the video tag.
-                                    </video>
+                                    @php
+                                        $isExternalVideo = str_contains($step->video_url, 'youtube.com') || str_contains($step->video_url, 'youtu.be') || str_contains($step->video_url, 'vimeo.com');
+                                    @endphp
+                                    
+                                    @if($isExternalVideo)
+                                        <!-- External Video (YouTube/Vimeo) -->
+                                        @if(str_contains($step->video_url, 'youtube.com') || str_contains($step->video_url, 'youtu.be'))
+                                            @php
+                                                $videoId = null;
+                                                if (str_contains($step->video_url, 'youtube.com/watch?v=')) {
+                                                    $videoId = substr($step->video_url, strpos($step->video_url, 'v=') + 2);
+                                                    $videoId = strtok($videoId, '&');
+                                                } elseif (str_contains($step->video_url, 'youtu.be/')) {
+                                                    $videoId = substr($step->video_url, strrpos($step->video_url, '/') + 1);
+                                                    $videoId = strtok($videoId, '?');
+                                                }
+                                            @endphp
+                                            @if($videoId)
+                                                @if($fit)
+                                                    <!-- Fit mode: Center the video -->
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <iframe 
+                                                            width="100%" 
+                                                            height="100%" 
+                                                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay=0&controls=1" 
+                                                            frameborder="0" 
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                            allowfullscreen
+                                                            class="w-full h-full max-w-full max-h-full object-contain">
+                                                        </iframe>
+                                                    </div>
+                                                @else
+                                                    <!-- Position mode: Full width like local videos -->
+                                                    <iframe 
+                                                        width="100%" 
+                                                        height="100%" 
+                                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay=0&controls=1" 
+                                                        frameborder="0" 
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                        allowfullscreen
+                                                        class="absolute inset-0 w-full h-full">
+                                                    </iframe>
+                                                @endif
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <p class="text-gray-500">Invalid YouTube URL</p>
+                                                </div>
+                                            @endif
+                                        @elseif(str_contains($step->video_url, 'vimeo.com'))
+                                            @php
+                                                $videoId = substr($step->video_url, strrpos($step->video_url, '/') + 1);
+                                                $videoId = strtok($videoId, '?');
+                                            @endphp
+                                            @if($videoId)
+                                                @if($fit)
+                                                    <!-- Fit mode: Center the video -->
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <iframe 
+                                                            width="100%" 
+                                                            height="100%" 
+                                                            src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&autoplay=0&controls=1" 
+                                                            frameborder="0" 
+                                                            allow="autoplay; fullscreen; picture-in-picture" 
+                                                            allowfullscreen
+                                                            class="w-full h-full max-w-full max-h-full object-contain">
+                                                        </iframe>
+                                                    </div>
+                                                @else
+                                                    <!-- Position mode: Full width like local videos -->
+                                                    <iframe 
+                                                        width="100%" 
+                                                        height="100%" 
+                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&autoplay=0&controls=1" 
+                                                        frameborder="0" 
+                                                        allow="autoplay; fullscreen; picture-in-picture" 
+                                                        allowfullscreen
+                                                        class="absolute inset-0 w-full h-full">
+                                                    </iframe>
+                                                @endif
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center">
+                                                    <p class="text-gray-500">Invalid Vimeo URL</p>
+                                                </div>
+                                            @endif
+                                        @endif
+                                    @else
+                                        <!-- Local Video -->
+                                        @if($fit)
+                                            <video x-ref="player"
+                                                class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
+                                                :controls="false">
+                                                <source src="{{ $step->video_url }}" type="video/webm">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @else
+                                            <video x-ref="player"
+                                                class="absolute inset-0 w-full h-full object-contain"
+                                                :controls="false">
+                                                <source src="{{ $step->video_url }}" type="video/webm">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @endif
 
-                                    <!-- Custom Play/Pause button shown only on hover -->
-                                    <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
-                                        <button
-                                            @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
-                                            class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
-                                            <svg x-show="!playing" style="display: none"
-                                                xmlns="http://www.w3.org/2000/svg" class="size-20" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
+                                        <!-- Custom Play/Pause button shown only on hover -->
+                                        <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
+                                            <button
+                                                @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
+                                                class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
+                                                <svg x-show="!playing" class="size-20" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M14.752 11.168l-5.197-3.028A1 1 0 008 9.028v5.944a1 1 0 001.555.832l5.197-3.028a1 1 0 000-1.664z" />
                                             </svg>
 
-                                            <svg x-show="playing" style="display: none"
-                                                xmlns="http://www.w3.org/2000/svg" class="size-20" fill="none"
+                                            <svg x-show="playing" class="size-20" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M10 9v6m4-6v6" />
                                             </svg>
                                         </button>
                                     </div>
+                                    @endif
                                 @endif
                                 {{-- @if (!empty($video_setting['overlay_text']))
                                 <div

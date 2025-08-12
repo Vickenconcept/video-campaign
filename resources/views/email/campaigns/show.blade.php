@@ -49,10 +49,73 @@
                     {!! nl2br(e($campaign->body)) !!}
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">
-                    <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="Thumbnail" class="w-52  object-cover rounded shadow">
-                    </a>
-                    <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">View Video</a>
+                    @if($campaign->video_url)
+                        @php
+                            $isExternalVideo = str_contains($campaign->video_url, 'youtube.com') || str_contains($campaign->video_url, 'youtu.be') || str_contains($campaign->video_url, 'vimeo.com');
+                        @endphp
+                        
+                        @if($isExternalVideo)
+                            <!-- External Video Display -->
+                            @if(str_contains($campaign->video_url, 'youtube.com') || str_contains($campaign->video_url, 'youtu.be'))
+                                @php
+                                    $videoId = null;
+                                    if (str_contains($campaign->video_url, 'youtube.com/watch?v=')) {
+                                        $videoId = substr($campaign->video_url, strpos($campaign->video_url, 'v=') + 2);
+                                        $videoId = strtok($videoId, '&');
+                                    } elseif (str_contains($campaign->video_url, 'youtu.be/')) {
+                                        $videoId = substr($campaign->video_url, strrpos($campaign->video_url, '/') + 1);
+                                        $videoId = strtok($videoId, '?');
+                                    }
+                                @endphp
+                                @if($videoId)
+                                    <div class="w-80">
+                                        <iframe 
+                                            width="100%" 
+                                            height="200" 
+                                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&controls=1" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen
+                                            class="rounded shadow">
+                                        </iframe>
+                                    </div>
+                                @else
+                                    <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">
+                                        <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="Thumbnail" class="w-52 object-cover rounded shadow">
+                                    </a>
+                                @endif
+                            @elseif(str_contains($campaign->video_url, 'vimeo.com'))
+                                @php
+                                    $videoId = substr($campaign->video_url, strrpos($campaign->video_url, '/') + 1);
+                                    $videoId = strtok($videoId, '?');
+                                @endphp
+                                @if($videoId)
+                                    <div class="w-80">
+                                        <iframe 
+                                            width="100%" 
+                                            height="200" 
+                                            src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&controls=1" 
+                                            frameborder="0" 
+                                            allow="autoplay; fullscreen; picture-in-picture" 
+                                            allowfullscreen
+                                            class="rounded shadow">
+                                        </iframe>
+                                    </div>
+                                @else
+                                    <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">
+                                        <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="Thumbnail" class="w-52 object-cover rounded shadow">
+                                    </a>
+                                @endif
+                            @endif
+                        @else
+                            <!-- Local Video Display -->
+                            <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">
+                                <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="Thumbnail" class="w-52 object-cover rounded shadow">
+                            </a>
+                        @endif
+                        
+                        <a href="{{ $campaign->video_url }}" target="_blank" class="text-blue-600 underline">View Video</a>
+                    @endif
                 </div>
             </div>
             <div class="mb-6">
