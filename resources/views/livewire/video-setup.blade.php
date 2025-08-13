@@ -153,6 +153,7 @@
                     
                     Livewire.on('video-generation-complete-{{ $activeStep->id }}', ({ videoUrl }) => {
                         clearInterval(intervalId);
+                        $wire.videoUrl = videoUrl;
                     });"
                         x-text="messages[currentIndex]"></p>
                 </div>

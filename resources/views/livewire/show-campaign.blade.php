@@ -46,8 +46,24 @@
                             'bottom-right' => 'items-end justify-end',
                         ];
 
+                        $absolutePositionClasses = [
+                            'top-left' => 'top-0 left-0',
+                            'top-center' => 'top-0 left-1/2 transform -translate-x-1/2',
+                            'top-right' => 'top-0 right-0',
+                            'center-left' => 'top-1/2 left-0 transform -translate-y-1/2',
+                            'center' => 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+                            'center-right' => 'top-1/2 right-0 transform -translate-y-1/2',
+                            'bottom-left' => 'bottom-0 left-0',
+                            'bottom-center' => 'bottom-0 left-1/2 transform -translate-x-1/2',
+                            'bottom-right' => 'bottom-0 right-0',
+                        ];
+
                         $alignment = !$fit
                             ? $positionClasses[$video_setting['position']] ?? 'items-center justify-center'
+                            : '';
+                        
+                        $absolutePosition = !$fit
+                            ? $absolutePositionClasses[$video_setting['position']] ?? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                             : '';
                     @endphp
 
@@ -107,7 +123,7 @@
                                                         frameborder="0" 
                                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                                         allowfullscreen
-                                                        class="absolute inset-0 w-full h-full">
+                                                        class="absolute w-full h-full {{ $absolutePosition }}">
                                                     </iframe>
                                                 @endif
                                             @else
@@ -139,11 +155,11 @@
                                                     <iframe 
                                                         width="100%" 
                                                         height="100%" 
-                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&autoplay=0&controls=1" 
+                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&portrait=0&autoplay=0&controls=1" 
                                                         frameborder="0" 
                                                         allow="autoplay; fullscreen; picture-in-picture" 
                                                         allowfullscreen
-                                                        class="absolute inset-0 w-full h-full">
+                                                        class="absolute w-full h-full {{ $absolutePosition }}">
                                                     </iframe>
                                                 @endif
                                             @else
@@ -163,7 +179,7 @@
                                             </video>
                                         @else
                                             <video x-ref="player"
-                                                class="absolute inset-0 w-full h-full object-contain"
+                                                class="absolute w-full h-full object-contain {{ $absolutePosition }}"
                                                 :controls="false">
                                                 <source src="{{ $step->video_url }}" type="video/webm">
                                                 Your browser does not support the video tag.
