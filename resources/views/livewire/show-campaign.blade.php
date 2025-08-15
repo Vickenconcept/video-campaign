@@ -78,11 +78,52 @@
                         @endif
                         <div class="h-screen md:h-full w-full bg-slate-300 relative">
 
-                            <div class="relative max-w-full max-h-full w-full h-full group" x-data="{ playing: false }"
-                                x-init="$refs.player.addEventListener('play', () => playing = true);
-                                $refs.player.addEventListener('pause', () => playing = false);">
+                            <div class="relative max-w-full max-h-full w-full h-full group" x-data="{ playing: false, shouldAutoplay: {{ $campaign->autoplay_video ? 'true' : 'false' }} }"
+                                x-init="
+                                    const yt = document.getElementById('yt-{{ $step->id }}');
+                                    const vm = document.getElementById('vm-{{ $step->id }}');
+                                    const playYT = () => { if (yt && yt.contentWindow) { yt.contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:[]}), '*'); } };
+                                    const pauseYT = () => { if (yt && yt.contentWindow) { yt.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}), '*'); } };
+                                    const playVM = () => { if (vm && vm.contentWindow) { vm.contentWindow.postMessage({ method: 'play' }, '*'); } };
+                                    const pauseVM = () => { if (vm && vm.contentWindow) { vm.contentWindow.postMessage({ method: 'pause' }, '*'); } };
+                                    const controlByVisibility = () => {
+                                        const active = shouldAutoplay && document.visibilityState === 'visible' && document.hasFocus();
+                                        if ($refs.player) {
+                                            if (active) { try { $refs.player.play(); } catch (e) {} } else { $refs.player.pause(); }
+                                        } else {
+                                            if (active) { playYT(); playVM(); } else { pauseYT(); pauseVM(); }
+                                        }
+                                    };
+                                    const tryStartPlayback = () => {
+                                        const active = shouldAutoplay && document.visibilityState === 'visible' && document.hasFocus();
+                                        if (!active) return;
+                                        if ($refs.player) {
+                                            try { $refs.player.play(); } catch (e) {}
+                                        } else {
+                                            playYT();
+                                            playVM();
+                                        }
+                                    };
+                                    if ($refs.player) {
+                                        $refs.player.addEventListener('play', () => playing = true);
+                                        $refs.player.addEventListener('pause', () => playing = false);
+                                        $refs.player.addEventListener('loadedmetadata', tryStartPlayback);
+                                        $refs.player.addEventListener('canplay', tryStartPlayback);
+                                    }
+                                    if (yt) { yt.addEventListener('load', tryStartPlayback); }
+                                    if (vm) { vm.addEventListener('load', tryStartPlayback); }
+                                    document.addEventListener('visibilitychange', controlByVisibility);
+                                    window.addEventListener('focus', controlByVisibility);
+                                    window.addEventListener('blur', controlByVisibility);
+                                    $nextTick(() => {
+                                        setTimeout(controlByVisibility, 200);
+                                        setTimeout(tryStartPlayback, 200);
+                                        setTimeout(tryStartPlayback, 800);
+                                    });
+                                ">
 
                                 @if ($step->video_url)
+                                    @php $autoplay = (bool) ($campaign->autoplay_video ?? false); @endphp
                                     @php
                                         $isExternalVideo = str_contains($step->video_url, 'youtube.com') || str_contains($step->video_url, 'youtu.be') || str_contains($step->video_url, 'vimeo.com');
                                     @endphp
@@ -104,10 +145,10 @@
                                                 @if($fit)
                                                     <!-- Fit mode: Center the video -->
                                                     <div class="w-full h-full flex items-center justify-center">
-                                                        <iframe 
+                                                        <iframe id="yt-{{ $step->id }}"
                                                             width="100%" 
                                                             height="100%" 
-                                                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay=0&controls=1" 
+                                                            src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay={{ $autoplay ? 1 : 0 }}&controls=1&mute=0&enablejsapi=1" 
                                                             frameborder="0" 
                                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                                             allowfullscreen
@@ -116,10 +157,10 @@
                                                     </div>
                                                 @else
                                                     <!-- Position mode: Full width like local videos -->
-                                                    <iframe 
+                                                    <iframe id="yt-{{ $step->id }}"
                                                         width="100%" 
                                                         height="100%" 
-                                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay=0&controls=1" 
+                                                        src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&autoplay={{ $autoplay ? 1 : 0 }}&controls=1&mute=0&enablejsapi=1" 
                                                         frameborder="0" 
                                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                                         allowfullscreen
@@ -140,10 +181,10 @@
                                                 @if($fit)
                                                     <!-- Fit mode: Center the video -->
                                                     <div class="w-full h-full flex items-center justify-center">
-                                                        <iframe 
+                                                        <iframe id="vm-{{ $step->id }}"
                                                             width="100%" 
                                                             height="100%" 
-                                                            src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&autoplay=0&controls=1" 
+                                                            src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&byline=0&portrait=0&autoplay={{ $autoplay ? 1 : 0 }}&controls=1&muted=0" 
                                                             frameborder="0" 
                                                             allow="autoplay; fullscreen; picture-in-picture" 
                                                             allowfullscreen
@@ -152,10 +193,10 @@
                                                     </div>
                                                 @else
                                                     <!-- Position mode: Full width like local videos -->
-                                                    <iframe 
+                                                    <iframe id="vm-{{ $step->id }}"
                                                         width="100%" 
                                                         height="100%" 
-                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&portrait=0&autoplay=0&controls=1" 
+                                                        src="https://player.vimeo.com/video/{{ $videoId }}?h=hash&title=0&portrait=0&autoplay={{ $autoplay ? 1 : 0 }}&controls=1&muted=0" 
                                                         frameborder="0" 
                                                         allow="autoplay; fullscreen; picture-in-picture" 
                                                         allowfullscreen
@@ -171,14 +212,14 @@
                                     @else
                                         <!-- Local Video -->
                                         @if($fit)
-                                            <video x-ref="player"
+                                            <video x-ref="player" @if($autoplay) autoplay playsinline @endif
                                                 class="mx-auto bg-slate-50/10 max-w-full max-h-full w-full object-contain"
                                                 :controls="false">
                                                 <source src="{{ $step->video_url }}" type="video/webm">
                                                 Your browser does not support the video tag.
                                             </video>
                                         @else
-                                            <video x-ref="player"
+                                            <video x-ref="player" @if($autoplay) autoplay playsinline @endif
                                                 class="absolute w-full h-full object-contain {{ $absolutePosition }}"
                                                 :controls="false">
                                                 <source src="{{ $step->video_url }}" type="video/webm">

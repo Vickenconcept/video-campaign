@@ -38,6 +38,14 @@
                 </button>
             </div>
             <div class="flex items-center space-x-3">
+                <div class="bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 flex items-center space-x-3">
+                    <span class="text-sm font-semibold text-gray-900">Autoplay video</span>
+                    <label class="relative inline-flex items-center cursor-pointer" wire:click="toggleAutoplay">
+                        <input type="checkbox" value="1" class="sr-only peer" wire:model="autoplay_video">
+                        <div class="w-11 z-0 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-400 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-green-400">
+                        </div>
+                    </label>
+                </div>
 
                 <button id="previewButton" data-dropdown-toggle="previewDropdown" data-dropdown-delay="500"
                     data-dropdown-trigger="hover"

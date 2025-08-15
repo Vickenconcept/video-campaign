@@ -52,6 +52,7 @@ class VideoSetup extends Component
         $this->text_size = $this->video_setting['text_size'] ?? null;
         $this->overlay_bg = $this->video_setting['overlay_bg'] ?? null;
 
+
         $this->videoUrl =  $this->activeStep->video_url ?? '';
         $this->content = strip_tags('hello this is the content');
         $this->pipioService = app(PipioService::class);
@@ -338,6 +339,8 @@ class VideoSetup extends Component
         ]);
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
     }
+
+    // Removed step-level autoplay handling in favor of campaign-level setting
     public function render()
     {
         return view('livewire.video-setup');

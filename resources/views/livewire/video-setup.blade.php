@@ -339,6 +339,8 @@
             </label>
         </div>
 
+        
+
         <div class="h-28 @if ($fit_video) cursor-not-allowed opacity-50 @endif">
             <div class="mx-auto w-[50%] flex flex-col justify-between rounded-md border-2 border-gray-300 bg-slate-100 h-full overflow-hidden p-1">
                 <div class="grid grid-cols-3">

@@ -19,6 +19,7 @@ class CampaignComponent extends Component
 
 
     public $campaign, $title, $steps, $lastStep, $activeStep, $activeName, $user, $form, $multi_choice_setting, $thank_you_image;
+    public $autoplay_video = false;
     public $id, $postion, $contact_detail = false;
 
     public $email, $name;
@@ -32,6 +33,7 @@ class CampaignComponent extends Component
 
         $this->title = $this->campaign->title;
         $this->steps = $this->campaign->steps;
+        $this->autoplay_video = (bool) ($this->campaign->autoplay_video ?? false);
 
         $this->lastStep = $this->steps->sortByDesc('id')->first();
 
@@ -64,6 +66,14 @@ class CampaignComponent extends Component
             'title' =>  $this->title,
         ]);
 
+        $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
+    }
+
+    public function toggleAutoplay()
+    {
+        $this->campaign->update([
+            'autoplay_video' => (bool) $this->autoplay_video,
+        ]);
         $this->dispatch('notify', status: 'success', msg: 'Saved successfully!');
     }
     public function goToTab($tab)

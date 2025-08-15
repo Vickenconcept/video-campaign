@@ -10,6 +10,7 @@ class Campaign extends Model
 
     protected $casts = [
         'paypal_keys' => 'array',
+        'autoplay_video' => 'boolean',
     ];
 
     public function folder(){
