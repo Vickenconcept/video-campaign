@@ -674,25 +674,28 @@
     <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Livewire.on('setFileType', (file_type) => {
-                let formatAllowed = file_type.flat();
+        // Initialize Cloudinary upload widget for file uploads in show-campaign
+        let fileUploadWidget;
 
-                var myWidget = cloudinary.createUploadWidget({
+        function initializeFileUploadWidget() {
+            const uploadButton = document.getElementById('upload_widget');
+            if (typeof cloudinary === 'undefined' || !uploadButton) {
+                return;
+            }
+
+            if (!fileUploadWidget) {
+                fileUploadWidget = cloudinary.createUploadWidget({
                     cloudName: "dp0bpzh9b",
                     uploadPreset: "video-campaign",
                     resourceType: "raw",
-                    clientAllowedFormats: formatAllowed,
+                    // Intentionally omit clientAllowedFormats here so preset controls allowed formats
                     maxFileSize: 500000000
                 }, (error, result) => {
                     if (!error && result && result.event === "success") {
-                        let response = result.info;
+                        const response = result.info;
 
-                        Livewire.dispatch('update-file', {
-                            url: response.secure_url
-                        });
+                        Livewire.dispatch('update-file', { url: response.secure_url });
 
-                        // alert("✅ File uploaded successfully!");
                         Toastify({
                             text: `Uploaded!, close and continue`,
                             position: "center",
@@ -700,37 +703,31 @@
                             backgroundColor: "linear-gradient(to right, #56ab2f, #a8e063)"
                         }).showToast();
 
-                        myWidget.close();
-                        if (uploadButton) {
-                            uploadButton.removeEventListener("click", openWidget);
-                        }
+                        fileUploadWidget.close();
                     }
                 });
+            }
 
-                function openWidget() {
-                    myWidget.open();
-                }
+            function openWidget(e) {
+                if (e) e.preventDefault();
+                fileUploadWidget.open();
+            }
 
-                function attachUploadListener() {
-                    const uploadButton = document.getElementById("upload_widget");
-                    if (uploadButton) {
-                        uploadButton.removeEventListener("click", openWidget);
-                        uploadButton.addEventListener("click", openWidget);
-                    }
-                }
+            // Ensure single listener
+            uploadButton.removeEventListener('click', openWidget);
+            uploadButton.addEventListener('click', openWidget);
+        }
 
-                attachUploadListener();
+        // DOM ready
+        document.addEventListener('DOMContentLoaded', initializeFileUploadWidget);
 
-                const observer = new MutationObserver(() => {
-                    attachUploadListener();
-                });
-
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            });
+        // When Livewire navigates
+        document.addEventListener('livewire:navigated', () => {
+            setTimeout(initializeFileUploadWidget, 100);
         });
+
+        // Fallback
+        setTimeout(initializeFileUploadWidget, 1000);
     </script>
 
 

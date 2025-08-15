@@ -147,14 +147,29 @@
                         ],
                         currentIndex: 0,
                         intervalId: null
-                    }" x-init="intervalId = setInterval(() => {
-                        currentIndex = (currentIndex + 1) % messages.length;
-                    }, 4000);
-                    
-                    Livewire.on('video-generation-complete-{{ $activeStep->id }}', ({ videoUrl }) => {
-                        clearInterval(intervalId);
-                        $wire.videoUrl = videoUrl;
-                    });"
+                    }" x-init="
+                        intervalId = setInterval(() => {
+                            currentIndex = (currentIndex + 1) % messages.length;
+                        }, 4000);
+                        
+                        Livewire.on('video-generation-complete-{{ $activeStep->id }}', ({ videoUrl }) => {
+                            clearInterval(intervalId);
+                            $wire.videoUrl = videoUrl;
+                            
+                            // Show success toast
+                            Toastify({
+                                text: 'Video generated successfully!',
+                                position: 'center',
+                                duration: 3000,
+                                backgroundColor: 'linear-gradient(to right, #56ab2f, #a8e063)'
+                            }).showToast();
+                            
+                            // Reload page after toast to update everything
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        });
+                    "
                         x-text="messages[currentIndex]"></p>
                 </div>
             </div>
@@ -268,7 +283,7 @@
                         </div>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">Write Your Script</h3>
                         <div class="space-y-4">
-                            <textarea wire:model.live="content" rows="6"
+                            <textarea wire:model="content" rows="6"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Write your script here..."></textarea>
                             <div class="text-sm text-gray-500">
@@ -303,7 +318,7 @@
                                     'bg-blue-600 hover:bg-blue-700': selectedAvatar && selectedVoice && $wire.content?.trim(),
                                     'bg-gray-400 cursor-not-allowed': !selectedAvatar || !selectedVoice || !$wire.content?.trim()
                                 }"
-                                class="w-full px-6 py-3 text-white font-medium rounded-lg transition-colors">
+                                class="w-full px-6 py-3 text-white font-medium rounded-lg transition-colors cursor-pointer">
                                 Generate Video
                             </button>
                         </div>
