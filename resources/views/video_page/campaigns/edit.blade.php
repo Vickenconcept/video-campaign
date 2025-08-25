@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
+    <div class="container mx-auto px-3 pb-40 overflow-y-auto h-screen pt-5">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Edit Video Page</h1>

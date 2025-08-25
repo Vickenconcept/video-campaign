@@ -1,46 +1,51 @@
-<div class=" h-screen overflow-y-auto px-5  pb-32">
+<div class=" h-screen overflow-y-auto px-5  pb-32 pt-5">
     <div wire:key="message-{{ now() }}">
         <x-session-msg />
     </div>
 
     @if (count($campaigns ?? []) > 0)
-        <div class="  space-y-10 " x-data="{ openDelete: false, openFolder: false, editModal: false }">
-            <div class="flex justify-between">
-                <div>
-                    <h3 class="font-semibold text-2xl">{{ $folder->name }}</h3>
-                </div>
-                <div class="max-w-xs w-full">
-                    <button class="btn cursor-pointer" data-modal-target="create-modal"
-                        data-modal-toggle="create-modal">Create Video Funnel</button>
+        <div class="space-y-8" x-data="{ openDelete: false, openFolder: false, editModal: false }">
+            <!-- Enhanced Header Section -->
+            <div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-6 shadow-2xl shadow-gray-500/20 border border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                    <div>
+                        <h3 class="font-bold text-3xl text-gray-900 mb-2">{{ $folder->name }}</h3>
+                        <p class="text-gray-600">Manage your video funnels in this folder</p>
+                    </div>
+                    <div class="w-full md:w-auto">
+                        <button class="w-full md:w-auto bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-medium py-3.5 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2" data-modal-target="create-modal" data-modal-toggle="create-modal">
+                            <i class="bx bx-plus text-lg"></i>
+                            <span>Create Video Funnel</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             @if (count($selectedCampaigns) > 0)
-                <div class="mb-4">
+                <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 flex items-center justify-between">
+                    <span class="text-red-700 font-medium">Selected {{ count($selectedCampaigns) }} campaign(s)</span>
                     <button wire:click="deleteSelected"
-                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition cursor-pointer">
-                        Delete Selected ({{ count($selectedCampaigns) }})
+                        class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-medium">
+                        Delete Selected
                     </button>
                 </div>
             @endif
 
-            <section class="" wire:key="section-{{ now() }}">
-                <ul class=" grid lg:grid-cols-4 gap-5 ">
+            <section wire:key="section-{{ now() }}">
+                <ul class="grid lg:grid-cols-4 gap-6">
                     @forelse ($campaigns as $campaign)
-                        <div class="relative" x-data="{ isOpen: false }" wire:key="campaign-{{ $campaign->id }}">
-                            <div
-                                class="relative  hover:shadow-2xl shadow-md transition duration-500 ease-in-out rounded-xl border border-gray-300 overflow-hidden">
-                                <div class="group bg-gray-500 h-40 overflow-hidden relative">
+                        <div class="relative group" x-data="{ isOpen: false }" wire:key="campaign-{{ $campaign->id }}">
+                            <div class="relative hover:shadow-2xl shadow-lg transition-all duration-300 ease-in-out rounded-xl border border-gray-200 overflow-hidden bg-white hover:border-indigo-300">
+                                <div class="bg-gray-500 h-40 overflow-hidden relative">
                                     <img src="{{ asset('images/video-thumbnail.jpg') }}" alt="video thumbnail"
-                                    class="w-full h-full object-center object-cover">
-                                    <div
-                                        class="absolute top-0 left-0 p-2 z-30 w-full @if (count($selectedCampaigns) > 0) @else  hidden @endif  group-hover:flex">
+                                    class="w-full h-full object-center object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute top-0 left-0 p-3 z-30 w-full @if (count($selectedCampaigns) > 0) @else hidden @endif group-hover:flex">
                                         <div class="flex items-center">
                                             <input id="checkbox1-{{ $campaign->id }}" type="checkbox"
                                                 wire:change="toggleSelectCampaign({{ $campaign->id }})" class="hidden peer"
                                                 {{ in_array($campaign->id, $selectedCampaigns) ? 'checked' : '' }} />
                                             <label for="checkbox1-{{ $campaign->id }}"
-                                                class="relative flex items-center justify-center p-1 peer-checked:before:hidden before:block before:absolute before:w-full before:h-full before:bg-white w-6 h-6 cursor-pointer bg-indigo-500 border rounded overflow-hidden">
+                                                class="relative flex items-center justify-center p-1 peer-checked:before:hidden before:block before:absolute before:w-full before:h-full before:bg-white w-6 h-6 cursor-pointer bg-indigo-500 border rounded overflow-hidden shadow-md">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-full fill-white"
                                                     viewBox="0 0 520 520">
                                                     <path
@@ -51,65 +56,76 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-3 flex justify-between items-center user-card ">
+                                <div class="p-4 flex justify-between items-center">
                                     <div class="flex items-center w-[60%] cursor-pointer"
                                         @click="activeCampaign = @js($campaign)">
-                                        <span class="ml-3 font-medium  capitalize truncate "
-                                            title="{{ $campaign->title }}">{{ $campaign->title }} </span>
+                                        <span class="font-semibold text-gray-900 capitalize truncate"
+                                            title="{{ $campaign->title }}">{{ $campaign->title }}</span>
                                     </div>
-                                    <div class="flex space-x-1 ">
+                                    <div class="flex space-x-2">
                                         <a href="{{ route('campaign.show', ['uuid' => $campaign->uuid]) }}"
-                                            class="text-gray-500 hover:text-gray-700 cursor-pointer ">
+                                            class="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white p-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                stroke-width="1.5" stroke="currentColor" class="size-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
                                         </a>
 
                                         <button @click="isOpen = true"
-                                            class="text-gray-500 hover:text-gray-700 cursor-pointer ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                            class="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white p-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M4 6h16M4 12h16m-7 6h7" />
                                             </svg>
                                         </button>
-
                                     </div>
                                 </div>
-                                <!-- Dropdown menu -->
                             </div>
-                            <div x-show="isOpen" style="display: none;" @click.away="isOpen =false"
-                                class="absolute right-0 -bottom-16 z-10  bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44 overflow-hidden ">
-                                <ul class=" text-sm text-gray-700 ">
+                            
+                            <!-- Enhanced Dropdown menu -->
+                            <div x-show="isOpen" style="display: none;" @click.away="isOpen = false"
+                                class="absolute right-0 -bottom-2 z-20 bg-white divide-y divide-gray-100 rounded-xl shadow-xl w-48 overflow-hidden border border-gray-200">
+                                <ul class="text-sm text-gray-700">
                                     <li>
                                         <button wire:click="duplicateCampaign({{ $campaign->id }})"
-                                            class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                            <p class="font-semibold text-sm">Duplicate</p>
+                                            class="cursor-pointer block w-full text-left px-4 py-3 hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200">
+                                            <div class="flex items-center gap-3">
+                                                <i class='bx bx-copy text-lg text-indigo-500'></i>
+                                                <span class="font-medium">Duplicate</span>
+                                            </div>
                                         </button>
                                     </li>
                                     <li>
                                         <button @click="openDelete = true"
                                             wire:click="setCampaign({{ $campaign->id }})"
-                                            class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                            <p class="font-semibold text-sm">Delete</p>
+                                            class="cursor-pointer block w-full text-left px-4 py-3 hover:bg-red-50 hover:text-red-700 transition-colors duration-200">
+                                            <div class="flex items-center gap-3">
+                                                <i class='bx bx-trash text-lg text-red-500'></i>
+                                                <span class="font-medium">Delete</span>
+                                            </div>
                                         </button>
                                     </li>
                                     <li>
                                         <button @click="openFolder = true"
                                             wire:click="setCampaign({{ $campaign->id }})"
-                                            class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                            <p class="font-semibold text-sm">Move To Folder</p>
+                                            class="cursor-pointer block w-full text-left px-4 py-3 hover:bg-green-50 hover:text-green-700 transition-colors duration-200">
+                                            <div class="flex items-center gap-3">
+                                                <i class='bx bx-folder text-lg text-green-500'></i>
+                                                <span class="font-medium">Move To Folder</span>
+                                            </div>
                                         </button>
                                     </li>
                                     <li>
                                         <button @click="editModal = true" wire:click="setCampaign({{ $campaign->id }})"
-                                            class="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100 ">
-                                            <p class="font-semibold text-sm">Settings</p>
+                                            class="cursor-pointer block w-full text-left px-4 py-3 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">
+                                            <div class="flex items-center gap-3">
+                                                <i class='bx bx-cog text-lg text-blue-500'></i>
+                                                <span class="font-medium">Settings</span>
+                                            </div>
                                         </button>
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -267,9 +283,18 @@
 
     @if (count($campaigns ?? []) == 0)
         <div class="h-[80%] flex justify-center items-center">
-            <div class="max-w-sm w-full">
-                <button class="btn cursor-pointer" data-modal-target="create-modal"
-                    data-modal-toggle="create-modal">Create Video Funnel</button>
+            <div class="max-w-md w-full text-center">
+                <div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-8 shadow-sm border border-gray-200">
+                    <div class="mb-6">
+                        <i class='bx bxs-folder-open text-6xl text-gray-400'></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-3">No campaigns yet</h3>
+                    <p class="text-gray-500 mb-6">Get started by creating your first video funnel in this folder</p>
+                    <button class="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-medium py-3.5 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 mx-auto" data-modal-target="create-modal" data-modal-toggle="create-modal">
+                        <i class="bx bx-plus text-lg"></i>
+                        <span>Create Video Funnel</span>
+                    </button>
+                </div>
             </div>
         </div>
     @endif

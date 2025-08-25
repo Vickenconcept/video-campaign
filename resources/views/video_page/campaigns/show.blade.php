@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen">
+    <div class="container mx-auto px-3 pb-32 overflow-y-auto h-screen pt-5">
         <div class="max-w-4xl mx-auto">
             <div class="  ">
                 <h1 class="text-2xl font-bold mb-6">Video Page: {{ $campaign->title }}</h1>

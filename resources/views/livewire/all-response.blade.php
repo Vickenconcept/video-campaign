@@ -3,7 +3,7 @@
         {{ 'All Response' }}
     @endsection
     <x-session-msg />
-    <section class="grid lg:grid-cols-7 gap-5 px-5" x-data="{ activeResponse: null }">
+    <section class="grid lg:grid-cols-7 gap-5 px-5 pt-5 pb-32" x-data="{ activeResponse: null }">
         <div class="lg:col-span-2 ">
             @if ($user_token == null)
                 <div class="relative mb-3" x-data="{ openDrawer: false, openRespondAll: false }">

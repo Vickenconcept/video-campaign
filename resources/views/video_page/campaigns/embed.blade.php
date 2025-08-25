@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class=" mx-auto px-3 pb-32 overflow-y-auto h-screen max-w-3xl">
+    <div class=" mx-auto px-3 pb-32 overflow-y-auto h-screen max-w-3xl pt-5">
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h1 class="text-2xl font-bold mb-2 text-indigo-700">Copy Email Content</h1>
             <p class="mb-4 text-gray-600">Below is a live preview of your campaign email. Click the button to copy the content, then paste it into your email client's compose window (Gmail, Outlook, etc). The formatting, images, and links will be preserved.</p>

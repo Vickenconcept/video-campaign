@@ -1,5 +1,5 @@
-<nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 shadow-sm">
-    <div class="px-4 py-3 lg:px-6 lg:pl-3">
+<nav class="fixed top-0 z-40 w-full bg-gray-50 pt-2 px-3  ">
+    <div class="px-4 py-3 lg:px-6 lg:pl-3 bg-white rounded-xl shadow-sm shadow-gray-200">
         <div class="flex items-center justify-between">
             <div class="flex items-center justify-start rtl:justify-end">
                 <!-- Mobile Sidebar Toggle -->
@@ -22,8 +22,8 @@
                 </a>
                 
                 <!-- Page Title -->
-                <div class="ml-6 lg:ml-8">
-                    <h2 class="text-lg lg:text-xl font-semibold text-gray-900 capitalize">
+                <div class="ml-6 lg:ml-8 bg-white py-3 px-6 rounded-lg shadow-sm shadow-gray-300">
+                    <h2 class="text-md font-semibold text-indigo-600 capitalize">
                         @yield('title', 'Dashboard')
                     </h2>
                 </div>
@@ -43,13 +43,15 @@
                 </button> --}}
 
                 <!-- Profile Dropdown -->
-                <div class="flex items-center">
+                <div class="flex items-center bg-white p-2 rounded-lg shadow-sm shadow-gray-300">
                     <div class="flex items-center space-x-3" aria-expanded="false" data-dropdown-toggle="dropdown-user"
                         id="profile_avatar">
                         <button type="button" id="profile_avatar"
                             class="flex text-sm bg-gray-100 rounded-lg focus:ring-4 focus:ring-gray-200 hover:bg-gray-200 transition-colors p-2">
                             <span class="sr-only">Open user menu</span>
-                            <i class='bx bx-user text-xl text-gray-600'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-gray-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                              </svg>
                         </button>
                         
                         <!-- User Info (Hidden on mobile) -->
