@@ -111,7 +111,7 @@ class VideoPageController extends Controller
         }
 
         return redirect()->route('video-page.campaigns.index')
-            ->with('success', 'Campaign created successfully!');
+            ->with('success', 'Page created successfully!');
     }
 
     public function show(EmailCampaign $campaign)

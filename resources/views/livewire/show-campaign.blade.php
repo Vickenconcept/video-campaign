@@ -31,6 +31,7 @@
         @if ($step->id == $nextStep)
             @if ($step->id != optional($lastStep)->id)
                 <div class="relative h-full w-full  overflow-hidden grid md:grid-cols-2">
+                    
                     @php
                         $fit = $video_setting['fit'] ?? false;
 
@@ -68,6 +69,7 @@
                     @endphp
 
                     <div class="bg-red-500 h-full">
+                   
                         @if (!empty($video_setting['overlay_text']))
                             <div
                                 class="absolute w-full md:w-[50%] z-50 @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto left-0 top-0 p-5">
@@ -268,6 +270,10 @@
                                 </p>
                             </div>
                         @endif
+                        <div class="">
+                            <div class="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
+                            <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+                        </div>
                         <div
                             class="h-full md:h-[80%] w-full md:w-[80%] md:border rounded-md flex justify-center items-center overflow-y-auto ">
                             <div class="w-full md:w-[80%] ">

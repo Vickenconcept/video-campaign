@@ -3,9 +3,9 @@
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Edit Video Page</h1>
-                <a href="{{ route('email.campaigns.index') }}" class="text-gray-600 hover:text-gray-900">← Back to Campaigns</a>
+                <a href="{{ route('video-page.campaigns.index') }}" class="text-gray-600 hover:text-gray-900">← Back to Campaigns</a>
             </div>
-            <form action="{{ route('email.campaigns.update', $campaign) }}" method="POST" class="space-y-8">
+            <form action="{{ route('video-page.campaigns.update', $campaign) }}" method="POST" class="space-y-8">
                 @csrf
                 @method('PUT')
                 <div class="bg-white shadow-md rounded-lg p-6">
@@ -269,7 +269,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4">
-                    <a href="{{ route('email.campaigns.index') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</a>
+                    <a href="{{ route('video-page.campaigns.index') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</a>
                     <button type="submit" class="px-6 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800">Update Campaign</button>
                 </div>
             </form>

@@ -4,7 +4,7 @@
     @endsection
     <div class="container mx-auto max-w-screen-lg px-4 py-8">
         <!-- Enhanced Header Section -->
-        <div class="bg-white rounded-xl p-6 shadow-2xl shadow-gray-500/20 border border-gray-200 mb-8">
+        <div class="bg-gradient-to-r from-blue-50 to-white rounded-xl p-6 shadow-2xl shadow-blue-500/20 border border-blue-200 mb-8">
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-900 mb-3">Email Service Provider Connections</h2>
                 <p class="text-gray-600">Connect and manage your email service provider integrations</p>

@@ -1,6 +1,6 @@
 <x-app-layout>
     @section('title')
-        {{ 'Dashboard' }}
+        {{ 'Dashboard' }}  <span class="text-gray-600 ml-3">Welcome back, {{ auth()->user()->name }}! 👋</span>
     @endsection
 
     <div class="max-w-7xl mx-auto pt-6 sm:px-6 lg:px-8 px-3 pb-32 overflow-y-auto h-screen">
