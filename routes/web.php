@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ESPController;
+use App\Http\Controllers\JVZooWebhookController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
@@ -19,82 +20,6 @@ use App\Livewire\ShowCampaign;
 use App\Livewire\SingleResponse;
 use Illuminate\Support\Facades\Route;
 
-// --- AYRSHARE SERVICE TEST ROUTES (for development/testing only) ---
-use App\Services\AyrshareService;
-
-// Route::prefix('ayrshare-test')->group(function () {
-    // Create a profile
-    Route::get('create-profile', function (AyrshareService $ayrshare) {
-        $title = 'TestProfile_' . uniqid();
-        $result = $ayrshare->createProfile($title);
-        return response()->json($result);
-    });
-
-    // Generate JWT linking URL (requires profileKey param)
-    Route::get('generate-jwt', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $result = $ayrshare->generateJwtUrl($profileKey);
-        return response()->json($result);
-    });
-
-    // List all profiles
-    Route::get('list-profiles', function (AyrshareService $ayrshare) {
-        $result = $ayrshare->listProfiles();
-        return response()->json($result);
-    });
-
-    // List connected social accounts for a profile (requires profileKey param)
-    Route::get('profile-socials', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $result = $ayrshare->getProfileSocialAccounts($profileKey);
-        return response()->json($result);
-    });
-
-    // Post to social (requires profileKey param)
-    Route::post('post', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $body = [
-            'post' => 'Test post from AyrshareService',
-            'platforms' => ['twitter'], // Change to your connected platform
-            // 'mediaUrls' => ['https://example.com/video.mp4'],
-        ];
-        $result = $ayrshare->postToSocial($profileKey, $body);
-        return response()->json($result);
-    });
-
-    // Delete a post (requires profileKey and postId param)
-    Route::delete('delete-post', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $postId = request('postId');
-        $result = $ayrshare->deletePost($profileKey, $postId);
-        return response()->json($result);
-    });
-
-    // Get post status (requires profileKey and postId param)
-    Route::get('post-status', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $postId = request('postId');
-        $result = $ayrshare->getPostStatus($profileKey, $postId);
-        return response()->json($result);
-    });
-
-    // Unlink a social account (requires profileKey and platform param)
-    Route::delete('unlink-social', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $platform = request('platform');
-        $result = $ayrshare->unlinkSocialAccount($profileKey, $platform);
-        return response()->json($result);
-    });
-
-    // Delete a profile (requires profileKey and title param)
-    Route::delete('delete-profile', function (AyrshareService $ayrshare) {
-        $profileKey = request('profileKey');
-        $title = request('title');
-        $result = $ayrshare->deleteProfile($profileKey, $title);
-        return response()->json($result);
-    });
-// });
-// --- END AYRSHARE SERVICE TEST ROUTES ---
 
 
 Route::middleware('guest')->group(function () {
@@ -137,6 +62,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('profile/password', [ProfileController::class, 'changePassword'])->name('changePassword');
     Route::resource('reseller', ResellerController::class);
     Route::view('tutorial', 'tutorial')->name('tutorial');
+
+    // New Product Menu Routes
+    Route::view('/dfy-video-agency-setup', 'dfy_video_agency_setup')->name('dfy_video_agency_setup.index');
+    Route::view('/dfy-unlimited-traffic', 'dfy_unlimited_traffic')->name('dfy_unlimited_traffic.index');
+    Route::view('/affiliate-marketing-training', 'affiliate_marketing_training')->name('affiliate_marketing_training.index');
 
     // Email Campaign Routes
     Route::prefix('email')->name('email.')->group(function () {
@@ -200,4 +130,7 @@ Route::get('email/tracking/view', [TrackingController::class, 'view'])->name('em
 Route::post('email/tracking/reply', [\App\Http\Controllers\Email\TrackingController::class, 'reply'])->name('email.tracking.reply');
 
 Route::get('/email/campaigns/{campaign}/embed', [\App\Http\Controllers\Email\EmailCampaignController::class, 'embed'])->name('email.campaigns.embed');
+
+// IPN Routes - bypass CSRF verification
+Route::post('/ipn/jvzoo', [JVZooWebhookController::class, 'JVZoo']);
 

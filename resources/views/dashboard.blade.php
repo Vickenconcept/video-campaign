@@ -3,7 +3,7 @@
         {{ 'Dashboard' }}  <span class="text-gray-600 ml-3">Welcome back, {{ auth()->user()->name }}! 👋</span>
     @endsection
 
-    <div class="max-w-7xl mx-auto pt-6 sm:px-6 lg:px-8 px-3 pb-32 overflow-y-auto h-screen">
+    <div class="max-w-7xl mx-auto pt-6 sm:px-6 lg:px-8 px-3 pb-40 overflow-y-auto h-screen">
         <!-- Welcome Header -->
         {{-- <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, {{ auth()->user()->name }}! 👋</h1>
@@ -68,7 +68,7 @@
                     ->unique(),
             )
                 ->latest()
-                ->take(5)
+                ->take(4)
                 ->get();
         @endphp
 

@@ -9,6 +9,7 @@ use Livewire\Attributes\On;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ShowCampaign extends Component
@@ -33,42 +34,69 @@ class ShowCampaign extends Component
 
 
 
+    protected function hasSteps()
+    {
+        return $this->steps && $this->steps->count() > 0;
+    }
+
     public function mount($uuid)
     {
-
-        $currentUuid = Cache::get('user_uuid');
-        $currentToken = Cache::get('user_token');
-
-        if (!$currentUuid || $currentUuid !== $uuid) {
-            $newToken = Str::uuid()->toString();
-            Cache::put('user_uuid', $uuid, 180); // 3600 seconds
-            Cache::put('user_token', $newToken, 180); // 3600 seconds
-
-            $this->userToken = $newToken;
-        } else {
-            $this->userToken = $currentToken;
-        }
-
-
-        $this->campaign = Campaign::where('uuid', $uuid)->firstOrFail();
-        $this->selectedLang =  $this->campaign->language;
-
-        $this->steps = $this->campaign->steps;
-
-        $this->lastStep = $this->steps->sortByDesc('id')->first();
-
-        $this->preview = request()->has('preview');
-
-        foreach ($this->steps as $step) {
-            if ($step->contact_detail) {
-                $this->contactDetailShownStepId = $step->id;
-                break;
+        try {
+            // Generate a unique session-based token for this user
+            // Include IP and user agent for additional uniqueness
+            $userFingerprint = md5(request()->ip() . request()->userAgent() . $uuid);
+            $sessionKey = 'user_token_' . $uuid . '_' . $userFingerprint;
+            $sessionTimestampKey = 'user_token_timestamp_' . $uuid . '_' . $userFingerprint;
+            
+            // Check if session exists and is not expired (24 hours)
+            $sessionAge = session($sessionTimestampKey);
+            $isExpired = $sessionAge && (time() - $sessionAge) > 86400; // 24 hours
+            
+            if (!session()->has($sessionKey) || $isExpired) {
+                $newToken = Str::uuid()->toString();
+                session([$sessionKey => $newToken]);
+                session([$sessionTimestampKey => time()]);
             }
+            
+            $this->userToken = session($sessionKey);
+            
+            // Clean up old sessions for this campaign
+            $this->cleanupOldSessions($uuid);
+
+            $this->campaign = Campaign::where('uuid', $uuid)->with('steps')->firstOrFail();
+            $this->selectedLang =  $this->campaign->language;
+
+            // Ensure steps are loaded and handle empty case
+            $this->steps = $this->campaign->steps()->orderBy('id')->get();
+
+            // Check if steps exist
+            if ($this->steps && $this->steps->count() > 0) {
+                $this->lastStep = $this->steps->sortByDesc('id')->first();
+
+                $this->preview = request()->has('preview');
+
+                foreach ($this->steps as $step) {
+                    if ($step->contact_detail) {
+                        $this->contactDetailShownStepId = $step->id;
+                        break;
+                    }
+                }
+
+                $this->nextStep = $this->steps->min('id');
+
+                $this->activeForm = json_decode($this->steps->findOrFail($this->nextStep)->form, true) ?? [];
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in ShowCampaign mount method', [
+                'uuid' => $uuid,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Set default values to prevent undefined variable errors
+            $this->steps = collect();
+            $this->campaign = null;
         }
-
-        $this->nextStep = $this->steps->min('id');
-
-        $this->activeForm = json_decode($this->steps->findOrFail($this->nextStep)->form, true) ?? [];
     }
 
 
@@ -93,6 +121,10 @@ class ShowCampaign extends Component
 
     public function goToNext($id = 0, $action = 'defualt')
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         try {
 
             if (!$this->preview) {
@@ -189,6 +221,9 @@ class ShowCampaign extends Component
 
     public function goToPrevious($id, $action)
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
 
         $step = $this->steps->findOrFail($id);
 
@@ -204,9 +239,12 @@ class ShowCampaign extends Component
 
     public function saveContact()
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
 
-        if (!$this->userToken) {
-            return response()->json(['error' => 'User token not found'], 400);
+        if (!$this->validateUserToken($this->campaign->uuid)) {
+            return response()->json(['error' => 'Invalid or expired user session'], 400);
         }
 
         $step = $this->steps->findorFail($this->nextStep);
@@ -240,6 +278,10 @@ class ShowCampaign extends Component
 
     public function saveText()
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         if (!$this->userToken) {
             return response()->json(['error' => 'User token not found'], 400);
         }
@@ -264,6 +306,10 @@ class ShowCampaign extends Component
 
     public function saveVideo()
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         if ($this->preview) {
             return;
         }
@@ -303,6 +349,10 @@ class ShowCampaign extends Component
 
     public function saveAudio()
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         if ($this->preview) {
             return;
         }
@@ -346,6 +396,10 @@ class ShowCampaign extends Component
     // Method to handle changes in the selected options (if necessary)
     public function saveSelectedOptions()
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         if (!$this->userToken) {
             return response()->json(['error' => 'User token not found'], 400);
         }
@@ -387,6 +441,10 @@ class ShowCampaign extends Component
     #[On('update-file')]
     public function update_file($url)
     {
+        if (!$this->hasSteps()) {
+            return;
+        }
+
         if ($this->preview) {
             return;
         }
@@ -414,7 +472,9 @@ class ShowCampaign extends Component
 
     public function saveNPSScore()
     {
-
+        if (!$this->hasSteps()) {
+            return;
+        }
 
         if (!$this->userToken) {
             return response()->json(['error' => 'User token not found'], 400);
@@ -438,6 +498,39 @@ class ShowCampaign extends Component
     }
 
 
+
+    /**
+     * Clean up old user sessions for this campaign
+     */
+    private function cleanupOldSessions($uuid)
+    {
+        $sessionKeys = array_keys(session()->all());
+        $campaignSessionKeys = array_filter($sessionKeys, function($key) use ($uuid) {
+            return strpos($key, 'user_token_' . $uuid) === 0;
+        });
+        
+        // Keep only the current session, remove others
+        foreach ($campaignSessionKeys as $key) {
+            if ($key !== 'user_token_' . $uuid . '_' . md5(request()->ip() . request()->userAgent() . $uuid)) {
+                session()->forget($key);
+            }
+        }
+    }
+    
+    /**
+     * Validate user token and ensure it belongs to current session
+     */
+    private function validateUserToken($uuid)
+    {
+        if (!$this->userToken) {
+            return false;
+        }
+        
+        $userFingerprint = md5(request()->ip() . request()->userAgent() . $uuid);
+        $sessionKey = 'user_token_' . $uuid . '_' . $userFingerprint;
+        
+        return session($sessionKey) === $this->userToken;
+    }
 
     public function render()
     {

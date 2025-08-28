@@ -22,7 +22,7 @@
                 </a>
                 
                 <!-- Page Title -->
-                <div class="ml-6 lg:ml-8 bg-white py-3 px-6 rounded-lg shadow-sm shadow-gray-300">
+                <div class="ml-6 lg:ml-8 bg-white py-3 px-6 rounded-lg shadow-sm shadow-gray-300 hidden lg:block">
                     <h2 class="text-md font-semibold text-indigo-600 capitalize">
                         @yield('title', 'Dashboard')
                     </h2>

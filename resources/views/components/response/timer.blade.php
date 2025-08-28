@@ -5,6 +5,14 @@
     $cta_url = $timer['cta_url'] ?? '';
     $cta_text = $timer['cta_text'] ?? '';
     $additional_text = $timer['additional_text'] ?? '';
+    
+    // Debug: Log timer data
+    \Log::info('Timer data:', [
+        'timer_setting' => $step->timer_setting,
+        'parsed_timer' => $timer,
+        'start' => $start,
+        'end' => $end
+    ]);
 @endphp
 
 <div class="max-w-lg mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center space-y-4"
@@ -14,6 +22,7 @@
     })" x-init="startCountdown()">
     <div class="w-full text-center">
         <h2 class="text-2xl font-bold mb-2">Countdown Timer</h2>
+        
         @if ($additional_text)
             <p class="text-gray-600 mb-2">{{ $additional_text }}</p>
         @endif

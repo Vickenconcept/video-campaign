@@ -72,7 +72,7 @@
                 </button>
             </div>
             {{-- Breadcrumbs --}}
-            <div class="px-4 py-3 lg:px-6 lg:pl-3 bg-white rounded-r-xl shadow-sm shadow-gray-200 mr-4 mt-2">
+            <div class="px-4 py-3 lg:px-6 lg:pl-3 bg-white rounded-r-xl hidden lg:block shadow-sm shadow-gray-200 mr-4 mt-2">
                 <x-breadcrumbs :items="isset($breadcrumbs) ? $breadcrumbs : []" />
             </div>
             {{ $slot }}

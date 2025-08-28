@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_id')->unique();
             $table->string('name');
-            $table->enum('funnel', ['FE', 'OTO1', 'OTO4', 'OTO5', 'OTO6', 'Bundle']);
+            $table->enum('funnel', ['FE', 'OTO1', 'OTO2', 'OTO3', 'OTO4', 'OTO5', 'OTO6', 'OTO7', 'OTO8', 'Bundle']);
             $table->timestamps();
         });
     }

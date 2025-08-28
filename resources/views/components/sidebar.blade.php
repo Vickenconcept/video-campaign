@@ -92,6 +92,42 @@
                         <span class="text-md">Reseller</span>
                     </a>
                 </li>
+
+                {{-- DFY Video Agency Setup - OTO2 Products --}}
+                @role('OTO2')
+                <li>
+                    <a href="{{ route('dfy_video_agency_setup.index') }}"
+                        class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('dfy_video_agency_setup.index') ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-indigo-700' }}">
+                        <i
+                            class='bx bx-building size-8 p-1 rounded-lg {{ request()->routeIs('dfy_video_agency_setup.index') ? 'text-white bg-white/20' : 'text-indigo-700 bg-gradient-to-r from-indigo-100 to-indigo-200' }}'></i>
+                        <span class="text-md">DFY Video Agency Setup</span>
+                    </a>
+                </li>
+                @endrole
+
+                {{-- DFY Unlimited Traffic - OTO3 Products --}}
+                @role('OTO3')
+                <li>
+                    <a href="{{ route('dfy_unlimited_traffic.index') }}"
+                        class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('dfy_unlimited_traffic.index') ? 'bg-gradient-to-r from-green-500 to-green-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-green-700' }}">
+                        <i
+                            class='bx bx-trending-up size-8 p-1 rounded-lg {{ request()->routeIs('dfy_unlimited_traffic.index') ? 'text-white bg-white/20' : 'text-green-700 bg-gradient-to-r from-green-100 to-green-200' }}'></i>
+                        <span class="text-md">DFY Unlimited Traffic</span>
+                    </a>
+                </li>
+                @endrole
+
+                {{-- Affiliate Marketing Training - OTO5 Products --}}
+                @role('OTO5')
+                <li>
+                    <a href="{{ route('affiliate_marketing_training.index') }}"
+                        class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('affiliate_marketing_training.index') ? 'bg-gradient-to-r from-purple-500 to-purple-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-purple-700' }}">
+                        <i
+                            class='bx bx-book-open size-8 p-1 rounded-lg {{ request()->routeIs('affiliate_marketing_training.index') ? 'text-white bg-white/20' : 'text-purple-700 bg-gradient-to-r from-purple-100 to-purple-200' }}'></i>
+                        <span class="text-md">Affiliate Marketing Training</span>
+                    </a>
+                </li>
+                @endrole
             </ul>
             <div class="my-4 border-t border-indigo-300"></div>
             <ul class="font-medium flex flex-col gap-1">

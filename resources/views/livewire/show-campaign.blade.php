@@ -12,14 +12,29 @@
 
 
 
-    @php
-        $lastPosition = $steps->max('id');
-        $firstPosition = $steps->min('id');
+    @if(!$campaign)
+        <div class="flex items-center justify-center h-screen bg-gray-50">
+            <div class="text-center max-w-md mx-auto p-8">
+                <div class="mb-6">
+                    <i class='bx bx-error-circle text-6xl text-red-400'></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Campaign Not Found</h2>
+                <p class="text-gray-600 mb-6">The requested campaign could not be loaded. Please check the URL or contact support.</p>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p class="text-sm text-red-800">
+                        <i class='bx bx-info-circle mr-2'></i>
+                        Campaign ID: {{ request()->route('uuid') ?? 'Unknown' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    @elseif($steps && $steps->count() > 0)
+        @php
+            $lastPosition = $steps->max('id');
+            $firstPosition = $steps->min('id');
+        @endphp
 
-    @endphp
-
-
-    @foreach ($steps as $step)
+        @foreach ($steps as $step)
 
         @php
             $nexts = json_decode($step->multi_choice_question, true);
@@ -72,7 +87,7 @@
                    
                         @if (!empty($video_setting['overlay_text']))
                             <div
-                                class="absolute w-full md:w-[50%] z-50 @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto left-0 top-0 p-5">
+                                class="absolute w-full md:w-[50%] z-50 @if ($video_setting['overlay_bg'] ?? false) ) bg-black/30 @endif h-auto left-0 top-0 p-2 lg:p-5">
                                 <p
                                     class="max-w-md mx-auto text-white text-center font-bold capitalize {{ $video_setting['text_size'] }}">
                                     {{ $video_setting['overlay_text'] ?? '' }}</p>
@@ -91,19 +106,30 @@
                                     const controlByVisibility = () => {
                                         const active = shouldAutoplay && document.visibilityState === 'visible' && document.hasFocus();
                                         if ($refs.player) {
-                                            if (active) { try { $refs.player.play(); } catch (e) {} } else { $refs.player.pause(); }
+                                            if (active) { 
+                                                try { 
+                                                    $refs.player.play().catch(e => console.log('Autoplay prevented:', e.message)); 
+                                                } catch (e) {} 
+                                            } else { 
+                                                $refs.player.pause(); 
+                                            }
                                         } else {
-                                            if (active) { playYT(); playVM(); } else { pauseYT(); pauseVM(); }
+                                            if (active) { 
+                                                try { playYT(); playVM(); } catch (e) {} 
+                                            } else { 
+                                                pauseYT(); pauseVM(); 
+                                            }
                                         }
                                     };
                                     const tryStartPlayback = () => {
                                         const active = shouldAutoplay && document.visibilityState === 'visible' && document.hasFocus();
                                         if (!active) return;
                                         if ($refs.player) {
-                                            try { $refs.player.play(); } catch (e) {}
+                                            try { 
+                                                $refs.player.play().catch(e => console.log('Autoplay prevented:', e.message)); 
+                                            } catch (e) {} 
                                         } else {
-                                            playYT();
-                                            playVM();
+                                            try { playYT(); playVM(); } catch (e) {} 
                                         }
                                     };
                                     if ($refs.player) {
@@ -118,9 +144,13 @@
                                     window.addEventListener('focus', controlByVisibility);
                                     window.addEventListener('blur', controlByVisibility);
                                     $nextTick(() => {
-                                        setTimeout(controlByVisibility, 200);
-                                        setTimeout(tryStartPlayback, 200);
-                                        setTimeout(tryStartPlayback, 800);
+                                        // Only try autoplay if user has interacted with the page
+                                        if (document.visibilityState === 'visible') {
+                                            setTimeout(controlByVisibility, 200);
+                                            // Remove aggressive autoplay attempts to prevent errors
+                                            // setTimeout(tryStartPlayback, 200);
+                                            // setTimeout(tryStartPlayback, 800);
+                                        }
                                     });
                                 ">
 
@@ -132,7 +162,7 @@
                                     
                                     @if($isExternalVideo)
                                         <!-- External Video (YouTube/Vimeo) -->
-                                        @if(str_contains($step->video_url, 'youtube.com') || str_contains($step->video_url, 'youtu.be'))
+                                        @if(str_contains($step->video_url, 'youtube.com/watch?v='))
                                             @php
                                                 $videoId = null;
                                                 if (str_contains($step->video_url, 'youtube.com/watch?v=')) {
@@ -233,14 +263,14 @@
                                         <div class="absolute top-0 left-0 h-full w-full flex items-center justify-center">
                                             <button
                                                 @click="$refs.player.paused ? $refs.player.play() : $refs.player.pause()"
-                                                class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-0 group-hover:opacity-100">
-                                                <svg x-show="!playing" class="size-20" fill="none"
+                                                class=" inset-0 cursor-pointer flex items-center justify-center text-white bg-black/50 rounded-full transition duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+                                                <svg x-show="!playing" style="display: none;" class="size-20" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M14.752 11.168l-5.197-3.028A1 1 0 008 9.028v5.944a1 1 0 001.555.832l5.197-3.028a1 1 0 000-1.664z" />
                                             </svg>
 
-                                            <svg x-show="playing" class="size-20" fill="none"
+                                            <svg x-show="playing" style="display: none;" class="size-20" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M10 9v6m4-6v6" />
@@ -271,8 +301,8 @@
                             </div>
                         @endif
                         <div class="">
-                            <div class="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
-                            <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+                            <div class="absolute hidden lg:flex -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl"></div>
+                            <div class="absolute hidden lg:flex -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
                         </div>
                         <div
                             class="h-full md:h-[80%] w-full md:w-[80%] md:border rounded-md flex justify-center items-center overflow-y-auto ">
@@ -422,7 +452,24 @@
 
         @endif
 
-    @endforeach
+        @endforeach
+    @else
+        <div class="flex items-center justify-center h-screen bg-gray-50">
+            <div class="text-center max-w-md mx-auto p-8">
+                <div class="mb-6">
+                    <i class='bx bx-video text-6xl text-gray-400'></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Campaign Not Ready</h2>
+                <p class="text-gray-600 mb-6">This campaign doesn't have any steps configured yet. Please contact the campaign owner to set up the video funnel.</p>
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                    <p class="text-sm text-orange-800">
+                        <i class='bx bx-info-circle mr-2'></i>
+                        Campaign ID: {{ $campaign->uuid ?? 'Unknown' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
 
 
     <!-- Paypal -->
@@ -473,18 +520,17 @@
 
 
     <script>
-        function responseRecorder() {
-            return {
-                openResponse: null,
-                mediaRecorder: null,
-                audioChunks: [],
-                videoStream: null,
-                shouldContinue: false,
-                textResponse: @entangle('textResponse'),
-                countdown: 60,
-                countdownInterval: null,
-
-
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('responseRecorder', () => {
+                return {
+                    openResponse: null,
+                    mediaRecorder: null,
+                    audioChunks: [],
+                    videoStream: null,
+                    shouldContinue: false,
+                    textResponse: @entangle('textResponse'),
+                    countdown: 60,
+                    countdownInterval: null,
 
                 startAudioRecording() {
                     console.log('Audio recording started');
@@ -497,6 +543,7 @@
                             this.countdown--;
                         } else {
                             clearInterval(this.countdownInterval);
+                            this.stopAudioRecording();
                         }
                     }, 1000);
 
@@ -547,8 +594,8 @@
 
 
                         this.mediaRecorder.start();
-                        setTimeout(() => this.stopAudioRecording(),
-                            60000);
+                        // Remove the setTimeout since countdown will handle stopping
+                        // setTimeout(() => this.stopAudioRecording(), 60000);
                     });
                 },
 
@@ -582,6 +629,7 @@
                             this.countdown--;
                         } else {
                             clearInterval(this.countdownInterval);
+                            this.stopVideoRecording();
                         }
                     }, 1000);
 
@@ -598,7 +646,7 @@
                         this.mediaRecorder.ondataavailable = e => chunks.push(e.data);
 
                         this.mediaRecorder.onstop = () => {
-                            console.log('Audio recording stopped');
+                            console.log('Video recording stopped');
 
                             const videoBlob = new Blob(chunks, {
                                 type: 'video/webm'
@@ -630,7 +678,8 @@
                         };
 
                         this.mediaRecorder.start();
-                        setTimeout(() => this.stopVideoRecording(), 60000);
+                        // Remove the setTimeout since countdown will handle stopping
+                        // setTimeout(() => this.stopVideoRecording(), 60000);
                     });
                 },
 
@@ -653,7 +702,8 @@
                 }
 
             }
-        }
+            });
+        });
     </script>
 
 
@@ -683,15 +733,35 @@
                     let parsedEnd = end ? new Date(end) : null;
                     let target;
 
+                    // Debug logging
+                    console.log('Timer start:', start, 'parsed:', parsedStart);
+                    console.log('Timer end:', end, 'parsed:', parsedEnd);
+                    console.log('Current time:', now);
+
                     if (parsedStart && now < parsedStart) {
                         // Start is in the future
                         target = parsedStart;
+                        console.log('Using start time as target:', target);
                     } else if (parsedEnd && now < parsedEnd) {
                         // Start is in the past, but end is in the future
                         target = parsedEnd;
+                        console.log('Using end time as target:', target);
+                    } else if (parsedStart && parsedEnd) {
+                        // Both times provided, use the one that's further in the future
+                        let startDiff = parsedStart - now;
+                        let endDiff = parsedEnd - now;
+                        if (startDiff > 0 || endDiff > 0) {
+                            target = startDiff > endDiff ? parsedStart : parsedEnd;
+                            console.log('Using future time as target:', target);
+                        } else {
+                            // Both are in the past, set a default future time (24 hours from now)
+                            target = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+                            console.log('Both times in past, using default 24h future:', target);
+                        }
                     } else {
-                        // Both are in the past or invalid
-                        target = now;
+                        // No valid times provided, set a default future time (24 hours from now)
+                        target = new Date(now.getTime() + (24 * 60 * 60 * 1000));
+                        console.log('No valid times, using default 24h future:', target);
                     }
 
                     this.updateCountdown(target);

@@ -335,7 +335,7 @@
             </div>
 
             <!-- Enhanced Migration Section -->
-            <div class="mt-8 pt-8 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white p-6">
+            <div class="mt-8 pt-8 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white p-6 overflow-y-auto">
                 <h3 class="text-xl font-bold mb-6 text-gray-900 flex items-center">
                     <i class='bx bx-transfer text-green-600 mr-2'></i>
                     Migrate Subscribers
