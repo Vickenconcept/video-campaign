@@ -84,6 +84,7 @@
                         <span class="text-md">Connect ESP</span>
                     </a>
                 </li>
+                @role(['OTO4', 'Bundle'])
                 <li>
                     <a href="{{ route('reseller.index') }}"
                         class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('reseller.index') ? 'bg-gradient-to-r from-amber-500 to-amber-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-amber-700' }}">
@@ -92,9 +93,9 @@
                         <span class="text-md">Reseller</span>
                     </a>
                 </li>
-
+                @endrole
                 {{-- DFY Video Agency Setup - OTO2 Products --}}
-                @role('OTO2')
+                @role(['OTO2', 'Bundle'])
                 <li>
                     <a href="{{ route('dfy_video_agency_setup.index') }}"
                         class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('dfy_video_agency_setup.index') ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-indigo-700' }}">
@@ -106,7 +107,7 @@
                 @endrole
 
                 {{-- DFY Unlimited Traffic - OTO3 Products --}}
-                @role('OTO3')
+                @role(['OTO3', 'Bundle'])
                 <li>
                     <a href="{{ route('dfy_unlimited_traffic.index') }}"
                         class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('dfy_unlimited_traffic.index') ? 'bg-gradient-to-r from-green-500 to-green-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-green-700' }}">
@@ -118,7 +119,7 @@
                 @endrole
 
                 {{-- Affiliate Marketing Training - OTO5 Products --}}
-                @role('OTO5')
+                @role(['OTO5', 'Bundle'])
                 <li>
                     <a href="{{ route('affiliate_marketing_training.index') }}"
                         class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('affiliate_marketing_training.index') ? 'bg-gradient-to-r from-purple-500 to-purple-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-purple-700' }}">
