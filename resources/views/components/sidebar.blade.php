@@ -133,6 +133,14 @@
             <div class="my-4 border-t border-indigo-300"></div>
             <ul class="font-medium flex flex-col gap-1">
                 <li>
+                    <a href="{{ route('brand-settings') }}"
+                        class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('brand-settings') ? 'bg-gradient-to-r from-pink-500 to-pink-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-pink-700' }}">
+                        <i
+                            class='bx bx-palette size-8 p-1 rounded-lg {{ request()->routeIs('brand-settings') ? 'text-white bg-white/20' : 'text-pink-700 bg-gradient-to-r from-pink-100 to-pink-200' }}'></i>
+                        <span class="text-md">Brand Settings</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('support.index') }}"
                         class="flex items-center gap-2 px-4 py-4 rounded-lg transition-colors group {{ request()->routeIs('support.index') ? 'bg-gradient-to-r from-rose-500 to-rose-700 text-white shadow font-semibold' : 'text-gray-700 hover:shadow-lg hover:text-rose-700' }}">
                         <i

@@ -244,6 +244,7 @@ class VideoPageController extends Controller
         return view($templateView, [
             'campaign' => $campaign,
             'recipient' => $dummyRecipient,
+            'brandSettings' => $campaign->user->getBrandSettings(),
             'trackingPixel' => '#',
             'viewUrl' => $campaign->video_url,
             'clickUrl' => $campaign->cta_url,
@@ -341,6 +342,7 @@ class VideoPageController extends Controller
         $html = view($templateView, [
             'campaign' => $campaign,
             'recipient' => $dummyRecipient,
+            'brandSettings' => $campaign->user->getBrandSettings(),
             'trackingPixel' => '#',
             'viewUrl' => $campaign->video_url,
             'clickUrl' => $campaign->cta_url,

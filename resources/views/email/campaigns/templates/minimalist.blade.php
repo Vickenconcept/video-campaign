@@ -8,6 +8,7 @@
         body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f7fafc; }
         .container { max-width: 500px; margin: 48px auto; padding: 0; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.10); border: 1.5px solid #e5e7eb; overflow: hidden; }
         .header { margin-bottom: 0; padding: 36px 24px 18px 24px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+        .brand-logo { max-height: 60px; max-width: 200px; margin-bottom: 10px; }
         .title { font-size: 28px; font-weight: 400; color: #1a202c; margin: 0; }
         .content { line-height: 1.7; color: #4a5568; font-size: 17px; margin-bottom: 32px; padding: 36px 24px; text-align: left; }
         .video-container { margin: 32px 0; position: relative; display: flex; justify-content: center; border-radius: 8px; overflow: hidden; border: 2px solid #e0e7ef; box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
@@ -34,6 +35,9 @@
 <body>
     <div class="container">
         <div class="header">
+            @if($brandSettings && $brandSettings->is_active && $brandSettings->logo_url)
+                <img src="{{ $brandSettings->logo_url }}" alt="{{ $brandSettings->display_name }}" class="brand-logo">
+            @endif
             <h1 class="title">{{ $campaign->title }}</h1>
         </div>
         <div class="content">
@@ -54,7 +58,24 @@
             </div>
         @endif
         <div class="footer">
-            <p>{{ $campaign->template_data['footer_line1'] ?? 'Personalized video campaign' }}</p>
+            @if($brandSettings && $brandSettings->is_active)
+                <div style="margin-top: 10px; font-size: 12px; color: #718096;">
+                    @if($brandSettings->display_name)
+                        <p><strong>{{ $brandSettings->display_name }}</strong></p>
+                    @endif
+                    @if($brandSettings->phone)
+                        <p>Phone: {{ $brandSettings->phone }}</p>
+                    @endif
+                    @if($brandSettings->email)
+                        <p>Email: {{ $brandSettings->email }}</p>
+                    @endif
+                    @if($brandSettings->website)
+                        <p>Website: <a href="{{ $brandSettings->website }}" style="color: #6366f1;">{{ $brandSettings->website }}</a></p>
+                    @endif
+                </div>
+            @else
+                <p>{{ $campaign->template_data['footer_line1'] ?? 'Personalized video campaign' }}</p>
+            @endif
         </div>
     </div>
     <!-- Tracking Pixel -->

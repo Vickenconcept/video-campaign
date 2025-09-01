@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\BrandSettings;
 
 class User extends Authenticatable
 {
@@ -66,5 +67,33 @@ class User extends Authenticatable
     public function resellers()
     {
         return $this->hasMany(Reseller::class);
+    }
+
+    public function brandSettings()
+    {
+        return $this->hasOne(BrandSettings::class);
+    }
+
+    /**
+     * Get the user's brand settings or create default ones
+     */
+    public function getBrandSettings()
+    {
+        $brandSettings = $this->brandSettings()->first();
+        
+        if (!$brandSettings) {
+            $brandSettings = $this->brandSettings()->create([
+                'brand_name' => null,
+                'company_name' => null,
+                'address' => null,
+                'phone' => null,
+                'website' => null,
+                'email' => $this->email,
+                'logo_url' => null,
+                'is_active' => true,
+            ]);
+        }
+        
+        return $brandSettings;
     }
 }

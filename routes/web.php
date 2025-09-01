@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('profile', 'profile')->name('profile');
     Route::post('profile/name', [ProfileController::class, 'changeName'])->name('changeName');
     Route::post('profile/password', [ProfileController::class, 'changePassword'])->name('changePassword');
+    Route::get('brand-settings', \App\Livewire\BrandSettings::class)->name('brand-settings');
     Route::resource('reseller', ResellerController::class);
     Route::view('tutorial', 'tutorial')->name('tutorial');
 

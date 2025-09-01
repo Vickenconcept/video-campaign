@@ -8,6 +8,7 @@
         body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #0f172a; }
         .container { width: 100%; margin: 40px auto; background-color: #ffffff; border-radius: 20px; box-shadow: 0 12px 40px rgba(99,102,241,0.10); border: 2px solid #e0e7ef; overflow: hidden; }
         .header { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); padding: 54px 24px 30px 24px; text-align: center; color: white; }
+        .brand-logo { max-height: 60px; max-width: 200px; margin-bottom: 10px; }
         .header-title { font-size: 38px; font-weight: 700; margin: 0; text-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .content { padding: 54px 24px; }
         .content-text { line-height: 1.8; color: #334155; font-size: 19px; margin-bottom: 44px; font-weight: 400; }
@@ -42,6 +43,9 @@
 <body>
     <div class="container">
         <div class="header">
+            @if($brandSettings && $brandSettings->is_active && $brandSettings->logo_url)
+                <img src="{{ $brandSettings->logo_url }}" alt="{{ $brandSettings->display_name }}" class="brand-logo">
+            @endif
             <h1 class="header-title">{{ $campaign->title }}</h1>
         </div>
         <div class="content">
@@ -64,9 +68,26 @@
             @endif
         </div>
         <div class="footer">
-            <p style="margin: 0 0 10px 0; font-weight: 600;">{{ $campaign->template_data['footer_line1'] ?? 'Thank you for your attention!' }}</p>
-            <p style="margin: 0 0 10px 0;">{{ $campaign->template_data['footer_line2'] ?? 'This email was sent as part of a personalized video campaign.' }}</p>
-            <p style="margin: 0; font-size: 12px;">{{ $campaign->template_data['footer_line3'] ?? 'Powered by advanced video personalization technology.' }}</p>
+            @if($brandSettings && $brandSettings->is_active)
+                <div style="margin-top: 10px; font-size: 14px; color: #64748b;">
+                    @if($brandSettings->display_name)
+                        <p style="margin: 0 0 10px 0; font-weight: 600;"><strong>{{ $brandSettings->display_name }}</strong></p>
+                    @endif
+                    @if($brandSettings->phone)
+                        <p style="margin: 0 0 10px 0;">Phone: {{ $brandSettings->phone }}</p>
+                    @endif
+                    @if($brandSettings->email)
+                        <p style="margin: 0 0 10px 0;">Email: {{ $brandSettings->email }}</p>
+                    @endif
+                    @if($brandSettings->website)
+                        <p style="margin: 0; font-size: 12px;">Website: <a href="{{ $brandSettings->website }}" style="color: #6366f1;">{{ $brandSettings->website }}</a></p>
+                    @endif
+                </div>
+            @else
+                <p style="margin: 0 0 10px 0; font-weight: 600;">{{ $campaign->template_data['footer_line1'] ?? 'Thank you for your attention!' }}</p>
+                <p style="margin: 0 0 10px 0;">{{ $campaign->template_data['footer_line2'] ?? 'This email was sent as part of a personalized video campaign.' }}</p>
+                <p style="margin: 0; font-size: 12px;">{{ $campaign->template_data['footer_line3'] ?? 'Powered by advanced video personalization technology.' }}</p>
+            @endif
         </div>
     </div>
     <!-- Tracking Pixel -->

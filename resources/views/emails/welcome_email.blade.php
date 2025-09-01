@@ -33,6 +33,11 @@
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .brand-logo {
+            max-height: 80px;
+            max-width: 250px;
+            margin-bottom: 15px;
+        }
         .header p {
             margin: 10px 0 0 0;
             font-size: 18px;
@@ -159,6 +164,9 @@
     <div class="email-container">
         <!-- Header Section -->
         <div class="header">
+            @if(isset($brandSettings) && $brandSettings && $brandSettings->is_active && $brandSettings->logo_url)
+                <img src="{{ $brandSettings->logo_url }}" alt="{{ $brandSettings->display_name }}" class="brand-logo">
+            @endif
             <h1>🎉 Welcome!</h1>
             <p>Your Video Campaign journey starts now</p>
         </div>
@@ -212,9 +220,29 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>Video Campaign Team</strong></p>
-            <p>Questions? Contact us at <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a></p>
-            <p>© {{ date('Y') }} Video Campaign. All rights reserved.</p>
+            @if(isset($brandSettings) && $brandSettings && $brandSettings->is_active)
+                @if($brandSettings->display_name)
+                    <p><strong>{{ $brandSettings->display_name }}</strong></p>
+                @endif
+                @if($brandSettings->contact_info)
+                    <div style="margin-top: 10px;">
+                        @if($brandSettings->phone)
+                            <p>Phone: {{ $brandSettings->phone }}</p>
+                        @endif
+                        @if($brandSettings->email)
+                            <p>Email: <a href="mailto:{{ $brandSettings->email }}">{{ $brandSettings->email }}</a></p>
+                        @endif
+                        @if($brandSettings->website)
+                            <p>Website: <a href="{{ $brandSettings->website }}">{{ $brandSettings->website }}</a></p>
+                        @endif
+                    </div>
+                @endif
+                <p>© {{ date('Y') }} {{ $brandSettings->display_name }}. All rights reserved.</p>
+            @else
+                <p><strong>Video Campaign Team</strong></p>
+                <p>Questions? Contact us at <a href="mailto:{{ env('MAIL_FROM_ADDRESS') }}">{{ env('MAIL_FROM_ADDRESS') }}</a></p>
+                <p>© {{ date('Y') }} Video Campaign. All rights reserved.</p>
+            @endif
         </div>
     </div>
 </body>

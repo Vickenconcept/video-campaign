@@ -152,7 +152,7 @@
                     class="rounded-md px-4 flex items-center space-x-2 py-2 cursor-pointer hover:shadow-lg shadow-inner hover:bg-white transition duration-500 ease-in-out border bg-slate-300 border-slate-500"
                     @click="startAudioRecording(), isPlaying = true">
                     <i class='bx bx-play text-2xl'></i>
-                    <span>Start Audio</span>
+                    <span>Start Recording</span>
                 </button>
                 <button x-show="isPlaying"
                     class="rounded-md px-4 flex items-center space-x-2 py-2 cursor-pointer hover:shadow-lg shadow-inner hover:bg-white transition duration-500 ease-in-out border bg-slate-300 border-slate-500"

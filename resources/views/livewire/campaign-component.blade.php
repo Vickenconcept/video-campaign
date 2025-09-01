@@ -1145,7 +1145,7 @@
 
                 if (errorMessage && errorMessage.includes('Component not found')) {
                     console.warn('🔄 Livewire component missing (from promise). Reloading page...');
-                    alert('An error occurred. Reloading the page...');
+                    // alert('An error occurred. Reloading the page...');
                     window.location.reload();
                 }
             });

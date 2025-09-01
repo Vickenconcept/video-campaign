@@ -243,6 +243,7 @@ class EmailCampaignController extends Controller
         return view($templateView, [
             'campaign' => $campaign,
             'recipient' => $dummyRecipient,
+            'brandSettings' => $campaign->user->getBrandSettings(),
             'trackingPixel' => '#',
             'viewUrl' => $campaign->video_url,
             'clickUrl' => $campaign->cta_url,
@@ -309,6 +310,7 @@ class EmailCampaignController extends Controller
         return view($templateView, [
             'campaign' => $campaign,
             'recipient' => $dummyRecipient,
+            'brandSettings' => $campaign->user->getBrandSettings(),
             'trackingPixel' => '#',
             'viewUrl' => $campaign->video_url,
             'clickUrl' => $campaign->cta_url,

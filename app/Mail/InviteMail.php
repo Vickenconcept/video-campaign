@@ -16,6 +16,7 @@ class InviteMail extends Mailable
 
     public $link;
     public $name;
+    public $brandSettings;
     /**
      * Create a new message instance.
      */
@@ -23,6 +24,7 @@ class InviteMail extends Mailable
     {
         $this->link = $link;
         $this->name = $name;
+        $this->brandSettings = auth()->user()->getBrandSettings();
     }
 
     /**
@@ -42,7 +44,7 @@ class InviteMail extends Mailable
     {
         return new Content(
             view: 'emails.invite_email',
-            with: ['link' => $this->link, 'name'=> $this->name],
+            with: ['link' => $this->link, 'name'=> $this->name, 'brandSettings' => $this->brandSettings],
         );
     }
 

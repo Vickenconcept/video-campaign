@@ -8,7 +8,7 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank you for your patronage.</h2>
 
             <p class="text-gray-700 mb-6">
-                Indeed you made a great decision because ConvergeAI works and we are here to help you get an outstanding
+                Indeed you made a great decision because Videngager works and we are here to help you get an outstanding
                 result too like other early adopters.
                 <br><br>
                 Note: If you need any support kindly reach out to us here

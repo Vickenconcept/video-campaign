@@ -75,12 +75,12 @@
         <p>If you have any questions or need help, just reply to this email — we're here for you!</p>
 
         <p>Warm regards,</p>
-        <p>The Team</p>
+        <p>{{ $brandSettings->brand_name }}</p>
 
         <hr style="margin: 24px 0;" />
 
         <p style="font-size: 0.9em;">From: <a
-                href="mailto:{{ auth()->user()->email }}">{{ auth()->user()->email }}</a></p>
+                href="mailto:{{ $brandSettings->email }}">{{ $brandSettings->email }}</a></p>
     </div>
 
 
