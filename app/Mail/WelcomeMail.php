@@ -19,10 +19,10 @@ class WelcomeMail extends Mailable
      */
     public $password;
     public $brandSettings;
-    public function __construct( $password)
+    public function __construct($password, $user = null)
     {
         $this->password = $password;
-        $this->brandSettings = auth()->user()->getBrandSettings();
+        $this->brandSettings = $user ? $user->getBrandSettings() : null;
     }
 
 

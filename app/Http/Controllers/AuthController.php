@@ -28,7 +28,7 @@ class AuthController extends Controller
             'status' => 1,
         ]);
         
-        Mail::to($requestData['email'])->send(new WelcomeMail($requestData['password']));
+        Mail::to($requestData['email'])->send(new WelcomeMail($requestData['password'], $user));
         return redirect()->to('login');
     }
 

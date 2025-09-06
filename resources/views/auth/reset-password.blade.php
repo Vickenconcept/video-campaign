@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="flex justify-center items-center h-screen bg-white">
-        <div class="w-[40%] mx-auto">
+        <div class="lg:w-[40%] w-full mx-auto">
             <form method="POST" action="{{ route('password.update') }}"
                 class="shadow-md rounded-2xl bg-sgray-50 px-8 pt-6 pb-8 mb-4">
                 @csrf
